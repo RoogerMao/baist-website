@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Shared layout scale */
+  --page-padding-inline: var(--mantine-spacing-xl);
+  --landing-link-height: 9rem;
+  --header-height: 3.5rem;
+  --hero-font-size: min(13vw, calc(var(--landing-link-height) * 2));
 }
 
 @theme inline {
@@ -20,7 +26,276 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--header-height);
+  background-color: var(--mantine-color-body);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.inner {
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: var(--page-padding-inline);
+}
+
+.brand {
+  text-decoration: none;
+  color: var(--mantine-color-text);
+  font-size: var(--mantine-font-size-md);
+  font-weight: 700;
+}
+
+.link {
+  display: block;
+  line-height: 1;
+  padding: 8px 12px;
+  border-radius: var(--mantine-radius-sm);
+  text-decoration: none;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    border-radius: 0;
+    padding: var(--mantine-spacing-md);
+    width: 100%;
+  }
+
+  @mixin hover {
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+}
+
+.subLink {
+  display: block;
+  text-decoration: none;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  padding-left: calc(var(--mantine-spacing-md) * 2);
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+
+  @mixin hover {
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+}
+
+.linkLabel {
+  margin-right: 5px;
+}
+
+.pageMain {
+  /* Trimmed top padding (1/3 of the block spacing). */
+  padding: calc(var(--mantine-spacing-xl) / 3) var(--page-padding-inline)
+    var(--mantine-spacing-xl);
+}
+
+.hero {
+  /* Target height ~= two landing links tall (wraps to two lines on wide
+     screens); never exceeds 2x a link's height. */
+  font-size: var(--hero-font-size);
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.subheading {
+  /* Half the hero size; one line spans a landing box. */
+  font-size: calc(var(--hero-font-size) / 2);
+  line-height: var(--landing-link-height);
+}
+
+/* --- AnimationManager: two stacked full-viewport pages --- */
+.am-stage {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;
+  z-index: 0;
+  /* `clip` (not `hidden`) so the zoomed-out inactive layer can't turn the
+     stage into a scroll container and shove both layers off-position. */
+  overflow: clip;
+  isolation: isolate;
+  background-color: var(--mantine-color-body);
+}
+
+.am-layer {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform-origin: 50% 35%;
+  background-color: var(--mantine-color-body);
+}
+
+.communityPage {
+  min-height: 100%;
+}
+
+.communityBody {
+  margin-block: auto;
+}
+
+.pageNavButton {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dimmed);
+  transition: color 100ms ease;
+}
+
+.pageNavButton:hover {
+  color: var(--mantine-color-text);
+}
+
+/* --- Landing page --- */
+.landingPage {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--mantine-spacing-xl) var(--page-padding-inline);
+}
+
+/* hero + subheading + links are one group, centered in the leftover space
+   (falls back to top-aligned + scroll when they don't fit) */
+.landingContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  gap: var(--mantine-spacing-xl);
+}
+
+/* "Explore AI Safety." sits at 15% of viewport height and stays there while
+   "AI Safety." (the longer half) still fits on one line — the non-breaking
+   space keeps it together so the only wrap is Explore / AI Safety. Once even
+   that no longer fits the width, the font shrinks with the viewport.
+   The `/ 4` is ~the width of "AI Safety." in ems (font-dependent — tune if the
+   heading font changes). */
+.landingPage .hero {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-wrap: balance;
+  font-size: max(2rem, min(15dvh, calc((100vw - 4rem) / 4)));
+}
+
+/* Subheading font size and line height are both 7.5% of viewport height; the
+   block grows taller as the text wraps. */
+.landingPage .subheading {
+  margin: 0;
+  color: var(--mantine-color-dimmed);
+  font-size: 7.5dvh;
+  line-height: 7.5dvh;
+}
+
+.cueBand {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--mantine-spacing-md);
+}
+
+.cueBand .pageNavButton {
+  gap: 0.4em;
+  font-size: calc(5dvh * 2 / 3);
+}
+
+.cueBand .pageNavButton svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* --- Landing links: 3-up row -> 2 + full-width -> column --- */
+.landingLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: stretch;
+  gap: var(--mantine-spacing-sm);
+  width: 100%;
+}
+
+.landingLinks > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: $mantine-breakpoint-md) {
+  .landingLinks > * {
+    flex-basis: calc(50% - var(--mantine-spacing-sm) / 2);
+  }
+
+  /* fellowships (3rd) drops to its own full-width row */
+  .landingLinks > *:nth-child(3) {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .landingLinks {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .landingLinks > *,
+  .landingLinks > *:nth-child(3) {
+    flex: 1 1 0;
+    flex-basis: 0;
+  }
+}
+
+.landingLink {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  width: 100%;
+  /* every landing link is the same height regardless of layout */
+  min-height: var(--landing-link-height);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid var(--mantine-color-default-border);
+  background-color: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+  text-decoration: none;
+  transition: background-color 100ms ease, border-color 100ms ease;
+
+  @mixin hover {
+    background-color: var(--mantine-color-default-hover);
+  }
+}
+
+.landingLink[data-highlight] {
+  border-color: var(--mantine-primary-color-filled);
+  background-color: var(--mantine-primary-color-filled);
+
+  @mixin hover {
+    background-color: var(--mantine-primary-color-filled-hover);
+  }
+}
+
+.landingLinkIcon {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
 }
