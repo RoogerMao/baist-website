@@ -1,12 +1,13 @@
 "use client"
 
+import { useState } from 'react';
 import Link from 'next/link';
+import { motion, useMotionValueEvent, useScroll } from 'motion/react';
 import { IconChevronDown } from '@tabler/icons-react';
 import {
   Burger,
   Center,
   Collapse,
-  Container,
   Divider,
   Drawer,
   Group,
@@ -30,6 +31,13 @@ const links = [
 
 export function HeaderMenu() {
   const [opened, { toggle, close }] = useDisclosure(false);
+
+  const { scrollY } = useScroll();
+  const [hidden, setHidden] = useState(false);
+  useMotionValueEvent(scrollY, 'change', (current) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setHidden(current > previous && current > 150 && !opened);
+  });
 
   const items = links.map((link) => {
     const menuItems = link.links?.map((item) => (
@@ -62,7 +70,11 @@ export function HeaderMenu() {
   });
 
   return (
-    <header className="header">
+    <motion.header
+      className="header"
+      animate={{ y: hidden ? '-100%' : 0 }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
       <div className="inner">
         <Link href="/" className="brand">Brown AI Safety Team</Link>
         <Group gap={5} visibleFrom="sm">
@@ -106,7 +118,7 @@ export function HeaderMenu() {
           })}
         </ScrollArea>
       </Drawer>
-    </header>
+    </motion.header>
   );
 }
 

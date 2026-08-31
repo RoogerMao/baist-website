@@ -1,93 +1,86 @@
 "use client"
 
+import { createContext, useContext, useState, type ReactNode } from "react"
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react"
-import { MotionConfig, motion } from "motion/react"
+  MotionConfig,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "motion/react"
 
-type View = "top" | "bottom"
+/**
+ * Window scroll position in "screens" (scrollY / innerHeight), 0 at the top.
+ * `null` outside <AnimationManager>. Consumed by the pages so their scroll
+ * cues can fade in step with the landing -> alumni transition.
+ */
+const HomeScrollContext = createContext<MotionValue<number> | null>(null)
 
-interface PageNav {
-  view: View
-  goDown: () => void
-  goUp: () => void
+export function useHomeScreens(): MotionValue<number> | null {
+  return useContext(HomeScrollContext)
 }
-
-const PageNavContext = createContext<PageNav | null>(null)
-
-export function usePageNav(): PageNav {
-  const ctx = useContext(PageNavContext)
-  if (!ctx) {
-    throw new Error("usePageNav must be used inside <AnimationManager>")
-  }
-  return ctx
-}
-
-const EASE = [0.16, 1, 0.3, 1] as const
-const DURATION = 0.9
 
 export interface AnimationManagerProps {
+  /** Front layer. Fades away on scroll to reveal `bottom` beneath it. */
   top: ReactNode
+  /** Base layer, revealed as `top` fades. */
   bottom: ReactNode
 }
 
+/**
+ * The two pages are stacked layers pinned to the viewport. Scrolling fades the
+ * landing layer OUT, then (through a beat of the stage's plain background) the
+ * alumni layer IN — sequential, not a cross-fade, so the two text layers never
+ * ghost through each other. Driven off raw window scrollY (monotonic).
+ */
 export function AnimationManager({ top, bottom }: AnimationManagerProps) {
-  const [view, setView] = useState<View>("top")
+  const { scrollY } = useScroll()
 
-  const goDown = useCallback(() => setView("bottom"), [])
-  const goUp = useCallback(() => setView("top"), [])
-  const nav = useMemo<PageNav>(() => ({ view, goDown, goUp }), [view, goDown, goUp])
+  const screens = useTransform(() => {
+    const vh = typeof window === "undefined" ? 1 : window.innerHeight || 1
+    return scrollY.get() / vh
+  })
 
-  const atTop = view === "top"
+  // The transition plays over ~2 screens of scroll: landing fades out over the
+  // first ~0.9, a beat of plain background, then alumni fades in by ~1.8.
+  const landingOpacity = useTransform(screens, [0.15, 0.85], [1, 0])
+  const alumniOpacity = useTransform(screens, [1.0, 1.7], [0, 1])
 
-  const topRef = useRef<HTMLDivElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    topRef.current?.toggleAttribute("inert", !atTop)
-    bottomRef.current?.toggleAttribute("inert", atTop)
-  }, [atTop])
+  // Only the layer currently showing catches clicks.
+  const [phase, setPhase] = useState<"landing" | "alumni">("landing")
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const vh = typeof window === "undefined" ? 1 : window.innerHeight || 1
+    setPhase(y / vh > 0.95 ? "alumni" : "landing")
+  })
 
   return (
-    <PageNavContext.Provider value={nav}>
-      <MotionConfig reducedMotion="user">
-        <div className="am-stage">
-          <motion.div
-            ref={topRef}
-            className="am-layer"
-            initial={false}
-            animate={{
-              scale: atTop ? 1 : 1.35,
-              opacity: atTop ? 1 : 0,
-              filter: atTop ? "blur(0px)" : "blur(6px)",
-            }}
-            transition={{ duration: DURATION, ease: EASE }}
-            style={{ zIndex: 2, pointerEvents: atTop ? "auto" : "none" }}
-          >
-            {top}
-          </motion.div>
-
-          <motion.div
-            ref={bottomRef}
-            className="am-layer"
-            initial={false}
-            animate={{
-              scale: atTop ? 1.12 : 1,
-              opacity: atTop ? 0 : 1,
-            }}
-            transition={{ duration: DURATION, ease: EASE }}
-            style={{ zIndex: 1, pointerEvents: atTop ? "none" : "auto" }}
-          >
-            {bottom}
-          </motion.div>
+    <MotionConfig reducedMotion="user">
+      <HomeScrollContext.Provider value={screens}>
+        <div className="home">
+          <div className="homeStage">
+            <motion.div
+              className="homeLayer"
+              style={{
+                opacity: alumniOpacity,
+                pointerEvents: phase === "alumni" ? "auto" : "none",
+              }}
+            >
+              {bottom}
+            </motion.div>
+            <motion.div
+              className="homeLayer"
+              style={{
+                opacity: landingOpacity,
+                visibility: phase === "alumni" ? "hidden" : "visible",
+                pointerEvents: phase === "landing" ? "auto" : "none",
+              }}
+            >
+              {top}
+            </motion.div>
+          </div>
         </div>
-      </MotionConfig>
-    </PageNavContext.Provider>
+      </HomeScrollContext.Provider>
+    </MotionConfig>
   )
 }

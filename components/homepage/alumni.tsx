@@ -1,38 +1,37 @@
 "use client"
 
-import { AnimatePresence } from "motion/react"
-import { Stack, Text } from "@mantine/core"
 import { IconArrowUp } from "@tabler/icons-react"
-import { SplitText } from "./split-text"
-import { usePageNav } from "./animation-manager"
+import { motion, useMotionValue, useTransform } from "motion/react"
+import { AlumniCarousel } from "./alumni-carousel"
+import { useHomeScreens } from "./animation-manager"
 
 export function Alumni() {
-  const { view, goUp } = usePageNav()
-  const active = view === "bottom"
+  const fallback = useMotionValue(1)
+  const screens = useHomeScreens() ?? fallback
+  // Appears as the alumni layer settles in.
+  const cueOpacity = useTransform(screens, [1.45, 1.75], [0, 1])
 
   return (
-    <Stack gap="xl" className="pageMain communityPage">
-      <button type="button" className="pageNavButton" onClick={goUp}>
-        <IconArrowUp size={18} stroke={1.5} />
+    <div className="alumniPage homeSection">
+      <motion.p
+        className="cueText cueText--top"
+        style={{ opacity: cueOpacity }}
+      >
+        <IconArrowUp stroke={1.5} />
         Our Community
-      </button>
+      </motion.p>
 
-      <Stack gap="sm" className="communityBody">
+      <div className="homeContent">
         <h1 className="hero">
-          <AnimatePresence>
-            {active && (
-              <SplitText key="alumni-heading" delay={0.35}>
-                Our Community
-              </SplitText>
-            )}
-          </AnimatePresence>
+          You don&apos;t have to sacrifice your career to do good.
         </h1>
-        <Text c="dimmed" className="subheading" style={{ maxWidth: "40rem" }}>
-          Placeholder text for the page beneath. This is where the community
-          section will live — people, stories, and everything that happens
-          between the fellowships and the events.
-        </Text>
-      </Stack>
-    </Stack>
+
+        <p className="subheading">
+          Our alumni have done both. See their profiles below. 
+        </p>
+
+        <AlumniCarousel />
+      </div>
+    </div>
   )
 }
