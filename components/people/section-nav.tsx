@@ -26,7 +26,6 @@ function ListIcon() {
   )
 }
 
-// header height + the section's scroll-margin
 const VISIBLE_TOP = 96
 
 export function SectionNav({ sections }: { sections: SectionLink[] }) {
@@ -72,9 +71,13 @@ export function SectionNav({ sections }: { sections: SectionLink[] }) {
         title="Sections"
         // sit below the fixed header rather than over it
         styles={{
-          inner: { top: "var(--header-height)" },
+          inner: {
+            top: "var(--header-height)",
+            bottom: 0,
+            height: "auto",
+          },
           overlay: { top: "var(--header-height)" },
-          content: { height: "calc(100% - var(--header-height))" },
+          content: { maxHeight: "100%" },
         }}
       >
         <nav>

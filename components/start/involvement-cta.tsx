@@ -3,20 +3,6 @@
 import { useRef, useState, type PointerEvent } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "motion/react"
-import { Stack, Text } from "@mantine/core"
-
-export interface LandingLinkProps {
-  /** Destination route. */
-  href: string
-  /** URL of the icon shown on the left of the button. */
-  iconSrc: string
-  /** Primary label — rendered bold and larger. */
-  title: string
-  /** Optional supporting text — rendered smaller. */
-  description?: string
-  /** When true, fill the button with the accent color. */
-  highlight?: boolean
-}
 
 interface Ripple {
   id: number
@@ -25,13 +11,14 @@ interface Ripple {
   size: number
 }
 
-export function LandingLink({
-  href,
-  iconSrc,
-  title,
-  description,
-  highlight = false,
-}: LandingLinkProps) {
+export interface InvolvementCtaProps {
+  label: string
+  href: string
+  /** Use a white background instead of the card-surface tone. */
+  white?: boolean
+}
+
+export function InvolvementCta({ label, href, white = false }: InvolvementCtaProps) {
   const [ripples, setRipples] = useState<Ripple[]>([])
   const nextId = useRef(0)
 
@@ -52,32 +39,18 @@ export function LandingLink({
   return (
     <Link
       href={href}
-      className="landingLink"
-      data-highlight={highlight || undefined}
+      className="involvementCardCta"
+      data-white={white || undefined}
       onPointerDown={spawnRipple}
     >
-      <span
-        aria-hidden
-        className="landingLinkIcon"
-        style={{ maskImage: `url(${iconSrc})`, WebkitMaskImage: `url(${iconSrc})` }}
-      />
-      <Stack gap={2} style={{ minWidth: 0 }}>
-        <Text fw={700} fz="md" lh={1.2}>
-          {title}
-        </Text>
-        {description ? (
-          <Text fz="sm" lh={1.3} className="landingLinkDesc" style={{ opacity: 0.75 }}>
-            {description}
-          </Text>
-        ) : null}
-      </Stack>
+      <span className="involvementCardCtaLabel">{label}</span>
 
-      <span className="landingLinkRipples" aria-hidden>
+      <span className="involvementCardCtaRipples" aria-hidden>
         <AnimatePresence>
           {ripples.map((ripple) => (
             <motion.span
               key={ripple.id}
-              className="landingLinkRipple"
+              className="involvementCardCtaRipple"
               style={{
                 left: ripple.x,
                 top: ripple.y,

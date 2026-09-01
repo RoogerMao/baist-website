@@ -1,0 +1,96 @@
+"use client"
+
+import { useId, useState } from "react"
+import { Box, Text, Title, UnstyledButton } from "@mantine/core"
+import { AnimatePresence, motion } from "motion/react"
+
+export interface FaqItem {
+  question: string
+  /** Answer body — a string, or any node for richer formatting. */
+  answer: React.ReactNode
+}
+
+/** Plus sign whose vertical bar collapses into the horizontal one when open. */
+function PlusMinusIcon({ open }: { open: boolean }) {
+  return (
+    <span className="faqIcon" aria-hidden>
+      <span className="faqIconBar" />
+      <motion.span
+        className="faqIconBar faqIconBarVertical"
+        animate={{ rotate: open ? 0 : 90, opacity: open ? 0 : 1 }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+      />
+    </span>
+  )
+}
+
+function FaqRow({ item, defaultOpen }: { item: FaqItem; defaultOpen: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
+  const panelId = useId()
+  const controlId = useId()
+
+  return (
+    <Box className="faqRow">
+      <UnstyledButton
+        id={controlId}
+        className="faqControl"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        aria-controls={panelId}
+      >
+        <Title order={3} fz="md" fw={600} lh={1.4}>
+          {item.question}
+        </Title>
+        <PlusMinusIcon open={open} />
+      </UnstyledButton>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="panel"
+            id={panelId}
+            role="region"
+            aria-labelledby={controlId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            style={{ overflow: "hidden" }}
+          >
+            <Text size="sm" c="dimmed" component="div" className="faqAnswer">
+              {item.answer}
+            </Text>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Box>
+  )
+}
+
+/**
+ * Accordion-style FAQ list with a plus/minus toggle per question, modelled on
+ * examples.motion.dev/ui/sections/faq-plus-minus. Items open independently.
+ * Styling uses Mantine tokens (see `.faq*` rules in globals.css).
+ */
+export function Faq({
+  items,
+  defaultOpenIndex,
+  className,
+}: {
+  items: FaqItem[]
+  /** Index of the item expanded on first render, if any. */
+  defaultOpenIndex?: number
+  className?: string
+}) {
+  return (
+    <div className={className ? `faq ${className}` : "faq"}>
+      {items.map((item, index) => (
+        <FaqRow
+          key={item.question}
+          item={item}
+          defaultOpen={index === defaultOpenIndex}
+        />
+      ))}
+    </div>
+  )
+}

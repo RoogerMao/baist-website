@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdfbf8;
+  --foreground: #1f1a16;
 
   /* Shared layout scale */
   --page-padding-inline: var(--mantine-spacing-xl);
-  --landing-link-height: 9rem;
+  --landing-link-height: 4.5rem;
   --header-height: 3.5rem;
 }
 
@@ -19,8 +19,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #201c18;
+    --foreground: #ede8e3;
   }
 }
 
@@ -94,10 +94,71 @@ body {
   margin-right: 5px;
 }
 
+/* Accented nav entry — highlight fill + accent text to pull the eye.
+   Selectors are doubled up / element-qualified so they beat Mantine's
+   single-class root styles (.mantine-UnstyledButton-root, .mantine-Menu-item). */
+.link.linkAccent {
+  color: var(--mantine-primary-color-filled);
+  font-weight: 700;
+  background-color: var(--mantine-primary-color-light);
+}
+
+.link.linkAccent:hover {
+  background-color: var(--mantine-primary-color-light-hover);
+}
+
+/* Accented dropdown item (desktop Menu) */
+a.menuItemAccent {
+  color: var(--mantine-primary-color-filled);
+  font-weight: 600;
+  background-color: var(--mantine-primary-color-light);
+}
+
+a.menuItemAccent:hover {
+  background-color: var(--mantine-primary-color-light-hover);
+}
+
+/* Accented dropdown item (mobile Drawer) */
+.subLink.subLinkAccent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  color: var(--mantine-primary-color-filled);
+  font-weight: 600;
+  background-color: var(--mantine-primary-color-light);
+}
+
+.subLink.subLinkAccent:hover {
+  background-color: var(--mantine-primary-color-light-hover);
+}
+
+/* Desktop dropdown panel — match the site background instead of Mantine's
+   default elevated surface. Drop the panel's inner padding and the item radius
+   so an item's background fill (e.g. the accented row) runs flush to every edge
+   of the dropdown; `overflow: hidden` re-clips the corners to the panel radius. */
+.navMenuDropdown {
+  background-color: var(--mantine-color-body);
+  padding: 0;
+  overflow: hidden;
+}
+
+.navMenuDropdown .mantine-Menu-item {
+  border-radius: 0;
+}
+
+/* Keep the FAQ block at a readable measure even when the page is wide. */
+.faqSection {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
 /* --- AnimationManager: two pinned layers, scroll cross-fades between them --- */
 .home {
   width: 100%;
-  min-height: 300svh; /* scroll distance the landing-out / alumni-in fade plays over */
+  /* Real height is set inline once the layers are measured; this is only the
+     pre-hydration fallback. */
+  min-height: 300svh;
 }
 
 .homeStage {
@@ -118,11 +179,17 @@ body {
   background-color: var(--mantine-color-body);
 }
 
-.homeLayer > * {
-  flex: 1;
+/* Inner wrapper that the manager translates with scroll (the "read" pass).
+   Natural content height, at least one screenful; the layer clips it. */
+.homeLayerScroll {
+  flex: 0 0 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
 }
 
-/* Text hint to keep scrolling (was a button; now just a cue). */
+/* Clickable hint that tweens the page to the other home layer. */
 .cueText {
   margin: 0;
   display: flex;
@@ -141,16 +208,61 @@ body {
   height: 1em;
 }
 
+.cueButton {
+  position: relative;
+  overflow: hidden;
+  appearance: none;
+  /* inherit the family/weight but keep .cueText's font-size */
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  padding: 0.3em 0.85em;
+  border: 1px solid currentColor;
+  border-radius: var(--mantine-radius-sm);
+  background: none;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.cueButton:hover {
+  color: var(--mantine-color-text);
+  background-color: var(--mantine-color-default-hover);
+}
+
+.cueButton:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+/* Material-style press ripple. */
+.cueButtonRipples {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cueButtonRipple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
 /* --- Landing + Alumni pages (shared `.homeSection`) --- */
 .homeSection {
-  min-height: 100%;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   padding: var(--mantine-spacing-xl) var(--page-padding-inline);
+  /* Shared hero size, derived from viewport WIDTH (not height) so a narrow
+     screen (which wraps the text to more lines) doesn't scale it up too. */
+  --hero-size: clamp(4rem, 8.5vw, 8rem);
 }
 
-/* hero + subheading + links/carousel are one group, centered in the leftover
-   space (falls back to top-aligned + scroll when they don't fit) */
+/* hero + subheading + links/carousel are one group, vertically centered in the
+   leftover space; when they're taller than the screen the section grows and the
+   manager scrolls it (top-aligned via `safe`). */
 .homeContent {
   flex: 1;
   min-height: 0;
@@ -160,82 +272,268 @@ body {
   gap: var(--mantine-spacing-xl);
 }
 
-/* "Explore AI Safety." sits at 15% of viewport height and stays there while
-   "AI Safety." (the longer half) still fits on one line — the non-breaking
-   space keeps it together so the only wrap is Explore / AI Safety. Once even
-   that no longer fits the width, the font shrinks with the viewport.
-   The `/ 4` is ~the width of "AI Safety." in ems (font-dependent — tune if the
-   heading font changes). */
 .homeSection .hero {
   margin: 0;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.05;
   text-wrap: balance;
-  font-size: max(2rem, min(15dvh, calc((100vw - 4rem) / 4)));
+  font-size: var(--hero-size);
 }
 
-/* Alumni heading is a full sentence — a third smaller than the landing hero. */
+/* landing hero picks up the accent colour on hover */
+.landingPage .hero {
+  transition: color 150ms ease;
+}
+
+.landingPage .hero:hover {
+  color: var(--mantine-primary-color-filled);
+}
+
+/* Alumni heading is a full sentence — three-quarters the landing hero size. */
 .alumniPage .hero {
-  font-size: calc(max(2rem, min(15dvh, calc((100vw - 4rem) / 4))) * 2 / 3);
+  font-size: calc(var(--hero-size) * 0.75);
 }
 
-/* Subheading font size and line height are both 7.5% of viewport height; the
-   block grows taller as the text wraps. */
+/* Leave room for the pinned "Meet our Alumni" cue at the bottom of the stage. */
+.landingPage .homeContent {
+  padding-bottom: 4rem;
+}
+
+/* Sit the alumni content nearer the "BAIST Today" up-cue instead of dead
+   centre — a fixed, smaller gap rather than half the leftover space. */
+.alumniPage .homeContent {
+  justify-content: safe start;
+  padding-top: 6dvh;
+}
+
+/* Intro block: hero + subheading, with the "Learn how to join" CTA after the
+   subheading — stacked below it on narrow screens, in-line to its right on
+   wider ones. The hero is forced onto its own row via flex-basis so the
+   subheading and CTA share the next row. */
+.alumniIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mantine-spacing-md);
+}
+
+.alumniIntro .hero {
+  flex-basis: 100%;
+}
+
+@media (min-width: 48em) {
+  .alumniIntro {
+    flex-flow: row wrap;
+    align-items: center;
+    column-gap: var(--mantine-spacing-md);
+  }
+
+  /* subheading + CTA share the row; the subheading sizes to its text so the
+     CTA sits just past the period, centred on the same line. */
+  .alumniIntro .subheading {
+    margin: 0;
+  }
+}
+
+.alumniCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  /* taller than the subheading's own line box (font-size clamp * line-height
+     1.3) so there's visible vertical padding around the label when it sits
+     inline with the subheading text. */
+  min-height: calc(1.3 * clamp(2rem, 4vw + 1rem, 3.8rem));
+  padding-block: var(--mantine-spacing-sm);
+  padding-inline: var(--mantine-spacing-md);
+  border-radius: 0;
+  background-color: var(--mantine-primary-color-filled);
+  color: var(--mantine-color-white);
+  font-size: calc(2 * var(--mantine-font-size-lg));
+  font-weight: 400;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0.9;
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+
+.alumniCta:hover {
+  background-color: var(--mantine-primary-color-filled-hover);
+  opacity: 1;
+}
+
+/* One continuous underline that sweeps left-to-right when the hero is hovered,
+   but only once the alumni layer is fully in focus (data-focused, set in
+   alumni.tsx). A background gradient rather than a pseudo-element so it tracks
+   every wrapped line as one stroke. */
+.heroUnderline {
+  background-image: linear-gradient(
+    var(--mantine-primary-color-filled),
+    var(--mantine-primary-color-filled)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 0.06em;
+  transition: background-size 450ms ease;
+}
+
+.alumniPage[data-focused] .hero:hover .heroUnderline {
+  background-size: 100% 0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroUnderline {
+    transition: none;
+  }
+}
+
+/* Width-based so a narrow screen doesn't turn this ~35-word paragraph into a
+   6-line, half-the-viewport block; floor keeps it >= ~half a landing link. */
 .homeSection .subheading {
   margin: 0;
   color: var(--mantine-color-dimmed);
-  font-size: 7.5dvh;
-  line-height: 7.5dvh;
+  font-size: clamp(2rem, 4vw + 1rem, 3.8rem);
+  line-height: 1.3;
 }
 
-.cueBand {
+/* "Meet our Alumni" — pinned near the bottom of the viewport (inside the sticky
+   stage, outside the translating content) so it shows on first load. */
+.homeCue {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--mantine-spacing-lg);
+  z-index: 1;
   display: flex;
   justify-content: center;
-  padding-top: var(--mantine-spacing-md);
 }
 
-/* Alumni: free-scroll marquee of destinations. */
+/* Solid fill so it stays legible when tall content scrolls behind it. */
+.homeCue .cueButton {
+  background-color: var(--mantine-color-body);
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .homeContent {
+    gap: var(--mantine-spacing-md);
+  }
+}
+
+/* --- Alumni: infinitely looping, drag-scrubbable profile carousel --- */
 .alumniCarousel {
+  position: relative;
   width: 100%;
+}
+
+.alumniCarouselViewport {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(
     90deg,
     transparent,
-    #000 5rem,
-    #000 calc(100% - 5rem),
+    #000 4rem,
+    #000 calc(100% - 4rem),
     transparent
   );
   mask-image: linear-gradient(
     90deg,
     transparent,
-    #000 5rem,
-    #000 calc(100% - 5rem),
+    #000 4rem,
+    #000 calc(100% - 4rem),
     transparent
   );
+}
+
+.alumniCarouselArrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 999px;
+  background-color: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+  cursor: pointer;
+}
+
+.alumniCarouselArrow:hover {
+  background-color: var(--mantine-color-default-hover);
+}
+
+.alumniCarouselArrow:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.alumniCarouselArrow svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.alumniCarouselArrow--prev {
+  left: 0;
+}
+
+.alumniCarouselArrow--next {
+  right: 0;
+}
+
+.alumniDots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--mantine-spacing-md);
+}
+
+.alumniDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--mantine-color-default-border);
+  cursor: pointer;
+  transition: width 200ms ease, background-color 200ms ease;
+}
+
+.alumniDot:hover {
+  background-color: var(--mantine-color-dimmed);
+}
+
+.alumniDot[data-active] {
+  width: 1.4rem;
+  background-color: var(--mantine-primary-color-filled);
+}
+
+.alumniDot:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
 }
 
 .alumniTrack {
   display: flex;
   width: max-content;
-  align-items: center;
-  gap: clamp(2rem, 6vw, 5rem);
-  margin: 0;
+  align-items: stretch;
+  gap: var(--mantine-spacing-md);
   padding: 0.5rem 0;
-  list-style: none;
   cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
 }
 
 .alumniTrack:active {
   cursor: grabbing;
 }
 
-.alumniOrg {
-  white-space: nowrap;
-  font-size: calc(var(--mantine-font-size-lg) * 1.5);
-  font-weight: 400;
-  color: var(--mantine-color-dimmed);
-  user-select: none;
+.alumniCard {
+  flex: 0 0 auto;
+  width: clamp(16rem, 24vw, 20rem);
 }
 
 /* --- Landing links: 3-up row -> 2 + full-width -> column --- */
@@ -245,7 +543,11 @@ body {
   align-content: flex-start;
   align-items: stretch;
   gap: var(--mantine-spacing-sm);
-  width: 100%;
+  /* Inset + centered so the row doesn't hug the left edge under a full-width
+     hero on wide screens. */
+  width: 85%;
+  max-width: $mantine-breakpoint-lg;
+  margin-inline: auto;
 }
 
 .landingLinks > * {
@@ -268,12 +570,14 @@ body {
   .landingLinks {
     flex-direction: column;
     flex-wrap: nowrap;
+    width: 100%;
+    max-width: none;
   }
 
+  /* stack at natural height rather than splitting the column equally */
   .landingLinks > *,
   .landingLinks > *:nth-child(3) {
-    flex: 1 1 0;
-    flex-basis: 0;
+    flex: 0 0 auto;
   }
 }
 
@@ -282,11 +586,11 @@ body {
   overflow: hidden;
   display: flex;
   align-items: center;
-  gap: var(--mantine-spacing-md);
+  gap: var(--mantine-spacing-sm);
   width: 100%;
   /* every landing link is the same height regardless of layout */
   min-height: var(--landing-link-height);
-  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-sm);
   border-radius: var(--mantine-radius-md);
   border: 1px solid var(--mantine-color-default-border);
   background-color: var(--mantine-color-body);
@@ -296,6 +600,10 @@ body {
 
   @mixin hover {
     background-color: var(--mantine-color-default-hover);
+    /* thicken the border without nudging layout */
+    border-width: 2px;
+    border-color: var(--mantine-color-default-border);
+    margin: -1px;
   }
 }
 
@@ -316,17 +624,18 @@ body {
 
 .landingLink[data-highlight] {
   border-color: var(--mantine-primary-color-filled);
-  background-color: var(--mantine-primary-color-filled);
+  background-color: var(--mantine-primary-color-light);
+  color: var(--mantine-primary-color-filled);
 
   @mixin hover {
-    background-color: var(--mantine-primary-color-filled-hover);
+    background-color: var(--mantine-primary-color-light-hover);
   }
 }
 
 .landingLinkIcon {
   flex-shrink: 0;
-  width: 3rem;
-  height: 3rem;
+  width: 2.25rem;
+  height: 2.25rem;
   background-color: currentColor;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -335,6 +644,153 @@ body {
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
 }
+
+/* Keep a long description from inflating the compact card height. */
+.landingLinkDesc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+/* --- Get Started page: involvement cards --- */
+.involvementCard[data-highlight] {
+  border-color: var(--mantine-primary-color-filled);
+  background-color: var(--mantine-primary-color-light);
+}
+
+.involvementCardHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.involvementCard[data-highlight] .involvementCardHeading {
+  color: var(--mantine-primary-color-filled);
+}
+
+.involvementCardAbilities {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  font-size: var(--mantine-font-size-sm);
+  flex: 1;
+}
+
+.involvementCardAbilities li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.involvementCardAbilities li::before {
+  content: "\2022";
+  position: absolute;
+  left: 0.15rem;
+  top: -0.05em;
+  opacity: 0.65;
+}
+
+.involvementCardAdmissionLink {
+  color: var(--mantine-primary-color-filled);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.involvementCardAdmissionLink:hover {
+  text-decoration: underline;
+}
+
+.involvementCard[data-highlight] .involvementCardAdmissionLink {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* CTA: a button that sits on a background distinct from its card, with a
+   Material-style press ripple (motion.dev/examples/react-material-design-ripple). */
+.involvementCardCta {
+  position: relative;
+  overflow: hidden;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  text-decoration: none;
+  /* card bg is --mantine-color-body; this is a step darker/lighter */
+  background-color: var(--mantine-color-default);
+  color: var(--mantine-primary-color-filled);
+  transition: background-color 100ms ease;
+}
+
+.involvementCardCta:hover {
+  background-color: var(--mantine-color-default-hover);
+}
+
+.involvementCardCta[data-white] {
+  background-color: var(--mantine-color-white);
+  color: var(--mantine-primary-color-filled);
+}
+
+.involvementCardCta[data-white]:hover {
+  background-color: var(--mantine-color-gray-1);
+}
+
+.involvementCardCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-xs);
+}
+
+.involvementCardCtaLabel {
+  position: relative;
+  z-index: 1;
+}
+
+.involvementCardCtaRipples {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.involvementCardCtaRipple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* --- People page: heading --- */
+.peopleHeading {
+  font-size: clamp(2rem, 6vw, 2.75rem);
+}
+
+/* Card icons flush to the accent colour: LinkedIn on hover, email briefly after
+   a copy (inspired by motion.dev/examples/react-copy-button — shape/icon keep,
+   colour is the only thing that changes). */
+.personCardIcon {
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.personCardIcon:hover,
+.personCardIcon[data-copied] {
+  color: var(--mantine-primary-color-filled);
+}
+
+.peopleHeadingLink {
+  color: var(--mantine-primary-color-filled);
+  text-decoration: none;
+}
+
+.peopleHeadingLink:hover {
+  text-decoration: underline;
+}
+
 /* --- People page: section navigator --- */
 .sectionNavToggle {
   position: fixed;
@@ -407,5 +863,385 @@ body {
   .sectionFlash {
     animation: none;
     color: var(--mantine-primary-color-filled);
+  }
+}
+
+/* --- Fellowships page --- */
+.fellowshipCardRow {
+  display: grid;
+  gap: var(--mantine-spacing-md);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 48em) {
+  .fellowshipCardRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.fellowshipLink {
+  color: var(--mantine-primary-color-filled);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.fellowshipLink:hover {
+  text-decoration: underline;
+}
+
+.fellowshipAccent {
+  color: var(--mantine-primary-color-filled);
+  font-style: italic;
+}
+
+.fellowshipList {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: var(--mantine-font-size-sm);
+  line-height: 1.55;
+}
+
+ol.fellowshipList {
+  list-style: decimal;
+}
+
+ul.fellowshipList {
+  list-style: disc;
+}
+
+.fellowshipList li {
+  padding-left: 0.25rem;
+}
+
+.fellowshipList li + li {
+  margin-top: var(--mantine-spacing-sm);
+}
+
+.fellowshipListNested {
+  margin-top: var(--mantine-spacing-sm);
+}
+
+.fellowshipListNested li + li {
+  margin-top: var(--mantine-spacing-xs);
+}
+
+/* Accordion: elevated card. Collapsed = fully accented; expanded keeps the
+   accent only behind the icon + title, with the panel on the page background. */
+.fellowshipAccordion .mantine-Accordion-item {
+  border: none;
+  overflow: hidden;
+  background-color: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.fellowshipAccordion .mantine-Accordion-control {
+  background-color: var(--mantine-primary-color-light);
+}
+
+.fellowshipAccordion .mantine-Accordion-control:hover {
+  background-color: var(--mantine-primary-color-light-hover);
+}
+
+.fellowshipAccordion .mantine-Accordion-icon {
+  color: var(--mantine-primary-color-filled);
+}
+
+.fellowshipControlLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.6rem;
+  row-gap: 0.15rem;
+}
+
+.fellowshipSchedule {
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-1));
+}
+
+.fellowshipAccordion .mantine-Accordion-panel {
+  background-color: var(--mantine-color-body);
+}
+
+/* Author names — italic, accent on hover */
+.authorName {
+  font-style: italic;
+}
+
+.authorLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.authorLink:hover {
+  color: var(--mantine-primary-color-filled);
+}
+
+/* Tentative-topic chips */
+.fellowshipChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fellowshipChipsLabel {
+  margin: 0 0.35rem 0 0;
+}
+
+.fellowshipChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: var(--mantine-font-size-xs);
+  line-height: 1.4;
+  background-color: var(--mantine-color-default);
+  color: var(--mantine-color-text);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.fellowshipChip:hover {
+  background-color: var(--mantine-primary-color-light);
+  color: var(--mantine-primary-color-light-color);
+}
+
+/* Person card flash when arrived at via /people#person-<slug> */
+@keyframes personCardFlash {
+  0%,
+  100% {
+    outline-color: color-mix(
+      in srgb,
+      var(--mantine-primary-color-filled) 0%,
+      transparent
+    );
+    background-color: var(--mantine-color-body);
+  }
+  15%,
+  55% {
+    outline-color: var(--mantine-primary-color-filled);
+    background-color: var(--mantine-primary-color-light);
+  }
+}
+
+.personCardFlash {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  animation: personCardFlash 2.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personCardFlash {
+    animation: none;
+    outline-color: var(--mantine-primary-color-filled);
+    background-color: var(--mantine-primary-color-light);
+  }
+}
+
+/* FAQ list — plus/minus accordion (components/shared/faq.tsx) */
+.faq {
+  display: flex;
+  flex-direction: column;
+}
+
+.faqRow {
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.faqRow:first-of-type {
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.faqControl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-md);
+  width: 100%;
+  padding: var(--mantine-spacing-md) 0;
+  color: var(--mantine-color-text);
+}
+
+.faqControl:hover .faqIconBar {
+  background-color: var(--mantine-primary-color-filled);
+}
+
+.faqControl:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.faqIcon {
+  position: relative;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.faqIconBar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 2px;
+  margin: -1px 0 0 -0.5rem;
+  border-radius: 999px;
+  background-color: var(--mantine-color-dimmed);
+  transition: background-color 120ms ease;
+}
+
+.faqIconBarVertical {
+  transform-origin: center;
+}
+
+.faqAnswer {
+  padding-bottom: var(--mantine-spacing-md);
+  max-width: 46rem;
+}
+
+.faqAnswer p {
+  margin: 0;
+}
+
+.faqAnswer p + ol,
+.faqAnswer p + ul {
+  margin-top: var(--mantine-spacing-xs);
+}
+
+.faqAnswer ol,
+.faqAnswer ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.faqAnswer ol {
+  list-style: decimal;
+}
+
+.faqAnswer ul {
+  list-style: disc;
+}
+
+.faqLink {
+  color: var(--mantine-primary-color-filled);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.faqLink:hover {
+  text-decoration: underline;
+}
+
+.faqAnswer li + li {
+  margin-top: var(--mantine-spacing-xs);
+}
+
+.copyEmail {
+  color: var(--mantine-primary-color-filled);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.copyEmail:hover {
+  text-decoration: underline;
+}
+
+.copyEmail:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-sm);
+}
+
+/* ── Calendar ─────────────────────────────────────────────────────────── */
+
+/* Pin icon beside the "Pinned" heading — a lighter shade of the accent. */
+.pinnedIcon {
+  color: var(--mantine-primary-color-filled);
+  opacity: 0.45;
+}
+
+/* Accented backdrop for the pinned board. */
+.pinnedCard {
+  background-color: var(--mantine-primary-color-light);
+  border: 1px solid
+    color-mix(in srgb, var(--mantine-primary-color-filled) 25%, transparent);
+}
+
+/* Three equal columns with inset vertical rules between them. */
+.pinnedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.pinnedCol {
+  padding: 0 var(--mantine-spacing-lg);
+}
+
+.pinnedCol + .pinnedCol {
+  border-left: 1px solid
+    color-mix(in srgb, var(--mantine-primary-color-filled) 30%, transparent);
+}
+
+@media (max-width: 48em) {
+  .pinnedGrid {
+    grid-template-columns: 1fr;
+    gap: var(--mantine-spacing-md);
+  }
+
+  .pinnedCol {
+    padding: 0;
+  }
+
+  .pinnedCol + .pinnedCol {
+    border-left: none;
+    border-top: 1px solid
+      color-mix(in srgb, var(--mantine-primary-color-filled) 30%, transparent);
+    padding-top: var(--mantine-spacing-md);
+  }
+}
+
+/* Preview cards inside the pinned board. */
+.pinnedPreview {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+button.pinnedPreview:hover {
+  border-color: var(--mantine-primary-color-filled);
+  transform: translateY(-1px);
+}
+
+button.pinnedPreview:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.pinnedPreviewEmpty {
+  border-style: dashed;
+}
+
+/* Brief highlight when a preview card scrolls you to the full event card. */
+.eventCardHighlight {
+  animation: eventCardPulse 2.2s ease-out;
+}
+
+@keyframes eventCardPulse {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px var(--mantine-primary-color-filled);
+    border-color: var(--mantine-primary-color-filled);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
   }
 }

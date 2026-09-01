@@ -7,7 +7,6 @@ import { IconChevronDown } from '@tabler/icons-react';
 import {
   Burger,
   Center,
-  Collapse,
   Divider,
   Drawer,
   Group,
@@ -16,15 +15,39 @@ import {
   UnstyledButton
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { MaskIcon } from './mask-icon';
+import { ActionToggle } from './action-toggle';
 
-const links = [
+interface NavSubLink {
+  link: string;
+  label: string;
+  /** Accent + highlight this entry to draw the eye. */
+  accent?: boolean;
+  /** Path to an SVG rendered as a `currentColor` mask icon before the label. */
+  icon?: string;
+}
+
+interface NavLink {
+  link: string;
+  label: string;
+  accent?: boolean;
+  links?: NavSubLink[];
+}
+
+const links: NavLink[] = [
   { link: '/people', label: 'People' },
   {
-    link: '#1',
+    link: '/start',
     label: 'Get Started',
+    accent: true,
     links: [
-      { link: '/start/events', label: 'Events' },
-      { link: '/start/fellowships', label: 'Fellowships' },
+      { link: '/start/calendar', label: 'Calendar' },
+      {
+        link: '/start/fellowships',
+        label: 'Apply to Our Fellowships',
+        accent: true,
+        icon: '/star.svg',
+      },
     ],
   }
 ];
@@ -41,7 +64,15 @@ export function HeaderMenu() {
 
   const items = links.map((link) => {
     const menuItems = link.links?.map((item) => (
-      <Menu.Item key={item.link} component={Link} href={item.link}>
+      <Menu.Item
+        key={item.link}
+        component={Link}
+        href={item.link}
+        className={item.accent ? 'menuItemAccent' : undefined}
+        rightSection={
+          item.icon ? <MaskIcon src={item.icon} size={16} /> : undefined
+        }
+      >
         {item.label}
       </Menu.Item>
     ));
@@ -50,20 +81,29 @@ export function HeaderMenu() {
       return (
         <Menu key={link.label} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
           <Menu.Target>
-            <UnstyledButton className="link">
+            {/* hover opens the dropdown; clicking still navigates to the page */}
+            <UnstyledButton
+              component={Link}
+              href={link.link}
+              className={link.accent ? 'link linkAccent' : 'link'}
+            >
               <Center>
                 <span className="linkLabel">{link.label}</span>
                 <IconChevronDown size={14} stroke={1.5} />
               </Center>
             </UnstyledButton>
           </Menu.Target>
-          <Menu.Dropdown>{menuItems}</Menu.Dropdown>
+          <Menu.Dropdown className="navMenuDropdown">{menuItems}</Menu.Dropdown>
         </Menu>
       );
     }
 
     return (
-      <Link key={link.label} href={link.link} className="link">
+      <Link
+        key={link.label}
+        href={link.link}
+        className={link.accent ? 'link linkAccent' : 'link'}
+      >
         {link.label}
       </Link>
     );
@@ -77,16 +117,19 @@ export function HeaderMenu() {
     >
       <div className="inner">
         <Link href="/" className="brand">Brown AI Safety Team</Link>
-        <Group gap={5} visibleFrom="sm">
-          {items}
+        <Group gap="lg">
+          <Group gap={5} visibleFrom="sm">
+            {items}
+          </Group>
+          <ActionToggle />
+          <Burger
+            opened={opened}
+            onClick={toggle}
+            size="sm"
+            hiddenFrom="sm"
+            aria-label="Toggle navigation"
+          />
         </Group>
-        <Burger
-          opened={opened}
-          onClick={toggle}
-          size="sm"
-          hiddenFrom="sm"
-          aria-label="Toggle navigation"
-        />
       </div>
 
       <Drawer
@@ -109,7 +152,7 @@ export function HeaderMenu() {
               <Link
                 key={link.label}
                 href={link.link}
-                className="link"
+                className={link.accent ? 'link linkAccent' : 'link'}
                 onClick={close}
               >
                 {link.label}
@@ -126,31 +169,29 @@ function DrawerLinksGroup({
   link,
   onNavigate,
 }: {
-  link: { link: string; label: string; links?: { link: string; label: string }[] };
+  link: NavLink;
   onNavigate?: () => void;
 }) {
-  const [opened, { toggle }] = useDisclosure(false);
-
   return (
     <>
-      <UnstyledButton className="link" onClick={toggle}>
-        <Center inline>
-          <span className="linkLabel">{link.label}</span>
-          <IconChevronDown size={14} stroke={1.5} />
-        </Center>
-      </UnstyledButton>
-      <Collapse expanded={opened}>
-        {link.links?.map((subLink) => (
-          <Link
-            key={subLink.link}
-            href={subLink.link}
-            className="subLink"
-            onClick={onNavigate}
-          >
-            {subLink.label}
-          </Link>
-        ))}
-      </Collapse>
+      <Link
+        href={link.link}
+        className={link.accent ? 'link linkAccent' : 'link'}
+        onClick={onNavigate}
+      >
+        {link.label}
+      </Link>
+      {link.links?.map((subLink) => (
+        <Link
+          key={subLink.link}
+          href={subLink.link}
+          className={subLink.accent ? 'subLink subLinkAccent' : 'subLink'}
+          onClick={onNavigate}
+        >
+          {subLink.label}
+          {subLink.icon && <MaskIcon src={subLink.icon} size={16} />}
+        </Link>
+      ))}
     </>
   );
 }

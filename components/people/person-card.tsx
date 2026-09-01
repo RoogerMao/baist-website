@@ -10,6 +10,8 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
+import { MaskIcon } from "@/components/mask-icon";
+import { personCardId } from "./people-ids";
 
 export interface Person {
   name: string;
@@ -18,33 +20,18 @@ export interface Person {
   email?: string;
   linkedin?: string;
 }
-function MaskIcon({ src }: { src: string }) {
-  return (
-    <span
-      aria-hidden
-      style={{
-        display: "block",
-        width: "1rem",
-        height: "1rem",
-        backgroundColor: "currentColor",
-        maskImage: `url(${src})`,
-        maskRepeat: "no-repeat",
-        maskPosition: "center",
-        maskSize: "contain",
-        WebkitMaskImage: `url(${src})`,
-        WebkitMaskRepeat: "no-repeat",
-        WebkitMaskPosition: "center",
-        WebkitMaskSize: "contain",
-      }}
-    />
-  );
-}
 
 export function PersonCard({ name, role, photo, email, linkedin }: Person) {
   const clipboard = useClipboard({ timeout: 1200 });
 
   return (
-    <Paper withBorder radius="md" p="md" className="h-full">
+    <Paper
+      withBorder
+      radius="md"
+      p="md"
+      id={personCardId(name)}
+      className="personCard h-full scroll-mt-28"
+    >
       <Stack gap={4} align="center" justify="center" className="h-full">
         {photo && <Avatar src={photo} alt={name} size={44} radius="xl" />}
 
@@ -62,6 +49,8 @@ export function PersonCard({ name, role, photo, email, linkedin }: Person) {
                   size="sm"
                   variant="subtle"
                   color="gray"
+                  className="personCardIcon"
+                  data-copied={clipboard.copied || undefined}
                   aria-label={`Copy email address for ${name}`}
                   onClick={() => clipboard.copy(email)}
                 >
@@ -71,20 +60,19 @@ export function PersonCard({ name, role, photo, email, linkedin }: Person) {
             )}
 
             {linkedin && (
-              <Tooltip label="LinkedIn" withArrow>
-                <ActionIcon
-                  size="sm"
-                  variant="subtle"
-                  color="gray"
-                  component="a"
-                  href={linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open ${name}'s LinkedIn profile in a new tab`}
-                >
-                  <MaskIcon src="/people/linkedin.svg" />
-                </ActionIcon>
-              </Tooltip>
+              <ActionIcon
+                size="sm"
+                variant="subtle"
+                color="gray"
+                className="personCardIcon"
+                component="a"
+                href={linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${name}'s LinkedIn profile in a new tab`}
+              >
+                <MaskIcon src="/people/linkedin.svg" />
+              </ActionIcon>
             )}
           </Group>
         </Group>

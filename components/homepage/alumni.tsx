@@ -1,36 +1,89 @@
 "use client"
 
-import { IconArrowUp } from "@tabler/icons-react"
-import { motion, useMotionValue, useTransform } from "motion/react"
+import { useState } from "react"
+import Link from "next/link"
+import { IconArrowUpRight } from "@tabler/icons-react"
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useTransform,
+} from "motion/react"
 import { AlumniCarousel } from "./alumni-carousel"
-import { useHomeScreens } from "./animation-manager"
+import { ALUMNI } from "./alumni-data"
+import { ScrollCue } from "./scroll-cue"
+import { useHome } from "./animation-manager"
+
+const MotionLink = motion.create(Link)
+
+/**
+ * Fade-in order entering the alumni page (scrolling down) — the reverse of
+ * the landing's leaving order: hero, subheading, CTA, then the carousel. Each
+ * range sits inside the manager's alumni-enter window (fadeProgress 0.55 ->
+ * 1). Scrolling back up reverses it automatically.
+ */
+const HERO_RANGE: [number, number] = [0.55, 0.7]
+const SUBHEADING_RANGE: [number, number] = [0.68, 0.83]
+const CTA_RANGE: [number, number] = [0.81, 0.92]
+const CAROUSEL_RANGE: [number, number] = [0.9, 1]
 
 export function Alumni() {
-  const fallback = useMotionValue(1)
-  const screens = useHomeScreens() ?? fallback
-  // Appears as the alumni layer settles in.
-  const cueOpacity = useTransform(screens, [1.45, 1.75], [0, 1])
+  const home = useHome()
+  const fallback = useMotionValue(0)
+  const fadeProgress = home?.fadeProgress ?? fallback
+
+  // The up-cue only appears once the whole alumni sequence has settled.
+  const cueOpacity = useTransform(fadeProgress, [0.9, 1], [0, 1])
+
+  const heroOpacity = useTransform(fadeProgress, HERO_RANGE, [0, 1])
+  const subheadingOpacity = useTransform(fadeProgress, SUBHEADING_RANGE, [0, 1])
+  const ctaOpacity = useTransform(fadeProgress, CTA_RANGE, [0, 1])
+  const carouselOpacity = useTransform(fadeProgress, CAROUSEL_RANGE, [0, 1])
+
+  // The underline sweep is only armed once the alumni sequence has settled.
+  const [focused, setFocused] = useState(false)
+  useMotionValueEvent(fadeProgress, "change", (v) => setFocused(v >= 0.99))
 
   return (
-    <div className="alumniPage homeSection">
-      <motion.p
-        className="cueText cueText--top"
-        style={{ opacity: cueOpacity }}
-      >
-        <IconArrowUp stroke={1.5} />
-        Our Community
-      </motion.p>
+    <div
+      className="alumniPage homeSection"
+      data-focused={focused || undefined}
+    >
+      <ScrollCue
+        direction="up"
+        label="BAIST Today"
+        opacity={cueOpacity}
+        onActivate={() => home?.scrollToTop()}
+        className="cueText--top"
+      />
 
       <div className="homeContent">
-        <h1 className="hero">
-          You don&apos;t have to sacrifice your career to do good.
-        </h1>
+        <div className="alumniIntro">
+          <motion.h1 className="hero" style={{ opacity: heroOpacity }}>
+            We want to build our careers{" "}
+            <span className="heroUnderline">
+              while preparing the world for future, more advanced models
+            </span>
+            .
+          </motion.h1>
 
-        <p className="subheading">
-          Our alumni have done both. See their profiles below. 
-        </p>
+          <motion.p className="subheading" style={{ opacity: subheadingOpacity }}>
+            Our alumni have done both.
+          </motion.p>
 
-        <AlumniCarousel />
+          <MotionLink
+            href="/start"
+            className="alumniCta"
+            style={{ opacity: ctaOpacity }}
+          >
+            <span>Learn how to join</span>
+            <IconArrowUpRight size={22} stroke={2} aria-hidden />
+          </MotionLink>
+        </div>
+
+        <motion.div style={{ opacity: carouselOpacity }}>
+          <AlumniCarousel profiles={ALUMNI} />
+        </motion.div>
       </div>
     </div>
   )

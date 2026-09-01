@@ -7,6 +7,7 @@ import {
   mantineHtmlProps,
 } from "@mantine/core";
 import { HeaderMenu } from "@/components/navbar";
+import { theme } from "./theme";
 
 export const metadata: Metadata = {
   title: "Brown AI Safety Team",
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body className="min-h-full flex flex-col">
-        <MantineProvider defaultColorScheme="auto">
+        <MantineProvider theme={theme} defaultColorScheme="auto">
           <HeaderMenu />
           {children}
         </MantineProvider>
