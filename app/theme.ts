@@ -1,62 +1,57 @@
 import { createTheme, type MantineColorsTuple } from "@mantine/core"
 
-// Brand palette (https://coolors.co/ffffff-1f1f1f-fb9660-59c5cf): orange as
-// the primary accent, cyan as the secondary — same order in light and dark.
-// Shades generated from the two swatches via @mantine/colors-generator.
-const orange: MantineColorsTuple = [
-  "#fff0e3",
-  "#ffe0cd",
-  "#febf9d",
-  "#fb9660",
-  "#f97e3c",
-  "#f96b1f",
-  "#f9610f",
-  "#de5003",
-  "#c64600",
-  "#ad3a00",
+// Palette 4 — "Slate green" (https://coolors.co/cad2c5-84a98c-52796f-354f52-
+// 2f3e46). Calm and grounded: pale-sage grounds in light mode, a deep-spruce
+// ground in dark mode, and a pine-green accent. Body text stays near-neutral
+// (soft green-white / green-near-black) — only the background and the accent
+// carry the palette.
+//
+//   cad2c5 sage · 84a98c green · 52796f pine · 354f52 slate · 2f3e46 spruce
+
+// Pine accent ramp, generated around #52796f, its deepest steps pulled toward
+// the palette's slate/spruce. `primaryShade` uses a deep pine in light mode
+// (readable on sage, white text on fills) and a brighter sage in dark mode.
+const pine: MantineColorsTuple = [
+  "#eef4f1",
+  "#dde8e3",
+  "#b8cec6",
+  "#93b3a8",
+  "#729a8e", // dark-mode filled
+  "#5c8579",
+  "#52796f", // base swatch
+  "#436258", // light-mode filled
+  "#354f52",
+  "#2f3e46",
 ];
 
-const cyan: MantineColorsTuple = [
-  "#e1fdff",
-  "#d3f4f7",
-  "#aee5ea",
-  "#85d5dd",
-  "#59c5cf",
-  "#4cc0cb",
-  "#3bbdc8",
-  "#28a6b1",
-  "#12949f",
-  "#00818b",
-];
-
-// Mantine's default `gray`/`dark` scales (used for borders, hover states,
-// dimmed text, and light/dark surfaces) are neutral-cool. Hue-shifted here
-// toward the brand orange's hue (~28°) at low saturation for a warmer,
-// cozier neutral without changing the lightness steps components rely on.
+// Mantine's `gray` scale drives light surfaces, borders and dimmed text. Shifted
+// off neutral toward the sage hue so the cool green ground stays consistent.
 const gray: MantineColorsTuple = [
-  "#fbf9f7",
-  "#f6f3f0",
-  "#f1ece7",
-  "#e9e2db",
-  "#ded3ca",
-  "#c4b4a6",
-  "#a18d7b",
-  "#5f4f41",
-  "#46392e",
-  "#2d241d",
+  "#f4f7f4",
+  "#eef2ee",
+  "#e3e9e3",
+  "#d3dcd2",
+  "#b9c5bd",
+  "#8fa096", // dimmed text
+  "#6c7d74",
+  "#4f5d57",
+  "#3a4540",
+  "#2b332f",
 ];
 
+// Mantine's `dark` tuple runs light -> dark: [0] is the lightest (primary text
+// on a dark surface), [9] the darkest. Cool slate-green, keyed off #2f3e46.
 const dark: MantineColorsTuple = [
-  "#cac3bc",
-  "#b2a89f",
-  "#9f9287",
-  "#6e6054",
-  "#453b32",
-  "#372f28",
-  "#2e2822",
-  "#201c18",
-  "#191512",
-  "#14110f",
+  "#e8efec", // dark-mode primary text
+  "#d5e0db",
+  "#b1c3bc", // dark-mode dimmed text
+  "#89a299",
+  "#46585b", // dark-mode borders
+  "#394a4d", // dark-mode hover
+  "#33444a", // dark-mode surface
+  "#2a373d", // dark-mode body background
+  "#232e33",
+  "#1c252a",
 ];
 
 /**
@@ -64,15 +59,15 @@ const dark: MantineColorsTuple = [
  * 1.125rem — bumped up a step so sub-headings read with more weight.
  */
 export const theme = createTheme({
-  white: "#fdfbf8",
-  black: "#1f1a16",
+  white: "#f4f7f4",
+  black: "#26302e",
   colors: {
-    orange,
-    cyan,
+    pine,
     gray,
     dark,
   },
-  primaryColor: "orange",
+  primaryColor: "pine",
+  primaryShade: { light: 7, dark: 4 },
   headings: {
     sizes: {
       h3: { fontSize: "1.625rem", lineHeight: "1.35" },

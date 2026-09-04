@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fdfbf8;
-  --foreground: #1f1a16;
+  --background: #eef2ee;
+  --foreground: #26302e;
 
   /* Shared layout scale */
   --page-padding-inline: var(--mantine-spacing-xl);
@@ -19,8 +19,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #201c18;
-    --foreground: #ede8e3;
+    --background: #2a373d;
+    --foreground: #e8efec;
   }
 }
 
@@ -348,7 +348,7 @@ a.menuItemAccent:hover {
   padding-inline: var(--mantine-spacing-md);
   border-radius: 0;
   background-color: var(--mantine-primary-color-filled);
-  color: var(--mantine-color-white);
+  color: light-dark(var(--mantine-color-white), var(--mantine-color-black));
   font-size: calc(2 * var(--mantine-font-size-lg));
   font-weight: 400;
   text-decoration: none;
@@ -732,12 +732,12 @@ a.menuItemAccent:hover {
 }
 
 .involvementCardCta[data-white] {
-  background-color: var(--mantine-color-white);
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-9));
   color: var(--mantine-primary-color-filled);
 }
 
 .involvementCardCta[data-white]:hover {
-  background-color: var(--mantine-color-gray-1);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8));
 }
 
 .involvementCardCtas {
