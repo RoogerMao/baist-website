@@ -14,12 +14,12 @@ export function Pill({ color, children, href, tooltip }: PillProps) {
   const badge = (
     <Badge
       color={color}
-      variant="light"
+      variant="filled"
       radius="xl"
       style={href ? { cursor: "pointer" } : undefined}
       styles={{
         label: {
-          color: `light-dark(var(--mantine-color-${color}-9), var(--mantine-color-${color}-2))`,
+          color: "white",
         },
       }}
     >

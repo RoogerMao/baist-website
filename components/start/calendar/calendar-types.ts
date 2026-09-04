@@ -2,9 +2,9 @@
 export type EventAudience = "General Body" | "Fellows" | "Members"
 
 /**
- * Event topics, grouped by colour family. "Club Information" uses the site's
- * primary (blue) accent; the fellowship-related topics share a secondary
- * (violet) accent.
+ * Event topics, grouped by colour family. "Club Information" and "Fellowship
+ * Applications" — the two meta categories — share red; the individual
+ * fellowship programmes share the brown accent.
  */
 export type EventTopic =
   | "Club Information"
@@ -15,11 +15,11 @@ export type EventTopic =
 
 /** Mantine colour used to render each topic's chip. */
 export const TOPIC_COLORS: Record<EventTopic, string> = {
-  "Club Information": "blue",
-  "Fellowship Applications": "violet",
-  "Technical Safety Research Fellowship": "violet",
-  "Governance Fellowship": "violet",
-  "AI Safety Fundamentals Fellowship": "violet",
+  "Club Information": "red",
+  "Fellowship Applications": "red",
+  "Technical Safety Research Fellowship": "brown",
+  "Governance Fellowship": "brown",
+  "AI Safety Fundamentals Fellowship": "brown",
 }
 
 export interface CalendarEvent {

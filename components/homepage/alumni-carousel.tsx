@@ -167,6 +167,7 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
         className="alumniCarouselArrow alumniCarouselArrow--prev"
         aria-label="Previous alumni"
         onClick={() => scrollBy(-1)}
+        style={{ y: "-50%" }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
@@ -194,6 +195,7 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
         className="alumniCarouselArrow alumniCarouselArrow--next"
         aria-label="Next alumni"
         onClick={() => scrollBy(1)}
+        style={{ y: "-50%" }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >

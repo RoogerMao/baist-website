@@ -29,14 +29,38 @@ function FaqRow({ item, defaultOpen }: { item: FaqItem; defaultOpen: boolean }) 
   const panelId = useId()
   const controlId = useId()
 
+  function toggle(event: React.SyntheticEvent) {
+    // Let a link inside the answer navigate without also toggling the row.
+    if (event.target instanceof HTMLElement && event.target.closest("a")) return
+    setOpen((value) => !value)
+  }
+
+  function onKeyDown(event: React.KeyboardEvent) {
+    if (event.target !== event.currentTarget) return
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault()
+      setOpen((value) => !value)
+    }
+  }
+
   return (
-    <Box className="faqRow">
+    // The whole row (question + expanded answer) toggles on click, not just
+    // the question — UnstyledButton wouldn't allow nesting the answer's own
+    // interactive content (links), so this is a div with button semantics.
+    <Box
+      id={controlId}
+      className="faqRow"
+      role="button"
+      tabIndex={0}
+      aria-expanded={open}
+      aria-controls={panelId}
+      onClick={toggle}
+      onKeyDown={onKeyDown}
+    >
       <UnstyledButton
-        id={controlId}
+        component="div"
+        tabIndex={-1}
         className="faqControl"
-        onClick={() => setOpen((value) => !value)}
-        aria-expanded={open}
-        aria-controls={panelId}
       >
         <Title order={3} fz="md" fw={600} lh={1.4}>
           {item.question}

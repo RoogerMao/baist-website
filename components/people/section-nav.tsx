@@ -78,6 +78,10 @@ export function SectionNav({ sections }: { sections: SectionLink[] }) {
           },
           overlay: { top: "var(--header-height)" },
           content: { maxHeight: "100%" },
+          // body itself has no horizontal padding so the hover fill on each
+          // .sectionNavLink can run flush to both edges of the drawer; the
+          // links replace that padding with their own.
+          body: { padding: 0 },
         }}
       >
         <nav>

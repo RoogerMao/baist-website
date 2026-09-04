@@ -3,7 +3,7 @@
 import { useRef, useState, type PointerEvent } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "motion/react"
-import { Stack, Text } from "@mantine/core"
+import { Stack, Text, Title } from "@mantine/core"
 
 export interface LandingLinkProps {
   /** Destination route. */
@@ -61,12 +61,12 @@ export function LandingLink({
         className="landingLinkIcon"
         style={{ maskImage: `url(${iconSrc})`, WebkitMaskImage: `url(${iconSrc})` }}
       />
-      <Stack gap={2} style={{ minWidth: 0 }}>
-        <Text fw={700} fz="md" lh={1.2}>
+      <Stack gap={4} style={{ minWidth: 0 }}>
+        <Title order={3} lh={1.2} m={0}>
           {title}
-        </Text>
+        </Title>
         {description ? (
-          <Text fz="sm" lh={1.3} className="landingLinkDesc" style={{ opacity: 0.75 }}>
+          <Text fz="md" lh={1.35} className="landingLinkDesc" style={{ opacity: 0.9 }}>
             {description}
           </Text>
         ) : null}

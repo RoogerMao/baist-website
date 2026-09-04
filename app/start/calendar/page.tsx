@@ -10,7 +10,7 @@ export default function CalendarPage() {
   return (
     <main className="w-full px-[var(--page-padding-inline)] pb-16 pt-[calc(var(--header-height)+2rem)]">
       <Title order={1} ta="center" mb="xl">
-        Calendar
+        Featured Events
       </Title>
 
       <CalendarBoard events={events} />

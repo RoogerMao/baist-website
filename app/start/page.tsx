@@ -70,7 +70,7 @@ const levels: InvolvementLevel[] = [
       "Receive our weekly mailing list",
       "Request a 1:1 with any executive board member",
     ],
-    ctas: [{ label: "Join our mailing list ↗", href: "#" }],
+    ctas: [{ label: "Join our mailing list", href: "#" }],
   },
   {
     title: "Fellow",

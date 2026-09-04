@@ -7,7 +7,6 @@ import {
   Title,
   UnstyledButton,
 } from "@mantine/core"
-import { MaskIcon } from "@/components/mask-icon"
 import { TOPIC_COLORS, type CalendarEvent, type EventAudience } from "./calendar-types"
 import { eventId, pinnedEventsFor } from "./calendar-utils"
 import { Pill } from "./pill"
@@ -30,8 +29,8 @@ function PreviewCard({
       className="pinnedPreview"
       onClick={() => onSelect(eventId(event))}
     >
-      <Group align="baseline" gap={6} wrap="wrap">
-        <Title order={4} lh={1.3}>
+      <Group align="baseline" gap={6} wrap="wrap" justify="center">
+        <Title order={4} lh={1.3} ta="center" className="pinnedPreviewTitle">
           {event.title}
         </Title>
         {event.topics.map((topic) => (
@@ -40,7 +39,7 @@ function PreviewCard({
           </Pill>
         ))}
       </Group>
-      <Text size="xs" c="dimmed" mt="sm">
+      <Text size="xs" c="dimmed" mt="sm" ta="center" className="pinnedPreviewDate">
         {event.date}
       </Text>
     </UnstyledButton>
@@ -50,10 +49,10 @@ function PreviewCard({
 function EmptyPreview() {
   return (
     <div className="pinnedPreview pinnedPreviewEmpty">
-      <Text fw={600} size="sm">
+      <Title order={4} lh={1.3} ta="center" className="pinnedPreviewEmptyTitle">
         Hang tight!
-      </Text>
-      <Text size="xs" c="dimmed" mt={6}>
+      </Title>
+      <Text fz={11} c="dimmed" mt={6} ta="center">
         Nothing scheduled yet — check back soon.
       </Text>
     </div>
@@ -69,13 +68,6 @@ export function PinnedSection({
 }) {
   return (
     <section className="mb-12">
-      <Group justify="center" gap={8} mb="md">
-        <Title order={2} ta="center">
-          Pinned
-        </Title>
-        <MaskIcon src="/pin.svg" size={22} className="pinnedIcon" />
-      </Group>
-
       <Container size="lg" px={0}>
         <Paper radius={32} p="xl" className="pinnedCard">
           <div className="pinnedGrid">
@@ -83,10 +75,10 @@ export function PinnedSection({
               const picks = pinnedEventsFor(events, section.audience)
               return (
                 <div key={section.audience} className="pinnedCol">
-                  <Title order={2} fz="md" ta="center" mb="sm">
+                  <Title order={2} ta="center" mb="sm" className="pinnedColTitle">
                     {section.title}
                   </Title>
-                  <Stack gap="xs">
+                  <Stack gap="xs" className="pinnedStack">
                     {picks.length > 0 ? (
                       picks.map((event) => (
                         <PreviewCard

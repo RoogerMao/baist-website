@@ -1,16 +1,18 @@
 import { createTheme, type MantineColorsTuple } from "@mantine/core"
 
-// Palette 4 — "Slate green" (https://coolors.co/cad2c5-84a98c-52796f-354f52-
-// 2f3e46). Calm and grounded: pale-sage grounds in light mode, a deep-spruce
-// ground in dark mode, and a pine-green accent. Body text stays near-neutral
-// (soft green-white / green-near-black) — only the background and the accent
-// carry the palette.
+// Light mode: pale-sage ground with a pine-green accent (Palette 4 — "Slate
+// green", https://coolors.co/cad2c5-84a98c-52796f-354f52-2f3e46). Dark mode
+// ("brown mode") instead grounds on the site's Brown University brown, so the
+// header bar and the page it sits on read as one consistent brand, with a
+// yellow accent for CTAs (see the `dark` tuple, and the primary-color
+// override in globals.css) — swapped from the light mode's BAIST red.
 //
 //   cad2c5 sage · 84a98c green · 52796f pine · 354f52 slate · 2f3e46 spruce
 
 // Pine accent ramp, generated around #52796f, its deepest steps pulled toward
-// the palette's slate/spruce. `primaryShade` uses a deep pine in light mode
-// (readable on sage, white text on fills) and a brighter sage in dark mode.
+// the palette's slate/spruce. Mostly superseded now: both light mode (BAIST
+// red) and dark mode (white, yellow on hover) override the filled primary
+// color in globals.css rather than using this ramp directly.
 const pine: MantineColorsTuple = [
   "#eef4f1",
   "#dde8e3",
@@ -25,33 +27,72 @@ const pine: MantineColorsTuple = [
 ];
 
 // Mantine's `gray` scale drives light surfaces, borders and dimmed text. Shifted
-// off neutral toward the sage hue so the cool green ground stays consistent.
+// off neutral toward the brown hue so it sits with the warm ground and the
+// Brown-brown body text.
 const gray: MantineColorsTuple = [
-  "#f4f7f4",
-  "#eef2ee",
-  "#e3e9e3",
-  "#d3dcd2",
-  "#b9c5bd",
-  "#8fa096", // dimmed text
-  "#6c7d74",
-  "#4f5d57",
-  "#3a4540",
-  "#2b332f",
+  "#f7f5f1",
+  "#f1ece5",
+  "#e6ded4",
+  "#d6cabb",
+  "#bdae9c",
+  "#9a8b78", // dimmed text
+  "#7a6c5b",
+  "#5b5044", // muted text (subheadings)
+  "#42392f",
+  "#332c24",
 ];
 
 // Mantine's `dark` tuple runs light -> dark: [0] is the lightest (primary text
-// on a dark surface), [9] the darkest. Cool slate-green, keyed off #2f3e46.
+// on a dark surface), [9] the darkest. Warm brown, keyed off the site's Brown
+// University brown (#4e3629) — the same colour as the light-mode nav bar —
+// so "dark mode" reads as the brown theme rather than an unrelated palette.
+// Reuses the darker steps of the `brown` accent tuple below for [7]/[8].
 const dark: MantineColorsTuple = [
-  "#e8efec", // dark-mode primary text
-  "#d5e0db",
-  "#b1c3bc", // dark-mode dimmed text
-  "#89a299",
-  "#46585b", // dark-mode borders
-  "#394a4d", // dark-mode hover
-  "#33444a", // dark-mode surface
-  "#2a373d", // dark-mode body background
-  "#232e33",
-  "#1c252a",
+  "#efe9e4", // dark-mode primary text
+  "#ddd2c8",
+  "#c2b0a0", // dark-mode dimmed text
+  "#a68f7a",
+  "#7c6552", // dark-mode borders
+  "#5c4735", // dark-mode hover
+  "#4e3629", // dark-mode surface — the site's Brown brown
+  "#3e2b20", // dark-mode body background
+  "#2f2018",
+  "#231710",
+];
+
+// Brown accent ramp keyed off the site's Brown University brown (#4E3629) —
+// the same colour as the nav bar and body text — so the calendar's brown
+// chips and pinned-board backdrop match the rest of the site exactly. The
+// nav bar brown doesn't shift between light/dark mode, so both the light- and
+// dark-mode filled shades below are pinned to that same value too.
+const brown: MantineColorsTuple = [
+  "#f6f0ec",
+  "#e6dcd3",
+  "#d3b9a7",
+  "#bd9478",
+  "#4e3629", // dark-mode filled — same brown, not lightened
+  "#6d4a35",
+  "#5c3f2c", // base swatch
+  "#4e3629", // light-mode filled — Brown University brown, matches the site
+  "#3e2b20",
+  "#2f2018",
+];
+
+// Overrides Mantine's default (brighter, more orange) "red" so calendar chips
+// use the site's actual BAIST red accent (#C00404 — the same red swapped in
+// for "pine" in light mode below) rather than the stock palette. Like brown,
+// both the light- and dark-mode filled shades are pinned to that one red.
+const red: MantineColorsTuple = [
+  "#fdeceb",
+  "#f9d0cd",
+  "#f0a29b",
+  "#e6746a",
+  "#c00404", // dark-mode filled — same red, not lightened
+  "#a80404",
+  "#8f0303",
+  "#c00404", // light-mode filled — BAIST red, matches the site
+  "#5c0202",
+  "#420101",
 ];
 
 /**
@@ -59,12 +100,17 @@ const dark: MantineColorsTuple = [
  * 1.125rem — bumped up a step so sub-headings read with more weight.
  */
 export const theme = createTheme({
-  white: "#f4f7f4",
-  black: "#26302e",
+  // Barely-there warm tint (halfway from #f7f4ee to white) + Brown University
+  // brown (#4E3629) for body text in light mode; dark mode keeps the cool
+  // slate ramp below.
+  white: "#fbfaf7",
+  black: "#4e3629",
   colors: {
     pine,
     gray,
     dark,
+    brown,
+    red,
   },
   primaryColor: "pine",
   primaryShade: { light: 7, dark: 4 },

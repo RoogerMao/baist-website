@@ -1,7 +1,7 @@
 "use client"
 
-import { IconMoon, IconSun } from '@tabler/icons-react';
 import { ActionIcon, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
+import { MaskIcon } from './mask-icon';
 import classes from './action-toggle.module.css';
 
 export function ActionToggle() {
@@ -11,13 +11,13 @@ export function ActionToggle() {
   return (
     <ActionIcon
       onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
-      variant="subtle"
+      variant="filled"
       size="lg"
       radius="md"
+      className="viewToggle"
       aria-label="Toggle color scheme"
     >
-      <IconSun className={`${classes.icon} ${classes.light}`} stroke={1.5} />
-      <IconMoon className={`${classes.icon} ${classes.dark}`} stroke={1.5} />
+      <MaskIcon src="/bear/bear-head.svg" size={22} className={classes.icon} />
     </ActionIcon>
   );
 }

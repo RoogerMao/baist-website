@@ -96,7 +96,11 @@ export function FellowshipAccordion({
       }
     >
       {fellowships.map((fellowship) => (
-        <Accordion.Item key={fellowship.value} value={fellowship.value}>
+        <Accordion.Item
+          key={fellowship.value}
+          value={fellowship.value}
+          className={`fellowshipItem fellowshipItem--${fellowship.value}`}
+        >
           <Accordion.Control
             icon={<MaskIcon src={fellowship.icon} size="1.5rem" />}
           >

@@ -16,6 +16,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { MaskIcon } from './mask-icon';
+import { BaistLogo } from './baist-logo';
 import { ActionToggle } from './action-toggle';
 
 interface NavSubLink {
@@ -116,7 +117,10 @@ export function HeaderMenu() {
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <div className="inner">
-        <Link href="/" className="brand">Brown AI Safety Team</Link>
+        <Link href="/" className="brand">
+          <BaistLogo size={26} className="brandLogo" />
+          Brown AI Safety Team
+        </Link>
         <Group gap="lg">
           <Group gap={5} visibleFrom="sm">
             {items}

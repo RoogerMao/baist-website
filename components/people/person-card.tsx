@@ -30,21 +30,25 @@ export function PersonCard({ name, role, photo, email, linkedin }: Person) {
       radius="md"
       p="md"
       id={personCardId(name)}
-      className="personCard h-full scroll-mt-28"
+      className="personCard scroll-mt-28"
     >
-      <Stack gap={4} align="center" justify="center" className="h-full">
+      <Stack gap={4} align="center">
         {photo && <Avatar src={photo} alt={name} size={44} radius="xl" />}
 
         {/* name + socials share one row and wrap together when tight, so the
             icons always sit just after the name — photo or no photo */}
         <Group gap={6} wrap="wrap" align="center" justify="center">
-          <Text fw={600} component="span">
+          <Text fw={600} fz="h4" component="span">
             {name}
           </Text>
 
           <Group gap={2} wrap="nowrap" align="center">
             {email && (
-              <Tooltip label={clipboard.copied ? "Copied!" : email} withArrow>
+              <Tooltip
+                label={clipboard.copied ? "Copied!" : email}
+                withArrow
+                classNames={{ tooltip: "personTooltip" }}
+              >
                 <ActionIcon
                   size="sm"
                   variant="subtle"
@@ -78,7 +82,7 @@ export function PersonCard({ name, role, photo, email, linkedin }: Person) {
         </Group>
 
         {role && (
-          <Text c="dimmed" size="sm" ta="center">
+          <Text c="dimmed" fz={12} ta="center" className="personCardRole">
             {role}
           </Text>
         )}

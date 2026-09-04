@@ -1,13 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --background: #eef2ee;
-  --foreground: #26302e;
+  --background: #fbfaf7;
+  --foreground: #4e3629;
 
   /* Shared layout scale */
   --page-padding-inline: var(--mantine-spacing-xl);
   --landing-link-height: 4.5rem;
   --header-height: 3.5rem;
+
+  /* Navbar — brown bar, warm-white text, white highlight turning yellow on
+     hover. Kept fixed (not tied to --accent below) rather than mode-swapped:
+     the bar itself is always brown, so a brown/white accent would blend
+     straight into it in light mode. */
+  --nav-bg: #4e3629;
+  --nav-fg: #efe9e4;
+  --nav-highlight: #ffffff;
+  --nav-highlight-fg: #4e3629;
+  --nav-highlight-hover: #ffc72c;
+
+  /* Site-wide accent: the "highlighted" state for CTAs, cards, and links that
+     sit directly on the page body (not the navbar — see above), used via
+     --mantine-primary-color-*. Its rest color is the *other* mode's identity
+     color — brown in light mode, white in dark mode — so it always contrasts
+     with its own mode's page background; its hover color is that identity
+     color's own accent (red for brown, yellow for white). One text color per
+     mode covers both states, since brown/red are both dark and white/yellow
+     are both light. */
+  --accent: #4e3629;
+  --accent-fg: #efe9e4;
+  --accent-hover: #c00404;
+}
+
+:root[data-mantine-color-scheme="dark"] {
+  --accent: var(--mantine-color-white);
+  --accent-fg: #4e3629;
+  --accent-hover: #ffc72c;
 }
 
 @theme inline {
@@ -19,9 +47,35 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #2a373d;
-    --foreground: #e8efec;
+    --background: #3e2b20;
+    --foreground: #efe9e4;
   }
+}
+
+/* Mantine's "primary" color (badges, links, tooltips, focus rings, and
+   anywhere else Mantine components reach for the theme's accent) follows the
+   same --accent tokens as the nav highlight, so the whole site shares one
+   highlight rule: brown/white at rest, red/yellow on hover. Defined with
+   plain var() rather than duplicated per color-scheme, since --accent itself
+   already swaps at the :root[data-mantine-color-scheme="dark"] level above.
+   !important: Mantine's own generated stylesheet re-declares these same
+   variables from theme.ts's `pine` colors and primaryShade, and can load
+   after this file, silently winning without it. */
+:root {
+  --mantine-primary-color-filled: var(--accent) !important;
+  --mantine-primary-color-filled-hover: var(--accent-hover) !important;
+  --mantine-primary-color-light: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  --mantine-primary-color-light-hover: color-mix(in srgb, var(--accent) 18%, transparent) !important;
+  --mantine-primary-color-light-color: var(--accent) !important;
+
+  --mantine-color-pine-filled: var(--accent) !important;
+  --mantine-color-pine-filled-hover: var(--accent-hover) !important;
+  --mantine-color-pine-light: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  --mantine-color-pine-light-hover: color-mix(in srgb, var(--accent) 18%, transparent) !important;
+  --mantine-color-pine-light-color: var(--accent) !important;
+  --mantine-color-pine-text: var(--accent) !important;
+  --mantine-color-pine-outline: var(--accent) !important;
+  --mantine-color-pine-outline-hover: color-mix(in srgb, var(--accent) 5%, transparent) !important;
 }
 
 body {
@@ -36,9 +90,8 @@ body {
   right: 0;
   z-index: 40;
   height: var(--header-height);
-  background-color: color-mix(in srgb, var(--mantine-color-body) 55%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  background-color: var(--nav-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .inner {
@@ -50,10 +103,68 @@ body {
 }
 
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   text-decoration: none;
-  color: var(--mantine-color-text);
+  color: var(--nav-fg);
   font-size: var(--mantine-font-size-md);
   font-weight: 700;
+  transition: color 120ms ease;
+}
+
+.brand:hover {
+  color: #ffc72c;
+}
+
+/* View-mode (light/dark) toggle — same --accent pattern as the rest of the
+   site: the pill previews the *other* mode's identity color (brown pill +
+   cream icon in light mode, white pill + brown icon in dark mode). The pill
+   itself never changes on hover; only the bear icon does, turning to the
+   *other* mode's accent (yellow in light mode, red in dark mode). */
+.viewToggle {
+  --ai-bg: var(--accent) !important;
+  --ai-hover: var(--accent) !important;
+  --ai-color: var(--accent-fg) !important;
+}
+
+.viewToggle:hover {
+  --ai-color: light-dark(#ffc72c, #c00404) !important;
+}
+
+.brandLogo {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+/* Mark only (components/baist-logo.tsx): transparent field. Lines are the
+   light-mode brown, inverting to white in dark ("brown") mode. */
+.baistLogoField {
+  fill: transparent;
+}
+
+.baistLogoMark {
+  fill: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .baistLogoMark {
+  fill: #ffffff;
+}
+
+/* The navbar bar is always brown, so on it the mark tracks the wordmark text
+   colour beside it rather than the light/dark rule above. Needs matching
+   specificity to actually beat that rule inside the header. */
+.header .baistLogoMark,
+:root[data-mantine-color-scheme="dark"] .header .baistLogoMark {
+  fill: var(--nav-fg);
+}
+
+/* Matching specificity to the dark-mode rule above (which has no :hover
+   condition, so it otherwise always wins and silently cancels this). */
+.brand:hover .baistLogoMark,
+:root[data-mantine-color-scheme="dark"] .brand:hover .baistLogoMark {
+  fill: #ffc72c;
 }
 
 .link {
@@ -94,28 +205,52 @@ body {
   margin-right: 5px;
 }
 
+/* Desktop navbar sits on the brown bar — light text, warm hover wash. The
+   mobile Drawer reuses `.link` but is portaled outside `.header`, so it keeps
+   the default theme colors. */
+.header {
+  --burger-color: var(--nav-fg);
+}
+
+.header .link {
+  color: var(--nav-fg);
+}
+
+.header .link:hover {
+  color: var(--nav-highlight-hover);
+  /* Neutralize the plain .link:hover gray wash (meant for the off-bar
+     drawer context) — the navbar background never changes on hover, only
+     the text color does. */
+  background-color: transparent;
+}
+
 /* Accented nav entry — highlight fill + accent text to pull the eye.
    Selectors are doubled up / element-qualified so they beat Mantine's
    single-class root styles (.mantine-UnstyledButton-root, .mantine-Menu-item). */
 .link.linkAccent {
-  color: var(--mantine-primary-color-filled);
+  color: var(--nav-highlight-fg);
   font-weight: 700;
-  background-color: var(--mantine-primary-color-light);
+  background-color: var(--nav-highlight);
+  border-radius: var(--mantine-radius-md);
 }
 
 .link.linkAccent:hover {
-  background-color: var(--mantine-primary-color-light-hover);
+  background-color: var(--nav-highlight-hover);
+}
+
+.header .link.linkAccent {
+  color: var(--nav-highlight-fg);
 }
 
 /* Accented dropdown item (desktop Menu) */
 a.menuItemAccent {
-  color: var(--mantine-primary-color-filled);
+  color: var(--nav-highlight-fg);
   font-weight: 600;
-  background-color: var(--mantine-primary-color-light);
+  background-color: var(--nav-highlight);
 }
 
 a.menuItemAccent:hover {
-  background-color: var(--mantine-primary-color-light-hover);
+  background-color: var(--nav-highlight-hover);
 }
 
 /* Accented dropdown item (mobile Drawer) */
@@ -124,13 +259,13 @@ a.menuItemAccent:hover {
   align-items: center;
   justify-content: space-between;
   gap: 0.4rem;
-  color: var(--mantine-primary-color-filled);
+  color: var(--nav-highlight-fg);
   font-weight: 600;
-  background-color: var(--mantine-primary-color-light);
+  background-color: var(--nav-highlight);
 }
 
 .subLink.subLinkAccent:hover {
-  background-color: var(--mantine-primary-color-light-hover);
+  background-color: var(--nav-highlight-hover);
 }
 
 /* Desktop dropdown panel — match the site background instead of Mantine's
@@ -195,12 +330,30 @@ a.menuItemAccent:hover {
   display: flex;
   gap: 0.4em;
   align-items: center;
-  color: var(--mantine-color-dimmed);
-  font-size: calc(5dvh * 2 / 3);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+  font-family: var(--font-jetbrains-mono), ui-monospace, "JetBrains Mono",
+    SFMono-Regular, Menlo, monospace;
+  font-size: clamp(1.05rem, 5.1dvh, 1.5rem);
 }
 
 .cueText--top {
   align-self: center;
+}
+
+/* Solid fill (beats .cueButton's `background: none`) so it stays legible when
+   tall content scrolls behind it — matching the landing's bottom cue. */
+.cueButton.cueText--top {
+  background-color: var(--mantine-color-body);
+}
+
+/* In dark mode, transparent (same as the page body) with a white outline,
+   rather than a filled pill. :not(:hover) so this doesn't outrank (and
+   silently cancel) .cueButton:hover's red fill below — this selector's
+   specificity is otherwise higher. */
+:root[data-mantine-color-scheme="dark"] .cueButton.cueText--top:not(:hover):not(:focus-visible) {
+  background-color: transparent;
+  border-color: var(--mantine-color-white);
+  color: var(--mantine-color-white);
 }
 
 .cueText svg {
@@ -212,21 +365,28 @@ a.menuItemAccent:hover {
   position: relative;
   overflow: hidden;
   appearance: none;
-  /* inherit the family/weight but keep .cueText's font-size */
-  font-family: inherit;
+  /* match .cueText's mono family; keep its font-size */
+  font-family: var(--font-jetbrains-mono), ui-monospace, "JetBrains Mono",
+    SFMono-Regular, Menlo, monospace;
   font-weight: inherit;
   letter-spacing: inherit;
   padding: 0.3em 0.85em;
   border: 1px solid currentColor;
-  border-radius: var(--mantine-radius-sm);
+  border-radius: var(--mantine-radius-md);
   background: none;
   cursor: pointer;
-  transition: color 150ms ease, background-color 150ms ease;
+  transition: color 150ms ease, background-color 150ms ease,
+    border-color 150ms ease;
 }
 
-.cueButton:hover {
-  color: var(--mantine-color-text);
-  background-color: var(--mantine-color-default-hover);
+/* Cue hover: yellow in light mode, red in dark mode — the reverse of
+   --accent-hover, so defined directly rather than reusing that token. Border
+   color is left alone (not matched to the new fill) so the outline stays
+   visible as its own edge rather than blending into the fill. */
+.cueButton:hover,
+.cueButton:focus-visible {
+  color: light-dark(#4e3629, #ffffff);
+  background-color: light-dark(#ffc72c, #c00404);
 }
 
 .cueButton:focus-visible {
@@ -281,13 +441,28 @@ a.menuItemAccent:hover {
   font-size: var(--hero-size);
 }
 
-/* landing hero picks up the accent colour on hover */
+/* Landing hero: a yellow underline sweeps in on hover (same technique as the
+   alumni hero — a background gradient so it tracks the wrapped block as one
+   stroke), text colour unchanged. */
 .landingPage .hero {
-  transition: color 150ms ease;
+  /* hug the text so the underline doesn't overrun into empty space */
+  width: fit-content;
+  max-width: 100%;
+  background-image: linear-gradient(#ffc72c, #ffc72c);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 0.06em;
+  transition: background-size 450ms ease;
 }
 
 .landingPage .hero:hover {
-  color: var(--mantine-primary-color-filled);
+  background-size: 100% 0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landingPage .hero {
+    transition: none;
+  }
 }
 
 /* Alumni heading is a full sentence — three-quarters the landing hero size. */
@@ -307,10 +482,10 @@ a.menuItemAccent:hover {
   padding-top: 6dvh;
 }
 
-/* Intro block: hero + subheading, with the "Learn how to join" CTA after the
-   subheading — stacked below it on narrow screens, in-line to its right on
-   wider ones. The hero is forced onto its own row via flex-basis so the
-   subheading and CTA share the next row. */
+/* Intro block: hero on its own, then the subheading + "Learn how to join" CTA
+   on a shared row (`.alumniCtaRow`) — CTA in-line to the right of the
+   subheading on wider screens, wrapping below it when the row runs out of
+   room. */
 .alumniIntro {
   display: flex;
   flex-direction: column;
@@ -318,37 +493,33 @@ a.menuItemAccent:hover {
   gap: var(--mantine-spacing-md);
 }
 
-.alumniIntro .hero {
-  flex-basis: 100%;
+.alumniCtaRow {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  column-gap: var(--mantine-spacing-lg);
+  row-gap: var(--mantine-spacing-md);
+  width: 100%;
 }
 
-@media (min-width: 48em) {
-  .alumniIntro {
-    flex-flow: row wrap;
-    align-items: center;
-    column-gap: var(--mantine-spacing-md);
-  }
-
-  /* subheading + CTA share the row; the subheading sizes to its text so the
-     CTA sits just past the period, centred on the same line. */
-  .alumniIntro .subheading {
-    margin: 0;
-  }
+.alumniCtaRow .subheading {
+  margin: 0;
 }
 
 .alumniCta {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
+  flex-direction: row;
   align-items: center;
-  gap: 0.35em;
-  /* taller than the subheading's own line box (font-size clamp * line-height
-     1.3) so there's visible vertical padding around the label when it sits
-     inline with the subheading text. */
-  min-height: calc(1.3 * clamp(2rem, 4vw + 1rem, 3.8rem));
-  padding-block: var(--mantine-spacing-sm);
-  padding-inline: var(--mantine-spacing-md);
+  justify-content: center;
+  gap: 0.25em;
+  /* sits just past the subheading, not pushed to the row's edge */
+  padding-block: 0.5rem;
+  padding-inline: 1.75rem;
   border-radius: 0;
-  background-color: var(--mantine-primary-color-filled);
-  color: light-dark(var(--mantine-color-white), var(--mantine-color-black));
+  background-color: var(--accent);
+  color: var(--accent-fg);
   font-size: calc(2 * var(--mantine-font-size-lg));
   font-weight: 400;
   text-decoration: none;
@@ -358,8 +529,39 @@ a.menuItemAccent:hover {
 }
 
 .alumniCta:hover {
-  background-color: var(--mantine-primary-color-filled-hover);
+  background-color: var(--accent-hover);
+  color: var(--accent-fg);
   opacity: 1;
+}
+
+/* Trailing arrow — same right-pointing glyph as the involvement-card CTAs,
+   nudged right on hover. */
+.alumniCta::after {
+  content: "\2192";
+  position: relative;
+  z-index: 1;
+  font-size: 0.9em;
+  line-height: 1;
+  transition: transform 150ms ease;
+}
+
+.alumniCta:hover::after {
+  transform: translateX(2px);
+}
+
+/* Material-style press ripple, matching the scroll cues. */
+.alumniCtaRipples {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.alumniCtaRipple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentColor;
 }
 
 /* One continuous underline that sweeps left-to-right when the hero is hovered,
@@ -367,10 +569,7 @@ a.menuItemAccent:hover {
    alumni.tsx). A background gradient rather than a pseudo-element so it tracks
    every wrapped line as one stroke. */
 .heroUnderline {
-  background-image: linear-gradient(
-    var(--mantine-primary-color-filled),
-    var(--mantine-primary-color-filled)
-  );
+  background-image: linear-gradient(#ffc72c, #ffc72c);
   background-repeat: no-repeat;
   background-position: 0 100%;
   background-size: 0% 0.06em;
@@ -391,7 +590,7 @@ a.menuItemAccent:hover {
    6-line, half-the-viewport block; floor keeps it >= ~half a landing link. */
 .homeSection .subheading {
   margin: 0;
-  color: var(--mantine-color-dimmed);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
   font-size: clamp(2rem, 4vw + 1rem, 3.8rem);
   line-height: 1.3;
 }
@@ -411,6 +610,21 @@ a.menuItemAccent:hover {
 /* Solid fill so it stays legible when tall content scrolls behind it. */
 .homeCue .cueButton {
   background-color: var(--mantine-color-body);
+}
+
+/* Same reasoning as the top cue: transparent (same as the page body) with a
+   white outline, rather than a filled pill. :not(:hover) so this doesn't
+   outrank .homeCue .cueButton:hover's red fill below. */
+:root[data-mantine-color-scheme="dark"] .homeCue .cueButton:not(:hover):not(:focus-visible) {
+  background-color: transparent;
+  border-color: var(--mantine-color-white);
+  color: var(--mantine-color-white);
+}
+
+.homeCue .cueButton:hover,
+.homeCue .cueButton:focus-visible {
+  color: light-dark(#4e3629, #ffffff);
+  background-color: light-dark(#ffc72c, #c00404);
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
@@ -453,16 +667,16 @@ a.menuItemAccent:hover {
   width: 2.5rem;
   height: 2.5rem;
   padding: 0;
-  transform: translateY(-50%);
-  border: 1px solid var(--mantine-color-default-border);
+  border: 1px solid var(--mantine-primary-color-filled);
   border-radius: 999px;
-  background-color: var(--mantine-color-body);
-  color: var(--mantine-color-text);
+  background-color: var(--mantine-primary-color-filled);
+  color: light-dark(var(--mantine-color-white), var(--mantine-color-black));
   cursor: pointer;
 }
 
 .alumniCarouselArrow:hover {
-  background-color: var(--mantine-color-default-hover);
+  background-color: var(--mantine-primary-color-filled-hover);
+  border-color: var(--mantine-primary-color-filled-hover);
 }
 
 .alumniCarouselArrow:focus-visible {
@@ -545,8 +759,7 @@ a.menuItemAccent:hover {
   gap: var(--mantine-spacing-sm);
   /* Inset + centered so the row doesn't hug the left edge under a full-width
      hero on wide screens. */
-  width: 85%;
-  max-width: $mantine-breakpoint-lg;
+  width: 90%;
   margin-inline: auto;
 }
 
@@ -607,6 +820,17 @@ a.menuItemAccent:hover {
   }
 }
 
+/* The plain (non-highlighted) card — e.g. "Club Events" — had no accent
+   hover of its own; fill its background yellow (light mode) / red (dark
+   mode) on hover, matching the cues, rather than tinting its icon/text — the
+   icon above stays whatever color it already is. The highlighted cards below
+   define their own hover and win via the [data-highlight] attribute's higher
+   specificity. */
+.landingLink:not([data-highlight]):hover {
+  background-color: light-dark(#ffc72c, #c00404);
+  border-color: light-dark(#ffc72c, #c00404);
+}
+
 /* Material-style press ripple. */
 .landingLinkRipples {
   position: absolute;
@@ -622,13 +846,16 @@ a.menuItemAccent:hover {
   background-color: currentColor;
 }
 
+/* Site-wide accent: brown in light mode / white in dark mode at rest, red /
+   yellow on hover (see --accent-* in the :root block near the top). */
 .landingLink[data-highlight] {
-  border-color: var(--mantine-primary-color-filled);
-  background-color: var(--mantine-primary-color-light);
-  color: var(--mantine-primary-color-filled);
+  border-color: var(--accent);
+  background-color: var(--accent);
+  color: var(--accent-fg);
 
   @mixin hover {
-    background-color: var(--mantine-primary-color-light-hover);
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
   }
 }
 
@@ -645,17 +872,11 @@ a.menuItemAccent:hover {
   -webkit-mask-size: contain;
 }
 
-/* Keep a long description from inflating the compact card height. */
-.landingLinkDesc {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
 /* --- Get Started page: involvement cards --- */
 .involvementCard[data-highlight] {
-  border-color: var(--mantine-primary-color-filled);
-  background-color: var(--mantine-primary-color-light);
+  border-color: var(--accent);
+  background-color: var(--accent);
+  color: var(--accent-fg);
 }
 
 .involvementCardHeading {
@@ -666,7 +887,7 @@ a.menuItemAccent:hover {
 }
 
 .involvementCard[data-highlight] .involvementCardHeading {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-fg);
 }
 
 .involvementCardAbilities {
@@ -694,7 +915,7 @@ a.menuItemAccent:hover {
 }
 
 .involvementCardAdmissionLink {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-hover);
   font-weight: 500;
   text-decoration: none;
 }
@@ -721,24 +942,48 @@ a.menuItemAccent:hover {
   font-size: var(--mantine-font-size-sm);
   font-weight: 600;
   text-decoration: none;
-  /* card bg is --mantine-color-body; this is a step darker/lighter */
-  background-color: var(--mantine-color-default);
-  color: var(--mantine-primary-color-filled);
-  transition: background-color 100ms ease;
+  /* site accent: brown/white fill that transitions to red/yellow on hover */
+  background-color: var(--accent);
+  color: var(--accent-fg);
+  transition: background-color 150ms ease;
 }
 
 .involvementCardCta:hover {
-  background-color: var(--mantine-color-default-hover);
+  background-color: var(--accent-hover);
 }
 
+/* Trailing arrow, nudged right on hover. */
+.involvementCardCta::after {
+  content: "\2192";
+  position: relative;
+  z-index: 1;
+  margin-left: 0.2em;
+  transition: transform 150ms ease;
+}
+
+.involvementCardCta:hover::after {
+  transform: translateX(2px);
+}
+
+/* The Fellow card itself is brown in light mode / white in dark mode (see
+   .involvementCard[data-highlight] below), so this CTA takes the opposite
+   fill in each mode to actually stand out against its own card, turning red
+   on hover in both. */
 .involvementCardCta[data-white] {
-  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-9));
-  color: var(--mantine-primary-color-filled);
+  background-color: light-dark(#ffffff, #4e3629);
+  color: light-dark(#4e3629, #ffffff);
 }
 
 .involvementCardCta[data-white]:hover {
-  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8));
+  background-color: #c00404;
+  color: #ffffff;
 }
+
+/* This CTA now resolves to the same colors as its own (also accent-filled)
+   card — a deliberate, requested trade-off: in light mode it's a brown pill
+   on a brown card, distinguished only by its border/ripple/arrow, not fill
+   contrast. No override needed; it already inherits .involvementCardCta's
+   --accent / --accent-hover above. */
 
 .involvementCardCtas {
   display: flex;
@@ -770,20 +1015,103 @@ a.menuItemAccent:hover {
   font-size: clamp(2rem, 6vw, 2.75rem);
 }
 
+/* 1/2/3 tracks by breakpoint (so both the Leadership and Executive grids wrap
+   into the same number of cards per row at a given width, and every screen
+   size lands on a predictable row count). Cards stretch to fill their column
+   (equal width all round) but are left their own natural height — the row
+   doesn't stretch every card to match its tallest neighbour. */
+.peopleGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--mantine-spacing-md);
+}
+
+@media (min-width: 40em) {
+  .peopleGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .peopleGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* --- People page: cards --- */
+
+/* Whole card fills the site accent on hover (brown in light mode, white in
+   dark), text + icons switch to --accent-fg. Only the hovered card reacts
+   (plain :hover, no sibling dimming). */
+.personCard {
+  transition: background-color 150ms ease, border-color 150ms ease,
+    color 150ms ease;
+}
+
+.personCard:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.personCard:hover .mantine-Text-root,
+.personCard:hover .mantine-Title-root,
+.personCard:hover .mantine-Avatar-placeholder {
+  color: var(--accent-fg);
+  --text-color: var(--accent-fg);
+}
+
+/* Role/subtitle goes a muted version of the name's color on hover, tinted
+   toward the card fill so it stays legible against either accent color.
+   Mostly accent-fg (90%) so it stays readable — just enough card-color mixed
+   in to read as "subtitle" rather than the name's full-strength color.
+   !important: Mantine's c="dimmed" sets color via an inline style, which
+   beats any plain class selector regardless of specificity. */
+.personCard:hover .personCardRole {
+  color: color-mix(in srgb, var(--accent-fg) 90%, var(--accent)) !important;
+  --text-color: color-mix(in srgb, var(--accent-fg) 90%, var(--accent)) !important;
+}
+
 /* Card icons flush to the accent colour: LinkedIn on hover, email briefly after
    a copy (inspired by motion.dev/examples/react-copy-button — shape/icon keep,
-   colour is the only thing that changes). */
+   colour is the only thing that changes; the subtle-variant hover fill is
+   suppressed so only the glyph reacts). */
 .personCardIcon {
-  transition: color 150ms ease, background-color 150ms ease;
+  transition: color 150ms ease;
 }
 
 .personCardIcon:hover,
 .personCardIcon[data-copied] {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-hover);
+}
+
+.personCardIcon:hover {
+  --ai-hover: transparent;
+  background-color: transparent;
+}
+
+/* On the hovered (accent-filled) card the glyphs sit at --accent-fg; a direct
+   icon hover still pops — yellow on the light-mode card's brown fill, red on
+   the dark-mode card's white fill (the reverse of --accent-hover). */
+.personCard:hover .personCardIcon {
+  color: color-mix(in srgb, var(--accent-fg) 80%, transparent);
+}
+
+.personCard:hover .personCardIcon:hover,
+.personCard:hover .personCardIcon[data-copied] {
+  color: light-dark(#ffc72c, #c00404);
+}
+
+/* Copy-email tooltip — accent surface, --accent-fg text (arrow inherits via
+   the var). */
+.personTooltip {
+  --tooltip-bg: var(--accent);
+  --tooltip-color: var(--accent-fg);
 }
 
 .peopleHeadingLink {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-hover);
   text-decoration: none;
 }
 
@@ -811,8 +1139,12 @@ a.menuItemAccent:hover {
   transition: background-color 100ms ease;
 }
 
+/* Same highlight as the cues: yellow in light mode, red in dark mode, with
+   matching icon/text color for contrast. */
 .sectionNavToggle:hover {
-  background-color: var(--mantine-color-default-hover);
+  background-color: light-dark(#ffc72c, #c00404);
+  border-color: light-dark(#ffc72c, #c00404);
+  color: light-dark(#4e3629, #ffffff);
 }
 
 .sectionNavToggle svg {
@@ -826,26 +1158,37 @@ a.menuItemAccent:hover {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
 }
 
+/* No background at rest, and flush (no radius/gap) rather than separate
+   pills, so the hover fill runs edge-to-edge like a menu row. */
 .sectionNavLink {
   display: block;
   width: 100%;
   text-align: left;
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
   border: 0;
-  border-radius: var(--mantine-radius-sm);
-  background: none;
+  border-radius: 0;
+  background-color: transparent;
   font: inherit;
   font-weight: 500;
-  color: var(--mantine-primary-color-filled);
+  color: var(--mantine-color-text);
   cursor: pointer;
-  transition: background-color 100ms ease;
+  transition: background-color 100ms ease, color 100ms ease;
 }
 
+/* Inverted highlight on hover: brown in light mode, white in dark mode. */
 .sectionNavLink:hover {
-  background-color: var(--mantine-primary-color-light);
+  background-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* Drawer's close button (Sections panel, and the mobile nav drawer) — icon
+   only highlights color on hover, no background change. */
+.mantine-Drawer-close:hover,
+.mantine-Drawer-close:focus-visible {
+  color: light-dark(#c00404, #ffc72c);
+  background-color: transparent;
 }
 
 @keyframes sectionFlash {
@@ -879,8 +1222,11 @@ a.menuItemAccent:hover {
   }
 }
 
+/* URL links: highlighted with --accent-hover (red on the light-mode page's
+   brown text, yellow on the dark-mode page's white text) — underlined only
+   on hover, not at rest. */
 .fellowshipLink {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-hover);
   font-weight: 500;
   text-decoration: none;
 }
@@ -890,7 +1236,7 @@ a.menuItemAccent:hover {
 }
 
 .fellowshipAccent {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-hover);
   font-style: italic;
 }
 
@@ -940,10 +1286,56 @@ ul.fellowshipList {
 
 .fellowshipAccordion .mantine-Accordion-control:hover {
   background-color: var(--mantine-primary-color-light-hover);
+  color: var(--mantine-primary-color-filled);
 }
 
 .fellowshipAccordion .mantine-Accordion-icon {
   color: var(--mantine-primary-color-filled);
+}
+
+/* Technical fellowship — solid brown header with light text, turning red on
+   hover, in light mode. */
+.fellowshipItem--technical-ai-safety-research .mantine-Accordion-control {
+  background-color: #4e3629;
+  color: #fff;
+}
+
+/* While expanded, keep the header red as long as the cursor is anywhere over
+   the card (control or panel) — not just directly over the control. */
+.fellowshipItem--technical-ai-safety-research:hover .mantine-Accordion-control {
+  background-color: #c00404;
+  color: #fff;
+}
+
+.fellowshipItem--technical-ai-safety-research .mantine-Accordion-icon,
+.fellowshipItem--technical-ai-safety-research .mantine-Accordion-chevron {
+  color: #fff;
+}
+
+.fellowshipItem--technical-ai-safety-research .fellowshipSchedule {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Dark mode: solid white header with brown text instead, turning yellow on
+   hover — the light-mode brown/white/red header would otherwise blend into
+   the (also brown) dark-mode page. */
+:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .mantine-Accordion-control {
+  background-color: var(--mantine-color-white);
+  color: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research:hover .mantine-Accordion-control {
+  background-color: #ffc72c;
+  color: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .mantine-Accordion-icon,
+:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .mantine-Accordion-chevron {
+  color: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .fellowshipSchedule {
+  color: #5b5044;
 }
 
 .fellowshipControlLabel {
@@ -971,13 +1363,13 @@ ul.fellowshipList {
 }
 
 .authorLink {
-  color: inherit;
+  color: var(--accent-hover);
   text-decoration: none;
   transition: color 120ms ease;
 }
 
 .authorLink:hover {
-  color: var(--mantine-primary-color-filled);
+  text-decoration: underline;
 }
 
 /* Tentative-topic chips */
@@ -999,14 +1391,27 @@ ul.fellowshipList {
   border-radius: 999px;
   font-size: var(--mantine-font-size-xs);
   line-height: 1.4;
-  background-color: var(--mantine-color-default);
-  color: var(--mantine-color-text);
+  background-color: #4e3629;
+  color: #fff;
   transition: background-color 120ms ease, color 120ms ease;
 }
 
 .fellowshipChip:hover {
-  background-color: var(--mantine-primary-color-light);
-  color: var(--mantine-primary-color-light-color);
+  background-color: #c00404;
+  color: #fff;
+}
+
+/* Dark mode: white chips (matching the now-white technical-fellowship header
+   above), turning yellow on hover — brown/red would blend into the (also
+   brown) dark-mode page. */
+:root[data-mantine-color-scheme="dark"] .fellowshipChip {
+  background-color: var(--mantine-color-white);
+  color: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .fellowshipChip:hover {
+  background-color: #ffc72c;
+  color: #4e3629;
 }
 
 /* Person card flash when arrived at via /people#person-<slug> */
@@ -1049,6 +1454,9 @@ ul.fellowshipList {
 
 .faqRow {
   border-bottom: 1px solid var(--mantine-color-default-border);
+  /* The whole row (question + expanded answer) toggles on click now, not
+     just the question, so it should read as clickable everywhere. */
+  cursor: pointer;
 }
 
 .faqRow:first-of-type {
@@ -1127,7 +1535,7 @@ ul.fellowshipList {
 }
 
 .faqLink {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-hover);
   font-weight: 500;
   text-decoration: none;
 }
@@ -1141,7 +1549,7 @@ ul.fellowshipList {
 }
 
 .copyEmail {
-  color: var(--mantine-primary-color-filled);
+  color: var(--accent-hover);
   font-weight: 500;
   cursor: pointer;
 }
@@ -1158,17 +1566,29 @@ ul.fellowshipList {
 
 /* ── Calendar ─────────────────────────────────────────────────────────── */
 
-/* Pin icon beside the "Pinned" heading — a lighter shade of the accent. */
-.pinnedIcon {
-  color: var(--mantine-primary-color-filled);
-  opacity: 0.45;
+/* Solid brown backdrop for the pinned board in light mode. Dark mode swaps
+   the whole board — white backdrop, brown preview cards — so it stands out
+   against the (also brown) page instead of blending into it. */
+.pinnedCard {
+  background-color: var(--mantine-color-brown-7);
+  border: 1px solid var(--mantine-color-brown-8);
 }
 
-/* Accented backdrop for the pinned board. */
-.pinnedCard {
-  background-color: var(--mantine-primary-color-light);
-  border: 1px solid
-    color-mix(in srgb, var(--mantine-primary-color-filled) 25%, transparent);
+:root[data-mantine-color-scheme="dark"] .pinnedCard {
+  background-color: var(--mantine-color-white);
+  border-color: var(--mantine-color-gray-3);
+}
+
+/* Section titles ("General Body" / "Fellows" / "Members") — white in light
+   mode (on the brown board), brown in dark mode (on the now-white board).
+   !important: Mantine's Title styles can load after this file and win on
+   equal specificity otherwise. */
+.pinnedColTitle {
+  color: var(--mantine-color-white) !important;
+}
+
+:root[data-mantine-color-scheme="dark"] .pinnedColTitle {
+  color: #4e3629 !important;
 }
 
 /* Three equal columns with inset vertical rules between them. */
@@ -1178,12 +1598,22 @@ ul.fellowshipList {
 }
 
 .pinnedCol {
+  display: flex;
+  flex-direction: column;
   padding: 0 var(--mantine-spacing-lg);
 }
 
+/* Stretches to fill the column so its card matches the tallest column's. */
+.pinnedStack {
+  flex: 1;
+}
+
 .pinnedCol + .pinnedCol {
-  border-left: 1px solid
-    color-mix(in srgb, var(--mantine-primary-color-filled) 30%, transparent);
+  border-left: 1px solid color-mix(in srgb, white 30%, transparent);
+}
+
+:root[data-mantine-color-scheme="dark"] .pinnedCol + .pinnedCol {
+  border-left-color: color-mix(in srgb, #4e3629 25%, transparent);
 }
 
 @media (max-width: 48em) {
@@ -1198,36 +1628,84 @@ ul.fellowshipList {
 
   .pinnedCol + .pinnedCol {
     border-left: none;
-    border-top: 1px solid
-      color-mix(in srgb, var(--mantine-primary-color-filled) 30%, transparent);
+    border-top: 1px solid color-mix(in srgb, white 30%, transparent);
     padding-top: var(--mantine-spacing-md);
+  }
+
+  :root[data-mantine-color-scheme="dark"] .pinnedCol + .pinnedCol {
+    border-top-color: color-mix(in srgb, #4e3629 25%, transparent);
   }
 }
 
-/* Preview cards inside the pinned board. */
+/* Preview cards inside the pinned board — solid white against the brown
+   backdrop in light mode; dark mode flips this (see .pinnedCard above) to
+   solid brown cards against the white backdrop, with matching light text.
+   flex: 1 so every card in a row matches the height of the tallest one. */
 .pinnedPreview {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   width: 100%;
   text-align: left;
   padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-md);
-  background-color: var(--mantine-color-body);
+  background-color: white;
   border: 1px solid var(--mantine-color-default-border);
   transition: border-color 120ms ease, transform 120ms ease;
 }
 
+:root[data-mantine-color-scheme="dark"] .pinnedPreview {
+  background-color: #4e3629;
+  border-color: #3e2b20;
+}
+
+:root[data-mantine-color-scheme="dark"] .pinnedPreviewTitle {
+  color: var(--mantine-color-white) !important;
+}
+
+:root[data-mantine-color-scheme="dark"] .pinnedPreviewDate {
+  /* !important: Mantine's c="dimmed" sets color via an inline style. */
+  color: color-mix(in srgb, white 65%, transparent) !important;
+}
+
 button.pinnedPreview:hover {
-  border-color: var(--mantine-primary-color-filled);
+  border-color: var(--mantine-color-brown-7);
   transform: translateY(-1px);
 }
 
+:root[data-mantine-color-scheme="dark"] button.pinnedPreview:hover {
+  border-color: var(--mantine-color-white);
+}
+
 button.pinnedPreview:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
+  outline: 2px solid white;
   outline-offset: 2px;
 }
 
 .pinnedPreviewEmpty {
+  justify-content: center;
+  background-color: transparent;
   border-style: dashed;
+}
+
+/* Stay transparent even though .pinnedPreview above sets a solid brown fill
+   for real (non-empty) preview cards in dark mode — this element carries
+   both classes. */
+:root[data-mantine-color-scheme="dark"] .pinnedPreviewEmpty {
+  background-color: transparent;
+  border-color: color-mix(in srgb, #4e3629 40%, transparent);
+}
+
+/* "Hang tight!" — white in light mode (dashed, transparent, on the brown
+   board), brown in dark mode (transparent, on the now-white board).
+   !important: same Mantine Title override-order issue as .pinnedColTitle
+   above. */
+.pinnedPreviewEmptyTitle {
+  color: var(--mantine-color-white) !important;
+}
+
+:root[data-mantine-color-scheme="dark"] .pinnedPreviewEmptyTitle {
+  color: #4e3629 !important;
 }
 
 /* Brief highlight when a preview card scrolls you to the full event card. */

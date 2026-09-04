@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState, type PointerEvent } from "react"
 import Link from "next/link"
-import { IconArrowUpRight } from "@tabler/icons-react"
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -15,6 +15,13 @@ import { ScrollCue } from "./scroll-cue"
 import { useHome } from "./animation-manager"
 
 const MotionLink = motion.create(Link)
+
+interface Ripple {
+  id: number
+  x: number
+  y: number
+  size: number
+}
 
 /**
  * Fade-in order entering the alumni page (scrolling down) — the reverse of
@@ -44,6 +51,24 @@ export function Alumni() {
   const [focused, setFocused] = useState(false)
   useMotionValueEvent(fadeProgress, "change", (v) => setFocused(v >= 0.99))
 
+  // Material-style press ripple on the CTA, matching the scroll cues.
+  const [ripples, setRipples] = useState<Ripple[]>([])
+  const nextRippleId = useRef(0)
+
+  function spawnRipple(event: PointerEvent<HTMLAnchorElement>) {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const size = Math.max(rect.width, rect.height) * 2
+    setRipples((current) => [
+      ...current,
+      {
+        id: nextRippleId.current++,
+        size,
+        x: event.clientX - rect.left - size / 2,
+        y: event.clientY - rect.top - size / 2,
+      },
+    ])
+  }
+
   return (
     <div
       className="alumniPage homeSection"
@@ -67,18 +92,48 @@ export function Alumni() {
             .
           </motion.h1>
 
-          <motion.p className="subheading" style={{ opacity: subheadingOpacity }}>
-            Our alumni have done both.
-          </motion.p>
+          <div className="alumniCtaRow">
+            <motion.p
+              className="subheading"
+              style={{ opacity: subheadingOpacity }}
+            >
+              Our alumni have done both.
+            </motion.p>
 
-          <MotionLink
-            href="/start"
-            className="alumniCta"
-            style={{ opacity: ctaOpacity }}
-          >
-            <span>Learn how to join</span>
-            <IconArrowUpRight size={22} stroke={2} aria-hidden />
-          </MotionLink>
+            <MotionLink
+              href="/start"
+              className="alumniCta"
+              style={{ opacity: ctaOpacity }}
+              onPointerDown={spawnRipple}
+            >
+              <span>Learn how to join</span>
+
+              <span className="alumniCtaRipples" aria-hidden>
+                <AnimatePresence>
+                  {ripples.map((ripple) => (
+                    <motion.span
+                      key={ripple.id}
+                      className="alumniCtaRipple"
+                      style={{
+                        left: ripple.x,
+                        top: ripple.y,
+                        width: ripple.size,
+                        height: ripple.size,
+                      }}
+                      initial={{ scale: 0, opacity: 0.35 }}
+                      animate={{ scale: 1, opacity: 0 }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                      onAnimationComplete={() =>
+                        setRipples((current) =>
+                          current.filter((item) => item.id !== ripple.id),
+                        )
+                      }
+                    />
+                  ))}
+                </AnimatePresence>
+              </span>
+            </MotionLink>
+          </div>
         </div>
 
         <motion.div style={{ opacity: carouselOpacity }}>

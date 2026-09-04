@@ -3,8 +3,8 @@ import { TOPIC_COLORS, type CalendarEvent } from "./calendar-types"
 import { Markdown } from "./markdown"
 import { Pill } from "./pill"
 
-/** All audience chips share one neutral colour. */
-const AUDIENCE_COLOR = "gray"
+/** All audience chips share one accent colour. */
+const AUDIENCE_COLOR = "yellow"
 
 export function EventCard({
   event,
