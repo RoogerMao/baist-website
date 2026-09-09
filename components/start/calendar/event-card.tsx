@@ -3,6 +3,8 @@ import { TOPIC_COLORS, type CalendarEvent } from "./calendar-types"
 import { Markdown } from "./markdown"
 import { Pill } from "./pill"
 
+import classes from "./event-card.module.css"
+
 /** All audience chips share one accent colour. */
 const AUDIENCE_COLOR = "yellow"
 
@@ -33,7 +35,7 @@ export function EventCard({
       p="lg"
       className={
         highlighted
-          ? "eventCard eventCardHighlight h-full scroll-mt-28"
+          ? `eventCard ${classes.eventCardHighlight} h-full scroll-mt-28`
           : "eventCard h-full scroll-mt-28"
       }
     >

@@ -11,6 +11,8 @@ import { TOPIC_COLORS, type CalendarEvent, type EventAudience } from "./calendar
 import { eventId, pinnedEventsFor } from "./calendar-utils"
 import { Pill } from "./pill"
 
+import classes from "./pinned-section.module.css"
+
 const SECTIONS: { title: string; audience: EventAudience }[] = [
   { title: "General Body", audience: "General Body" },
   { title: "Fellows", audience: "Fellows" },
@@ -26,11 +28,11 @@ function PreviewCard({
 }) {
   return (
     <UnstyledButton
-      className="pinnedPreview"
+      className={classes.pinnedPreview}
       onClick={() => onSelect(eventId(event))}
     >
       <Group align="baseline" gap={6} wrap="wrap" justify="center">
-        <Title order={4} lh={1.3} ta="center" className="pinnedPreviewTitle">
+        <Title order={4} lh={1.3} ta="center" className={classes.pinnedPreviewTitle}>
           {event.title}
         </Title>
         {event.topics.map((topic) => (
@@ -39,7 +41,7 @@ function PreviewCard({
           </Pill>
         ))}
       </Group>
-      <Text size="xs" c="dimmed" mt="sm" ta="center" className="pinnedPreviewDate">
+      <Text size="xs" c="dimmed" mt="sm" ta="center" className={classes.pinnedPreviewDate}>
         {event.date}
       </Text>
     </UnstyledButton>
@@ -48,8 +50,8 @@ function PreviewCard({
 
 function EmptyPreview() {
   return (
-    <div className="pinnedPreview pinnedPreviewEmpty">
-      <Title order={4} lh={1.3} ta="center" className="pinnedPreviewEmptyTitle">
+    <div className={`${classes.pinnedPreview} ${classes.pinnedPreviewEmpty}`}>
+      <Title order={4} lh={1.3} ta="center" className={classes.pinnedPreviewEmptyTitle}>
         Hang tight!
       </Title>
       <Text fz={11} c="dimmed" mt={6} ta="center">
@@ -69,16 +71,16 @@ export function PinnedSection({
   return (
     <section className="mb-12">
       <Container size="lg" px={0}>
-        <Paper radius={32} p="xl" className="pinnedCard">
-          <div className="pinnedGrid">
+        <Paper radius={32} p="xl" className={classes.pinnedCard}>
+          <div className={classes.pinnedGrid}>
             {SECTIONS.map((section) => {
               const picks = pinnedEventsFor(events, section.audience)
               return (
-                <div key={section.audience} className="pinnedCol">
-                  <Title order={2} ta="center" mb="sm" className="pinnedColTitle">
+                <div key={section.audience} className={classes.pinnedCol}>
+                  <Title order={2} ta="center" mb="sm" className={classes.pinnedColTitle}>
                     {section.title}
                   </Title>
-                  <Stack gap="xs" className="pinnedStack">
+                  <Stack gap="xs" className={classes.pinnedStack}>
                     {picks.length > 0 ? (
                       picks.map((event) => (
                         <PreviewCard
