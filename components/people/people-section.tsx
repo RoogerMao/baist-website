@@ -1,6 +1,8 @@
 import { Title } from "@mantine/core"
 import { PersonCard, type Person } from "./person-card"
 
+import classes from "./people-section.module.css"
+
 export interface PeopleSectionProps {
   /** used as the section's DOM id and scroll target */
   id: string
@@ -15,7 +17,7 @@ export function PeopleSection({ id, title, people }: PeopleSectionProps) {
         {title}
       </Title>
 
-      <div className="peopleGrid">
+      <div className={classes.peopleGrid}>
         {people.map((person) => (
           <PersonCard key={person.name} {...person} />
         ))}

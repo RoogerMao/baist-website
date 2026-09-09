@@ -1,0 +1,53 @@
+/* People page: a titled section and its card grid
+   (components/people/people-section.tsx) */
+
+/* 1/2/3 tracks by breakpoint (so both the Leadership and Executive grids wrap
+   into the same number of cards per row at a given width, and every screen
+   size lands on a predictable row count). Cards stretch to fill their column
+   (equal width all round) but are left their own natural height — the row
+   doesn't stretch every card to match its tallest neighbour. */
+.peopleGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--mantine-spacing-md);
+}
+
+@media (min-width: 40em) {
+  .peopleGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .peopleGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Section-heading flash — used both by the section-nav drawer and by arriving
+   at /people#<section-id> (e.g. the "executive board members" link on the
+   fellowships page). Colour only: the heading text alone changes, never a
+   background or outline. --accent-hover is the mode's own accent against its
+   body text — red on light mode's brown, yellow on dark mode's white — where
+   --accent would land on roughly the text colour itself and not read at all.
+   It decorates this component's [data-section-title] heading, but is applied
+   imperatively by section-nav.tsx and people-highlight.tsx, which both import
+   this module for the class name. */
+@keyframes sectionFlash {
+  20%,
+  55% {
+    color: var(--accent-hover);
+  }
+}
+
+.sectionFlash {
+  animation: sectionFlash 1.8s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sectionFlash {
+    animation: none;
+    color: var(--accent-hover);
+  }
+}

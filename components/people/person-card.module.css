@@ -1,0 +1,158 @@
+/* People page: cards (components/people/person-card.tsx) */
+
+/* Whole card fills the site accent on hover (brown in light mode, white in
+   dark), text + icons switch to --accent-fg. Only the hovered card reacts
+   (plain :hover, no sibling dimming). */
+.personCard {
+  transition: background-color 150ms ease, border-color 150ms ease,
+    color 150ms ease;
+}
+
+.personCard:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* Reaches Mantine's own element classes from inside this module. They must be
+   wrapped in :global() — CSS Modules scopes *every* bare class selector, so an
+   unwrapped .mantine-Text-root would be hashed here and never match the class
+   Mantine actually renders. */
+.personCard:hover :global(.mantine-Text-root),
+.personCard:hover :global(.mantine-Title-root),
+.personCard:hover :global(.mantine-Avatar-placeholder) {
+  color: var(--accent-fg);
+  --text-color: var(--accent-fg);
+}
+
+/* Role/subtitle goes a muted version of the name's color on hover, tinted
+   toward the card fill so it stays legible against either accent color.
+   Mostly accent-fg (90%) so it stays readable — just enough card-color mixed
+   in to read as "subtitle" rather than the name's full-strength color.
+   !important: Mantine's c="dimmed" sets color via an inline style, which
+   beats any plain class selector regardless of specificity. */
+.personCard:hover .personCardRole {
+  color: color-mix(in srgb, var(--accent-fg) 90%, var(--accent)) !important;
+  --text-color: color-mix(in srgb, var(--accent-fg) 90%, var(--accent)) !important;
+}
+
+/* Card icons flush to the accent colour: LinkedIn on hover, email briefly after
+   a copy (inspired by motion.dev/examples/react-copy-button — shape/icon keep,
+   colour is the only thing that changes; the subtle-variant hover fill is
+   suppressed so only the glyph reacts). */
+.personCardIcon {
+  transition: color 150ms ease;
+}
+
+.personCardIcon:hover,
+.personCardIcon[data-copied] {
+  color: var(--accent-hover);
+}
+
+.personCardIcon:hover {
+  --ai-hover: transparent;
+  background-color: transparent;
+}
+
+/* On the hovered (accent-filled) card the glyphs sit at --accent-fg; a direct
+   icon hover still pops — yellow on the light-mode card's brown fill, red on
+   the dark-mode card's white fill (the reverse of --accent-hover). */
+.personCard:hover .personCardIcon {
+  color: color-mix(in srgb, var(--accent-fg) 80%, transparent);
+}
+
+.personCard:hover .personCardIcon:hover,
+.personCard:hover .personCardIcon[data-copied] {
+  color: light-dark(#ffc72c, #c00404);
+}
+
+/* "Book a time" button at the foot of a person card. Spans the card, and is
+   outlined rather than filled: the card itself flips to the accent fill on
+   hover, so a pill that borrows the current text colour reads correctly in
+   both states without a colour change of its own. */
+.personCardBooking {
+  align-self: stretch;
+  margin-top: var(--mantine-spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid currentColor;
+  border-radius: var(--mantine-radius-xl);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 150ms ease, color 150ms ease,
+    border-color 150ms ease;
+}
+
+/* Trailing ↗ marks the link as leaving the site; the tooltip-only variant
+   (Raen) goes nowhere, so it gets no arrow. */
+.personCardBooking:not([data-inert])::after {
+  content: "\2197";
+  margin-left: 0.25em;
+  transition: transform 150ms ease;
+}
+
+/* Link variant fills on its own hover; the tooltip-only variant keeps a flat
+   look and a default cursor, since there is nowhere to click through. */
+.personCardBooking:not([data-inert]):hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #ffffff;
+}
+
+.personCardBooking:not([data-inert]):hover::after {
+  transform: translate(2px, -2px);
+}
+
+.personCardBooking[data-inert] {
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* The booking note's bubble can overlap the card it belongs to, and a hovered
+   card carries the same accent fill as the tooltip. A border in the tooltip's
+   own text colour keeps its edge visible against card and page alike.
+   Mantine portals the tooltip out of the card, so this must stay a standalone
+   selector rather than a descendant of .personCard. */
+.personBookingTooltip {
+  border: 1px solid var(--accent-fg);
+}
+
+/* Person card flash when arrived at via /people#person-<slug>. Applied
+   imperatively by components/people/people-highlight.tsx, which imports this
+   module for the class name. */
+@keyframes personCardFlash {
+  0%,
+  100% {
+    outline-color: color-mix(
+      in srgb,
+      var(--mantine-primary-color-filled) 0%,
+      transparent
+    );
+    background-color: var(--mantine-color-body);
+  }
+  15%,
+  55% {
+    outline-color: var(--mantine-primary-color-filled);
+    background-color: var(--mantine-primary-color-light);
+  }
+}
+
+.personCardFlash {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  animation: personCardFlash 2.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personCardFlash {
+    animation: none;
+    outline-color: var(--mantine-primary-color-filled);
+    background-color: var(--mantine-primary-color-light);
+  }
+}

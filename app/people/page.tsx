@@ -9,6 +9,8 @@ import {
   leadershipTeam,
 } from "@/components/people"
 
+import classes from "./page.module.css"
+
 export const metadata: Metadata = {
   title: "People — Brown AI Safety Team",
 }
@@ -24,12 +26,12 @@ export default function PeoplePage() {
       <PeopleHighlight />
       <SectionNav sections={sections} />
 
-      <Title order={1} className="peopleHeading" ta="center" mb={4}>
+      <Title order={1} className={classes.peopleHeading} ta="center" mb={4}>
         Our People
       </Title>
       <Text c="dimmed" ta="center" mb="xl">
         Read about our club structure{" "}
-        <Link href="/start" className="peopleHeadingLink">
+        <Link href="/start" className={classes.peopleHeadingLink}>
           here
         </Link>
       </Text>

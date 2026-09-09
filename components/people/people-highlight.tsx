@@ -2,11 +2,14 @@
 
 import { useEffect } from "react"
 
-const CARD_FLASH_CLASS = "personCardFlash"
+import card from "./person-card.module.css"
+import section from "./people-section.module.css"
+
+const CARD_FLASH_CLASS = card.personCardFlash
 const CARD_FLASH_MS = 2200
 // Shared with the section-nav drawer (components/people/section-nav.tsx), so
 // both routes to a heading flash identically. Matches its 1.8s animation.
-const TITLE_FLASH_CLASS = "sectionFlash"
+const TITLE_FLASH_CLASS = section.sectionFlash
 const TITLE_FLASH_MS = 1800
 
 /**
