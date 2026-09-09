@@ -16,9 +16,19 @@ export interface InvolvementCtaProps {
   href: string
   /** Use a white background instead of the card-surface tone. */
   white?: boolean
+  /** Open in a new tab — for off-site application forms. */
+  newTab?: boolean
+  /** Extra class names, appended to `.involvementCardCta`. */
+  className?: string
 }
 
-export function InvolvementCta({ label, href, white = false }: InvolvementCtaProps) {
+export function InvolvementCta({
+  label,
+  href,
+  white = false,
+  newTab = false,
+  className,
+}: InvolvementCtaProps) {
   const [ripples, setRipples] = useState<Ripple[]>([])
   const nextId = useRef(0)
 
@@ -39,8 +49,12 @@ export function InvolvementCta({ label, href, white = false }: InvolvementCtaPro
   return (
     <Link
       href={href}
-      className="involvementCardCta"
+      className={
+        className ? `involvementCardCta ${className}` : "involvementCardCta"
+      }
       data-white={white || undefined}
+      target={newTab ? "_blank" : undefined}
+      rel={newTab ? "noopener noreferrer" : undefined}
       onPointerDown={spawnRipple}
     >
       <span className="involvementCardCtaLabel">{label}</span>

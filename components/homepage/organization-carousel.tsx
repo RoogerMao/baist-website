@@ -5,9 +5,10 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type MouseEvent,
   type PointerEvent,
 } from "react"
-import { Avatar, Paper, Stack, Text } from "@mantine/core"
+import { Avatar, Paper, Text, Title } from "@mantine/core"
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import {
   animate,
@@ -17,62 +18,93 @@ import {
   wrap,
 } from "motion/react"
 
-export interface AlumniProfile {
+export interface Organization {
+  /** Organization name — the card's title. */
   name: string
-  photo?: string
-  /** Most recent credentials — current position and/or additional degrees. */
-  credential: string
-  /** Former role in the club, e.g. "Former Member", "Former Policy Lead". */
-  clubRole: string
-  /** Graduation year at Brown. */
-  classYear: number | string
-  /** One or more concentrations, already formatted (e.g. "CS and Philosophy"). */
-  concentrations: string
+  /** URL of the organization's logo. Falls back to initials. */
+  logo?: string
+  /**
+   * Optional short label for what they do in AI safety, e.g. "Model
+   * Benchmarking". Omit it where the name already says as much.
+   */
+  focus?: string
+  /** Optional destination — a click (not a drag) opens it in a new tab. */
+  url?: string
+  /**
+   * Crop the logo to fill the square tile instead of fitting it inside.
+   * For marks that carry their own background to the edge.
+   */
+  logoFill?: boolean
 }
 
-function AlumniCard({
+/** Pointer travel, in px, past which a press counts as a drag, not a click. */
+const DRAG_SLOP = 5
+
+/**
+ * Two columns: the logo on the left, the title and focus label stacked in a
+ * column to its right. The logo is the link — the rest of the card stays
+ * selectable — and hovering anywhere on the card tints the title to
+ * advertise it.
+ */
+function OrganizationCard({
   name,
-  photo,
-  credential,
-  clubRole,
-  classYear,
-  concentrations,
-}: AlumniProfile) {
+  logo,
+  focus,
+  url,
+  logoFill,
+}: Organization) {
   return (
-    <Paper withBorder radius="md" p="md" className="alumniCard">
-      <Stack gap={6} align="center">
-        <Avatar
-          src={photo}
-          name={name}
-          color="initials"
-          radius="xl"
-          size={48}
-        />
-        <Text fw={600} size="sm" ta="center" lh={1.3}>
+    <Paper
+      withBorder
+      radius="md"
+      p="lg"
+      className="orgCard"
+      data-linked={url ? true : undefined}
+    >
+      <Avatar
+        src={logo}
+        name={name}
+        color="initials"
+        radius="md"
+        size={64}
+        className="orgCardLogo"
+        data-fill={logoFill || undefined}
+        {...(url
+          ? {
+              component: "a" as const,
+              href: url,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              "aria-label": `${name} — about page`,
+            }
+          : {})}
+      />
+      <div className="orgCardText">
+        <Title order={3} fz="h4" lh={1.2} m={0} className="orgCardTitle">
           {name}
-        </Text>
-        <Text size="sm" ta="center" lh={1.35}>
-          {credential}
-        </Text>
-        <Text size="sm" c="dimmed" fs="italic" ta="center" lh={1.35}>
-          {clubRole}
-        </Text>
-        <Text c="dimmed" size="xs" ta="center" lh={1.35}>
-          Class of {classYear}, {concentrations}
-        </Text>
-      </Stack>
+        </Title>
+        {focus ? (
+          <Text size="sm" c="dimmed" lh={1.35} className="orgCardFocus">
+            {focus}
+          </Text>
+        ) : null}
+      </div>
     </Paper>
   )
 }
 
 /**
- * Infinitely looping, drag-scrubbable row of alumni profiles
+ * Infinitely looping, drag-scrubbable row of organizations
  * (motion.dev/examples/react-carousel-loop). Three copies of the list are
  * rendered and the track's x is wrapped over one copy's width, so the seam is
  * never visible. Movement is drag-only — no automatic scrolling.
  */
-export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
-  const count = profiles.length
+export function OrganizationCarousel({
+  organizations,
+}: {
+  organizations: Organization[]
+}) {
+  const count = organizations.length
   const x = useMotionValue(0)
   const trackRef = useRef<HTMLDivElement>(null)
   const [copyWidth, setCopyWidth] = useState(0)
@@ -82,6 +114,9 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
   const drag = useRef<{ pointerId: number; startX: number; startValue: number } | null>(
     null,
   )
+  // Set once a press travels past DRAG_SLOP; read by the capture-phase click
+  // handler so scrubbing the track never follows a card's link.
+  const dragged = useRef(false)
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -97,7 +132,7 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
     const observer = new ResizeObserver(measure)
     if (trackRef.current) observer.observe(trackRef.current)
     return () => observer.disconnect()
-  }, [profiles])
+  }, [organizations])
 
   // keep the active dot in sync with the track position
   useMotionValueEvent(x, "change", (value) => {
@@ -107,12 +142,15 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
 
   const onPointerDown = useCallback(
     (event: PointerEvent<HTMLDivElement>) => {
+      dragged.current = false
       drag.current = {
         pointerId: event.pointerId,
         startX: event.clientX,
         startValue: x.get(),
       }
-      event.currentTarget.setPointerCapture(event.pointerId)
+      // NB: the pointer is captured lazily, in onPointerMove — capturing here
+      // would retarget the click to the track and a linked card would never
+      // see it.
     },
     [x],
   )
@@ -121,7 +159,14 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
     (event: PointerEvent<HTMLDivElement>) => {
       const current = drag.current
       if (!current || copyWidth === 0) return
-      const next = current.startValue + (event.clientX - current.startX)
+      const travel = event.clientX - current.startX
+      if (!dragged.current && Math.abs(travel) > DRAG_SLOP) {
+        dragged.current = true
+        // Take the pointer only now that it's a drag, so the track keeps
+        // following it past its own bounds.
+        event.currentTarget.setPointerCapture(current.pointerId)
+      }
+      const next = current.startValue + travel
       x.set(wrap(-copyWidth, 0, next))
     },
     [x, copyWidth],
@@ -129,6 +174,14 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
 
   const endDrag = useCallback((event: PointerEvent<HTMLDivElement>) => {
     if (drag.current?.pointerId === event.pointerId) drag.current = null
+  }, [])
+
+  // A drag ends with a click on whichever card sat under the pointer; swallow
+  // it before the anchor sees it. Keyboard activation never sets `dragged`.
+  const onClickCapture = useCallback((event: MouseEvent<HTMLDivElement>) => {
+    if (!dragged.current) return
+    event.preventDefault()
+    event.stopPropagation()
   }, [])
 
   // Move by `cards` cards (can be negative), wrapping x back into one copy's
@@ -158,14 +211,14 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
     [count, activeIndex, scrollBy],
   )
 
-  const loop = [...profiles, ...profiles, ...profiles]
+  const loop = [...organizations, ...organizations, ...organizations]
 
   return (
     <div className="alumniCarousel">
       <motion.button
         type="button"
         className="alumniCarouselArrow alumniCarouselArrow--prev"
-        aria-label="Previous alumni"
+        aria-label="Previous organization"
         onClick={() => scrollBy(-1)}
         style={{ y: "-50%" }}
         whileHover={{ scale: 1.1 }}
@@ -183,9 +236,10 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
           onPointerCancel={endDrag}
+          onClickCapture={onClickCapture}
         >
-          {loop.map((profile, index) => (
-            <AlumniCard key={index} {...profile} />
+          {loop.map((organization, index) => (
+            <OrganizationCard key={index} {...organization} />
           ))}
         </motion.div>
       </div>
@@ -193,7 +247,7 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
       <motion.button
         type="button"
         className="alumniCarouselArrow alumniCarouselArrow--next"
-        aria-label="Next alumni"
+        aria-label="Next organization"
         onClick={() => scrollBy(1)}
         style={{ y: "-50%" }}
         whileHover={{ scale: 1.1 }}
@@ -202,14 +256,19 @@ export function AlumniCarousel({ profiles }: { profiles: AlumniProfile[] }) {
         <IconChevronRight stroke={1.75} />
       </motion.button>
 
-      <div className="alumniDots" role="tablist" aria-label="Alumni">
-        {profiles.map((_, index) => (
+      <p className="alumniDisclaimer alumniDisclaimer--logos">
+        Use of organizational logos does not imply affiliation with or
+        endorsement by these organizations.
+      </p>
+
+      <div className="alumniDots" role="tablist" aria-label="Organizations">
+        {organizations.map((_, index) => (
           <button
             key={index}
             type="button"
             className="alumniDot"
             data-active={index === activeIndex || undefined}
-            aria-label={`Go to alumnus ${index + 1}`}
+            aria-label={`Go to organization ${index + 1}`}
             aria-selected={index === activeIndex}
             role="tab"
             onClick={() => goTo(index)}

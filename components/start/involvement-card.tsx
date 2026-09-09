@@ -6,6 +6,8 @@ export interface InvolvementLevel {
   title: string
   /** How you get in — rendered italicised and smaller, inline with the title. */
   admissionProcess?: string
+  /** Aside shown italicised above the ability list — e.g. how to apply. */
+  note?: string
   /** What this level lets you do. */
   abilities: string[]
   /** Optional call(s) to action, rendered as ripple buttons at the foot of the card. */
@@ -14,6 +16,8 @@ export interface InvolvementLevel {
     href: string
     /** Force a white background (otherwise it matches the card's surface). */
     white?: boolean
+    /** Open in a new tab — for off-site application forms. */
+    newTab?: boolean
   }[]
   /** Fill the card with the accent colour. */
   highlighted?: boolean
@@ -22,6 +26,7 @@ export interface InvolvementLevel {
 export function InvolvementCard({
   title,
   admissionProcess,
+  note,
   abilities,
   ctas,
   highlighted = false,
@@ -48,6 +53,12 @@ export function InvolvementCard({
           {admission}
         </div>
 
+        {note && (
+          <Text fz="sm" fs="italic" className="involvementCardNote">
+            {note}
+          </Text>
+        )}
+
         <ul className="involvementCardAbilities">
           {abilities.map((ability) => (
             <li key={ability}>{ability}</li>
@@ -62,6 +73,7 @@ export function InvolvementCard({
                 label={cta.label}
                 href={cta.href}
                 white={cta.white}
+                newTab={cta.newTab}
               />
             ))}
           </div>

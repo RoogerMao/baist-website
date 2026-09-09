@@ -211,7 +211,7 @@ export function AnimationManager({ top, bottom }: AnimationManagerProps) {
             >
               <ScrollCue
                 direction="down"
-                label="Meet our Alumni"
+                label="See where you could go"
                 opacity={landingOpacity}
                 onActivate={scrollToAlumni}
               />

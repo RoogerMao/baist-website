@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Accordion, Stack, Text, Title } from "@mantine/core"
 import { MaskIcon } from "@/components/mask-icon"
+import { InvolvementCta } from "../involvement-cta"
 import { AuthorList } from "./author-link"
 
 export interface Fellowship {
@@ -16,12 +17,45 @@ export interface Fellowship {
   schedule?: string
   /** Names of the people who designed / facilitate the fellowship. */
   authors: string[]
-  /** Short prose overview of what the fellowship covers. */
+  /**
+   * Short prose overview of what the fellowship covers. Supports inline
+   * markdown-style links — `[label](https://…)` — which open in a new tab.
+   */
   description: string
   /** Tentative curriculum topics, rendered as chips. */
   topics: string[]
   /** Links to past syllabi. */
   pastCurriculums: { label: string; href: string }[]
+  /** Application form, opened in a new tab from the foot of the panel. */
+  applyHref?: string
+}
+
+const DESCRIPTION_LINK = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g
+
+/** Renders a description, turning `[label](href)` spans into external links. */
+function DescriptionText({ description }: { description: string }) {
+  const parts: React.ReactNode[] = []
+  let cursor = 0
+
+  for (const match of description.matchAll(DESCRIPTION_LINK)) {
+    const [raw, label, href] = match
+    parts.push(description.slice(cursor, match.index))
+    parts.push(
+      <Link
+        key={href}
+        href={href}
+        className="fellowshipLink"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {label}
+      </Link>,
+    )
+    cursor = match.index + raw.length
+  }
+
+  parts.push(description.slice(cursor))
+  return <>{parts}</>
 }
 
 function FellowshipPanel({
@@ -29,6 +63,7 @@ function FellowshipPanel({
   description,
   topics,
   pastCurriculums,
+  applyHref,
 }: Omit<Fellowship, "value" | "icon" | "title">) {
   return (
     <Stack gap="md" pt="xs">
@@ -36,7 +71,9 @@ function FellowshipPanel({
         <AuthorList names={authors} />
       </Text>
 
-      <Text size="sm">{description}</Text>
+      <Text size="sm">
+        <DescriptionText description={description} />
+      </Text>
 
       <div className="fellowshipChips">
         <Title order={3} fz="sm" fw={600} className="fellowshipChipsLabel">
@@ -50,7 +87,7 @@ function FellowshipPanel({
       </div>
 
       {pastCurriculums.length > 0 && (
-        <Text size="sm">
+        <Text size="sm" fs="italic">
           Sample past curriculums:{" "}
           {pastCurriculums.map((item, index) => (
             <span key={item.href}>
@@ -67,6 +104,15 @@ function FellowshipPanel({
           ))}
         </Text>
       )}
+
+      {applyHref && (
+        <InvolvementCta
+          label="Apply Here"
+          href={applyHref}
+          newTab
+          className="fellowshipApplyCta"
+        />
+      )}
     </Stack>
   )
 }
@@ -74,8 +120,8 @@ function FellowshipPanel({
 /**
  * Template for the fellowships list. Each fellowship is a Mantine `Accordion`
  * item — a chevron control showing the icon + heading, and a panel with authors,
- * description, topic chips, and past curriculums. Uses Mantine's default
- * chevron rotation and panel transition.
+ * description, topic chips, and past curriculums. Any number of panels may be
+ * open at once. Uses Mantine's default chevron rotation and panel transition.
  */
 export function FellowshipAccordion({
   fellowships,
@@ -83,11 +129,13 @@ export function FellowshipAccordion({
   className,
 }: {
   fellowships: Fellowship[]
-  defaultValue?: string
+  /** Items open on first render — several may be open at once. */
+  defaultValue?: string[]
   className?: string
 }) {
   return (
     <Accordion
+      multiple
       variant="separated"
       radius="md"
       defaultValue={defaultValue}
@@ -119,6 +167,7 @@ export function FellowshipAccordion({
               description={fellowship.description}
               topics={fellowship.topics}
               pastCurriculums={fellowship.pastCurriculums}
+              applyHref={fellowship.applyHref}
             />
           </Accordion.Panel>
         </Accordion.Item>

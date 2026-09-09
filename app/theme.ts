@@ -79,20 +79,39 @@ const brown: MantineColorsTuple = [
 ];
 
 // Overrides Mantine's default (brighter, more orange) "red" so calendar chips
-// use the site's actual BAIST red accent (#C00404 — the same red swapped in
-// for "pine" in light mode below) rather than the stock palette. Like brown,
-// both the light- and dark-mode filled shades are pinned to that one red.
+// sit in the BAIST red family (#C00404 — the same red swapped in for "pine" in
+// light mode below) rather than the stock palette. The filled shades are pinned
+// one step *darker* than the brand red: chips are small blocks of saturated
+// colour repeated down the calendar, and the full-strength red is harsh at that
+// density. Like brown, light and dark mode share the one filled value.
 const red: MantineColorsTuple = [
   "#fdeceb",
   "#f9d0cd",
   "#f0a29b",
   "#e6746a",
-  "#c00404", // dark-mode filled — same red, not lightened
+  "#8f0303", // dark-mode filled — same deepened red, not lightened
   "#a80404",
-  "#8f0303",
-  "#c00404", // light-mode filled — BAIST red, matches the site
+  "#c00404", // base swatch — the brand red itself
+  "#8f0303", // light-mode filled — brand red, one step darker for chips
   "#5c0202",
   "#420101",
+];
+
+// Overrides Mantine's default "yellow" for the calendar's audience chips. The
+// brand yellow (#FFC72C) is a highlight colour, far too bright to carry white
+// label text as a filled chip, so the ramp runs down to a deep gold at the
+// filled shades — same reasoning as the deepened `red` above.
+const yellow: MantineColorsTuple = [
+  "#fdf6e3",
+  "#f8e9bf",
+  "#eed48a",
+  "#dcb954",
+  "#8d6710", // dark-mode filled — same deep gold, not lightened
+  "#a87c1a",
+  "#96700f", // base swatch
+  "#8d6710", // light-mode filled — deep gold, readable under white text
+  "#6e5009",
+  "#4f3906",
 ];
 
 /**
@@ -111,6 +130,7 @@ export const theme = createTheme({
     dark,
     brown,
     red,
+    yellow,
   },
   primaryColor: "pine",
   primaryShade: { light: 7, dark: 4 },

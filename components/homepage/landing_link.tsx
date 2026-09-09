@@ -14,6 +14,12 @@ export interface LandingLinkProps {
   title: string
   /** Optional supporting text — rendered smaller. */
   description?: string
+  /**
+   * Optional trailing clause of the description, picked out bold in the
+   * highlight colour (see `.landingLinkEmphasis`). Used for the fellowship
+   * application deadline.
+   */
+  emphasis?: string
   /** When true, fill the button with the accent color. */
   highlight?: boolean
 }
@@ -30,6 +36,7 @@ export function LandingLink({
   iconSrc,
   title,
   description,
+  emphasis,
   highlight = false,
 }: LandingLinkProps) {
   const [ripples, setRipples] = useState<Ripple[]>([])
@@ -65,9 +72,13 @@ export function LandingLink({
         <Title order={3} lh={1.2} m={0}>
           {title}
         </Title>
-        {description ? (
+        {description || emphasis ? (
           <Text fz="md" lh={1.35} className="landingLinkDesc" style={{ opacity: 0.9 }}>
             {description}
+            {description && emphasis ? " " : null}
+            {emphasis ? (
+              <strong className="landingLinkEmphasis">{emphasis}</strong>
+            ) : null}
           </Text>
         ) : null}
       </Stack>

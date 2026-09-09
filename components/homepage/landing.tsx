@@ -53,7 +53,8 @@ export function Landing() {
             href="/start/fellowships"
             iconSrc="/landing/fellowships.svg"
             title="Research and Governance Fellowships"
-            description="We will teach you real-world skills, the arguments for, and the arguments against AI safety. Applications due Friday, September 18th."
+            description="We will teach you real-world skills, the arguments for, and the arguments against AI safety."
+            emphasis="Applications due Friday, September 18th."
             highlight
           />
         </motion.div>

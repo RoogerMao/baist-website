@@ -37,18 +37,21 @@ export const executiveBoard: Person[] = [
     role: "Director of AI Safety Fundamentals Fellowship",
     email: "garret_xu@brown.edu",
     linkedin: "https://www.linkedin.com/in/garrett-xu-575420228/",
+    calendly: "https://calendly.com/garrett-xu",
   },
   {
     name: "Raen Kao",
     role: "Director of Technical Governance Fellowship",
     email: "raen_kao@brown.edu",
     linkedin: "https://www.linkedin.com/in/raenkao/",
+    bookingNote: "To speak with Raen, please send an email!",
   },
   {
     name: "Roger Mao",
     role: "Director of Technical Research Fellowship and Programming",
     email: "roger_mao@brown.edu",
     linkedin: "https://www.linkedin.com/in/roger-y-mao/",
+    calendly: "https://calendly.com/rogermao2019/30min",
   },
 ]
 

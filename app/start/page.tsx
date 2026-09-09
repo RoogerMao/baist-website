@@ -6,28 +6,29 @@ import { CopyEmail, Faq, type FaqItem } from "@/components/shared"
 
 const startFaq: FaqItem[] = [
   {
-    question: "Why do you have two separate applications for members?",
+    question:
+      "Should I contact an executive board member about direct membership?",
     answer:
-      "We think people will get the most out of club events if they have some previous experience with AI safety. The fellowships provide that in a structured, less intensive commitment. Roughly, if you've read about AI safety for around 20 hours, whether on your own or through an online course, we encourage you to apply directly for membership!",
+      "As a rule of thumb, we recommend this if you have spent around 20+ hours in AI Safety, though this will vary from person to person. We think people get the most out of member events and projects if they have previous experience.",
   },
   {
-    question:
-      "If I have enough past experience, should I apply for direct membership?",
+    question: "Why does BAIST have fellowships?",
     answer: (
       <>
-        <p>
-          Yes, although we do encourage many applicants to go through a
-          fellowship for the following reasons:
-        </p>
+        <p>BAIST has fellowships for the following reasons:</p>
         <ul>
           <li>
-            Fellowships provide you a smaller, more structured community, which
-            can serve as your home base before becoming a member
+            They provide you a smaller, more structured community, which can
+            serve as your home base before becoming a member
           </li>
           <li>
-            We&rsquo;ve structured our fellowships to build research, governance,
-            and critical thinking skills in addition to surveying AI safety as a
-            societal issue
+            They build research, governance, and critical thinking skills in
+            addition to surveying AI safety as a societal issue
+          </li>
+          <li>
+            They help the leadership team know potential members over an
+            extended period of time, not just a short written application and
+            interview.
           </li>
         </ul>
       </>
@@ -70,7 +71,13 @@ const levels: InvolvementLevel[] = [
       "Receive our weekly mailing list",
       "Request a 1:1 with any executive board member",
     ],
-    ctas: [{ label: "Join our mailing list", href: "#" }],
+    ctas: [
+      {
+        label: "Join our mailing list",
+        href: "https://airtable.com/appzrK1CeY3gVhlS6/pag7Xrvd9qKBIiWim/form",
+        newTab: true,
+      },
+    ],
   },
   {
     title: "Fellow",
@@ -87,19 +94,22 @@ const levels: InvolvementLevel[] = [
   {
     title: "Member",
     admissionProcess: "Rolling Applications",
+    note: "If you'd like to directly apply for membership, please speak to an executive board member.",
     abilities: [
       "Attend all club events",
       "Propose and contribute to club projects",
     ],
     ctas: [
-      { label: "Direct Member Application", href: "#" },
-      { label: "Fellow-to-Member Application", href: "#" },
+      {
+        label: "Apply here",
+        href: "https://airtable.com/appzrK1CeY3gVhlS6/pagigZisNeZjn623f/form",
+        newTab: true,
+      },
     ],
   },
   {
     title: "Club Leadership / Executive Board",
     abilities: ["Members leading (multiple) club fellowships and events"],
-    ctas: [{ label: "Express Interest", href: "#" }],
   },
 ]
 

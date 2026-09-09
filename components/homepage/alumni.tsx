@@ -9,8 +9,8 @@ import {
   useMotionValueEvent,
   useTransform,
 } from "motion/react"
-import { AlumniCarousel } from "./alumni-carousel"
-import { ALUMNI } from "./alumni-data"
+import { OrganizationCarousel } from "./organization-carousel"
+import { ORGANIZATIONS } from "./organizations-data"
 import { ScrollCue } from "./scroll-cue"
 import { useHome } from "./animation-manager"
 
@@ -76,7 +76,7 @@ export function Alumni() {
     >
       <ScrollCue
         direction="up"
-        label="BAIST Today"
+        label="BAIST"
         opacity={cueOpacity}
         onActivate={() => home?.scrollToTop()}
         className="cueText--top"
@@ -85,7 +85,7 @@ export function Alumni() {
       <div className="homeContent">
         <div className="alumniIntro">
           <motion.h1 className="hero" style={{ opacity: heroOpacity }}>
-            We want to build our careers{" "}
+            We build our careers{" "}
             <span className="heroUnderline">
               while preparing the world for future, more advanced models
             </span>
@@ -97,7 +97,7 @@ export function Alumni() {
               className="subheading"
               style={{ opacity: subheadingOpacity }}
             >
-              Our alumni have done both.
+              Our alumni have collaborated with the following organizations.
             </motion.p>
 
             <MotionLink
@@ -137,7 +137,17 @@ export function Alumni() {
         </div>
 
         <motion.div style={{ opacity: carouselOpacity }}>
-          <AlumniCarousel profiles={ALUMNI} />
+          <OrganizationCarousel organizations={ORGANIZATIONS} />
+
+          <p className="alumniDisclaimer">
+            Disclaimer: &ldquo;The content of UCS/GSC recognized student
+            organization websites is generated independently from Brown
+            University. The statements, views, opinions, and information
+            contained on the site are personal to those of the authors and
+            student organization and do not necessarily reflect those of Brown
+            University. The content on the site is not reviewed, approved, or
+            endorsed by Brown University or its faculty or staff.&rdquo;
+          </p>
         </motion.div>
       </div>
     </div>

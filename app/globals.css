@@ -705,6 +705,20 @@ a.menuItemAccent:hover {
   margin-top: var(--mantine-spacing-md);
 }
 
+.alumniDisclaimer {
+  margin: var(--mantine-spacing-xl) auto 0;
+  max-width: 60rem;
+  font-size: var(--mantine-font-size-xs);
+  font-style: italic;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--mantine-color-dimmed);
+}
+
+.alumniDisclaimer--logos {
+  margin-top: calc(var(--mantine-spacing-md) - 0.5rem);
+}
+
 .alumniDot {
   width: 0.5rem;
   height: 0.5rem;
@@ -745,9 +759,75 @@ a.menuItemAccent:hover {
   cursor: grabbing;
 }
 
-.alumniCard {
+/* Organization card: two columns — logo on the left, title and focus label
+   stacked to its right. The track stretches every card to the tallest in the
+   row. */
+.orgCard {
   flex: 0 0 auto;
-  width: clamp(16rem, 24vw, 20rem);
+  width: clamp(18rem, 26vw, 22rem);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mantine-spacing-sm);
+}
+
+/* The right-hand column: title stacked above the focus label, never beside
+   it. Takes every pixel the logo leaves; `min-width: 0` lets long names wrap
+   inside it instead of forcing the card wider. */
+.orgCardText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.orgCardLogo {
+  /* Wordmarks are wider than they are tall — fit them into the square rather
+     than cropping to fill it, and pad the leftover with white so every logo
+     reads as the same square tile whatever its aspect ratio. */
+  background-color: #fff;
+  flex: 0 0 auto;
+}
+
+/* The logo is the only link; hovering the card tints the title so the target
+   is discoverable from anywhere on it. */
+.orgCardTitle {
+  transition: color 150ms ease;
+}
+
+.orgCard[data-linked]:hover .orgCardTitle,
+.orgCard:has(.orgCardLogo:focus-visible) .orgCardTitle {
+  /* brown -> red on the light theme, cream -> yellow on the dark one; the
+     primary colour is near-white here and would barely read as a change. */
+  color: light-dark(#c00404, #ffc72c);
+}
+
+a.orgCardLogo {
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+a.orgCardLogo:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+/* Stacked under the title by .orgCardText's column gap. */
+.orgCardFocus {
+  margin: 0;
+}
+
+/* `contain` letterboxes the image inside the square, so the Avatar's own
+   clip doesn't touch its edges — round the image itself. */
+.orgCardLogo img {
+  object-fit: contain;
+  border-radius: var(--mantine-radius-md);
+}
+
+/* Marks that carry their own background crop to fill the tile instead. */
+.orgCardLogo[data-fill] img {
+  object-fit: cover;
 }
 
 /* --- Landing links: 3-up row -> 2 + full-width -> column --- */
@@ -857,6 +937,15 @@ a.menuItemAccent:hover {
     background-color: var(--accent-hover);
     border-color: var(--accent-hover);
   }
+}
+
+/* Deadline clause inside a highlighted landing link. The card's own text is
+   cream in light mode (brown card) and brown in dark mode (white card), so the
+   pick-out colour is the matching brand accent for each: yellow against the
+   light text, red against the brown. */
+.landingLinkEmphasis {
+  font-weight: 700;
+  color: light-dark(#ffc72c, #c00404);
 }
 
 .landingLinkIcon {
@@ -985,6 +1074,13 @@ a.menuItemAccent:hover {
    contrast. No override needed; it already inherits .involvementCardCta's
    --accent / --accent-hover above. */
 
+/* Aside above the ability list (e.g. how to apply for membership). Pulled
+   closer to the list than the Stack's own gap, so it reads as a lead-in to
+   the bullets rather than a separate block. */
+.involvementCardNote {
+  margin-bottom: calc(var(--mantine-spacing-md) * -1 + var(--mantine-spacing-xs));
+}
+
 .involvementCardCtas {
   display: flex;
   flex-wrap: wrap;
@@ -1103,11 +1199,59 @@ a.menuItemAccent:hover {
   color: light-dark(#ffc72c, #c00404);
 }
 
-/* Copy-email tooltip — accent surface, --accent-fg text (arrow inherits via
-   the var). */
-.personTooltip {
-  --tooltip-bg: var(--accent);
-  --tooltip-color: var(--accent-fg);
+/* "Book a time" button at the foot of a person card. Spans the card, and is
+   outlined rather than filled: the card itself flips to the accent fill on
+   hover, so a pill that borrows the current text colour reads correctly in
+   both states without a colour change of its own. */
+.personCardBooking {
+  align-self: stretch;
+  margin-top: var(--mantine-spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid currentColor;
+  border-radius: var(--mantine-radius-xl);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 150ms ease, color 150ms ease,
+    border-color 150ms ease;
+}
+
+/* Trailing ↗ marks the link as leaving the site; the tooltip-only variant
+   (Raen) goes nowhere, so it gets no arrow. */
+.personCardBooking:not([data-inert])::after {
+  content: "\2197";
+  margin-left: 0.25em;
+  transition: transform 150ms ease;
+}
+
+/* Link variant fills on its own hover; the tooltip-only variant keeps a flat
+   look and a default cursor, since there is nowhere to click through. */
+.personCardBooking:not([data-inert]):hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #ffffff;
+}
+
+.personCardBooking:not([data-inert]):hover::after {
+  transform: translate(2px, -2px);
+}
+
+.personCardBooking[data-inert] {
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* The booking note's bubble can overlap the card it belongs to, and a hovered
+   card carries the same accent fill as the tooltip. A border in the tooltip's
+   own text colour keeps its edge visible against card and page alike. */
+.personBookingTooltip {
+  border: 1px solid var(--accent-fg);
 }
 
 .peopleHeadingLink {
@@ -1191,10 +1335,16 @@ a.menuItemAccent:hover {
   background-color: transparent;
 }
 
+/* Section-heading flash — used both by the section-nav drawer and by arriving
+   at /people#<section-id> (e.g. the "executive board members" link on the
+   fellowships page). Colour only: the heading text alone changes, never a
+   background or outline. --accent-hover is the mode's own accent against its
+   body text — red on light mode's brown, yellow on dark mode's white — where
+   --accent would land on roughly the text colour itself and not read at all. */
 @keyframes sectionFlash {
   20%,
   55% {
-    color: var(--mantine-primary-color-filled);
+    color: var(--accent-hover);
   }
 }
 
@@ -1205,7 +1355,7 @@ a.menuItemAccent:hover {
 @media (prefers-reduced-motion: reduce) {
   .sectionFlash {
     animation: none;
-    color: var(--mantine-primary-color-filled);
+    color: var(--accent-hover);
   }
 }
 
@@ -1280,61 +1430,40 @@ ul.fellowshipList {
   box-shadow: var(--mantine-shadow-md);
 }
 
-.fellowshipAccordion .mantine-Accordion-control {
-  background-color: var(--mantine-primary-color-light);
-}
-
+/* Title bars hold one flat colour — solid brown with light text in light mode.
+   Mantine's own control:hover wash is pinned back to the rest fill rather than
+   simply dropped, since its stylesheet can load after this file and win on
+   equal specificity; the bars stay a constant colour so only the chevron
+   signals interactivity. */
+.fellowshipAccordion .mantine-Accordion-control,
 .fellowshipAccordion .mantine-Accordion-control:hover {
-  background-color: var(--mantine-primary-color-light-hover);
-  color: var(--mantine-primary-color-filled);
-}
-
-.fellowshipAccordion .mantine-Accordion-icon {
-  color: var(--mantine-primary-color-filled);
-}
-
-/* Technical fellowship — solid brown header with light text, turning red on
-   hover, in light mode. */
-.fellowshipItem--technical-ai-safety-research .mantine-Accordion-control {
   background-color: #4e3629;
   color: #fff;
 }
 
-/* While expanded, keep the header red as long as the cursor is anywhere over
-   the card (control or panel) — not just directly over the control. */
-.fellowshipItem--technical-ai-safety-research:hover .mantine-Accordion-control {
-  background-color: #c00404;
+.fellowshipAccordion .mantine-Accordion-icon,
+.fellowshipAccordion .mantine-Accordion-chevron {
   color: #fff;
 }
 
-.fellowshipItem--technical-ai-safety-research .mantine-Accordion-icon,
-.fellowshipItem--technical-ai-safety-research .mantine-Accordion-chevron {
-  color: #fff;
-}
-
-.fellowshipItem--technical-ai-safety-research .fellowshipSchedule {
+.fellowshipAccordion .fellowshipSchedule {
   color: rgba(255, 255, 255, 0.75);
 }
 
-/* Dark mode: solid white header with brown text instead, turning yellow on
-   hover — the light-mode brown/white/red header would otherwise blend into
-   the (also brown) dark-mode page. */
-:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .mantine-Accordion-control {
+/* Dark mode: solid white header with brown text instead — the light-mode
+   brown header would otherwise blend into the (also brown) dark-mode page. */
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion .mantine-Accordion-control,
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion .mantine-Accordion-control:hover {
   background-color: var(--mantine-color-white);
   color: #4e3629;
 }
 
-:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research:hover .mantine-Accordion-control {
-  background-color: #ffc72c;
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion .mantine-Accordion-icon,
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion .mantine-Accordion-chevron {
   color: #4e3629;
 }
 
-:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .mantine-Accordion-icon,
-:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .mantine-Accordion-chevron {
-  color: #4e3629;
-}
-
-:root[data-mantine-color-scheme="dark"] .fellowshipItem--technical-ai-safety-research .fellowshipSchedule {
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion .fellowshipSchedule {
   color: #5b5044;
 }
 
@@ -1355,6 +1484,13 @@ ul.fellowshipList {
 
 .fellowshipAccordion .mantine-Accordion-panel {
   background-color: var(--mantine-color-body);
+}
+
+/* Apply button at the foot of a fellowship panel. Inherits the /start CTA
+   styling wholesale (brown/white pill, red/yellow on hover); only needs a
+   little extra air separating it from the curriculum line above. */
+.fellowshipApplyCta {
+  margin-top: var(--mantine-spacing-xs);
 }
 
 /* Author names — italic, accent on hover */
@@ -1401,7 +1537,7 @@ ul.fellowshipList {
   color: #fff;
 }
 
-/* Dark mode: white chips (matching the now-white technical-fellowship header
+/* Dark mode: white chips (matching the now-white fellowship headers
    above), turning yellow on hover — brown/red would blend into the (also
    brown) dark-mode page. */
 :root[data-mantine-color-scheme="dark"] .fellowshipChip {
@@ -1445,6 +1581,7 @@ ul.fellowshipList {
     background-color: var(--mantine-primary-color-light);
   }
 }
+
 
 /* FAQ list — plus/minus accordion (components/shared/faq.tsx) */
 .faq {
@@ -1566,29 +1703,22 @@ ul.fellowshipList {
 
 /* ── Calendar ─────────────────────────────────────────────────────────── */
 
-/* Solid brown backdrop for the pinned board in light mode. Dark mode swaps
-   the whole board — white backdrop, brown preview cards — so it stands out
-   against the (also brown) page instead of blending into it. */
+/* The pinned board reads as a recessed panel rather than a slab of accent
+   colour: its backdrop is a variant of the page ground in each mode — a warm
+   light gray against the near-white light-mode body, a lighter brown against
+   the darker brown of dark mode. Preview cards then sit one step *lighter*
+   again (see .pinnedPreview below) so they still lift off the panel. */
 .pinnedCard {
-  background-color: var(--mantine-color-brown-7);
-  border: 1px solid var(--mantine-color-brown-8);
+  background-color: light-dark(var(--mantine-color-gray-1), #4e3629);
+  border: 1px solid light-dark(var(--mantine-color-gray-3), #5c4735);
 }
 
-:root[data-mantine-color-scheme="dark"] .pinnedCard {
-  background-color: var(--mantine-color-white);
-  border-color: var(--mantine-color-gray-3);
-}
-
-/* Section titles ("General Body" / "Fellows" / "Members") — white in light
-   mode (on the brown board), brown in dark mode (on the now-white board).
+/* Section titles ("General Body" / "Fellows" / "Members") — the page's own
+   body text colour in each mode, since the board is now a page-ground variant.
    !important: Mantine's Title styles can load after this file and win on
    equal specificity otherwise. */
 .pinnedColTitle {
-  color: var(--mantine-color-white) !important;
-}
-
-:root[data-mantine-color-scheme="dark"] .pinnedColTitle {
-  color: #4e3629 !important;
+  color: light-dark(#4e3629, var(--mantine-color-white)) !important;
 }
 
 /* Three equal columns with inset vertical rules between them. */
@@ -1609,11 +1739,11 @@ ul.fellowshipList {
 }
 
 .pinnedCol + .pinnedCol {
-  border-left: 1px solid color-mix(in srgb, white 30%, transparent);
-}
-
-:root[data-mantine-color-scheme="dark"] .pinnedCol + .pinnedCol {
-  border-left-color: color-mix(in srgb, #4e3629 25%, transparent);
+  border-left: 1px solid
+    light-dark(
+      color-mix(in srgb, #4e3629 18%, transparent),
+      color-mix(in srgb, white 22%, transparent)
+    );
 }
 
 @media (max-width: 48em) {
@@ -1628,18 +1758,18 @@ ul.fellowshipList {
 
   .pinnedCol + .pinnedCol {
     border-left: none;
-    border-top: 1px solid color-mix(in srgb, white 30%, transparent);
+    border-top: 1px solid
+      light-dark(
+        color-mix(in srgb, #4e3629 18%, transparent),
+        color-mix(in srgb, white 22%, transparent)
+      );
     padding-top: var(--mantine-spacing-md);
-  }
-
-  :root[data-mantine-color-scheme="dark"] .pinnedCol + .pinnedCol {
-    border-top-color: color-mix(in srgb, #4e3629 25%, transparent);
   }
 }
 
-/* Preview cards inside the pinned board — solid white against the brown
-   backdrop in light mode; dark mode flips this (see .pinnedCard above) to
-   solid brown cards against the white backdrop, with matching light text.
+/* Preview cards inside the pinned board — one step lighter than the board
+   itself in each mode (white on the light gray panel, a lighter brown on the
+   dark-mode panel) so they read as cards rather than dissolving into it.
    flex: 1 so every card in a row matches the height of the tallest one. */
 .pinnedPreview {
   display: flex;
@@ -1655,8 +1785,8 @@ ul.fellowshipList {
 }
 
 :root[data-mantine-color-scheme="dark"] .pinnedPreview {
-  background-color: #4e3629;
-  border-color: #3e2b20;
+  background-color: #5c4735;
+  border-color: #6d4a35;
 }
 
 :root[data-mantine-color-scheme="dark"] .pinnedPreviewTitle {
@@ -1669,16 +1799,12 @@ ul.fellowshipList {
 }
 
 button.pinnedPreview:hover {
-  border-color: var(--mantine-color-brown-7);
+  border-color: light-dark(var(--mantine-color-brown-7), var(--mantine-color-white));
   transform: translateY(-1px);
 }
 
-:root[data-mantine-color-scheme="dark"] button.pinnedPreview:hover {
-  border-color: var(--mantine-color-white);
-}
-
 button.pinnedPreview:focus-visible {
-  outline: 2px solid white;
+  outline: 2px solid light-dark(#4e3629, white);
   outline-offset: 2px;
 }
 
@@ -1688,24 +1814,18 @@ button.pinnedPreview:focus-visible {
   border-style: dashed;
 }
 
-/* Stay transparent even though .pinnedPreview above sets a solid brown fill
-   for real (non-empty) preview cards in dark mode — this element carries
-   both classes. */
+/* Stay transparent even though .pinnedPreview above sets a solid fill for
+   real (non-empty) preview cards in dark mode — this element carries both
+   classes. */
 :root[data-mantine-color-scheme="dark"] .pinnedPreviewEmpty {
   background-color: transparent;
-  border-color: color-mix(in srgb, #4e3629 40%, transparent);
+  border-color: color-mix(in srgb, white 35%, transparent);
 }
 
-/* "Hang tight!" — white in light mode (dashed, transparent, on the brown
-   board), brown in dark mode (transparent, on the now-white board).
-   !important: same Mantine Title override-order issue as .pinnedColTitle
-   above. */
+/* "Hang tight!" — body text colour in each mode, matching .pinnedColTitle.
+   !important: same Mantine Title override-order issue as that rule. */
 .pinnedPreviewEmptyTitle {
-  color: var(--mantine-color-white) !important;
-}
-
-:root[data-mantine-color-scheme="dark"] .pinnedPreviewEmptyTitle {
-  color: #4e3629 !important;
+  color: light-dark(#4e3629, var(--mantine-color-white)) !important;
 }
 
 /* Brief highlight when a preview card scrolls you to the full event card. */

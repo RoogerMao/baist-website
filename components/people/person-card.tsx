@@ -19,10 +19,24 @@ export interface Person {
   photo?: string;
   email?: string;
   linkedin?: string;
+  /** Personal scheduling link — renders a "Book a time" button on the card. */
+  calendly?: string;
+  /** Shown as a hover tooltip on a non-clickable button for people who take
+      meeting requests some other way (i.e. have no `calendly`). */
+  bookingNote?: string;
 }
 
-export function PersonCard({ name, role, photo, email, linkedin }: Person) {
+export function PersonCard({
+  name,
+  role,
+  photo,
+  email,
+  linkedin,
+  calendly,
+  bookingNote,
+}: Person) {
   const clipboard = useClipboard({ timeout: 1200 });
+  const firstName = name.split(" ")[0];
 
   return (
     <Paper
@@ -85,6 +99,33 @@ export function PersonCard({ name, role, photo, email, linkedin }: Person) {
           <Text c="dimmed" fz={12} ta="center" className="personCardRole">
             {role}
           </Text>
+        )}
+
+        {calendly ? (
+          <a
+            href={calendly}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="personCardBooking"
+          >
+            Book a time with {firstName}
+          </a>
+        ) : (
+          bookingNote && (
+            <Tooltip
+              label={bookingNote}
+              /* Below the button, so the bubble clears the card: a hovered
+                 card is filled with the same accent colour as the tooltip. */
+              position="bottom"
+              withArrow
+              classNames={{ tooltip: "personTooltip personBookingTooltip" }}
+            >
+              {/* Not a link: focusable so the note is reachable by keyboard. */}
+              <span className="personCardBooking" data-inert tabIndex={0}>
+                Book a time with {firstName}
+              </span>
+            </Tooltip>
+          )
         )}
       </Stack>
     </Paper>

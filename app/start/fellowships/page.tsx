@@ -12,12 +12,12 @@ const fellowshipFaq: FaqItem[] = [
   {
     question: "Can I apply to multiple fellowships?",
     answer:
-      "Yes! We encourage exploration, and have scheduled the fellowships accordingly for this reason. If you apply to multiple, we will still ask you to rank your preferences, in the case we can't offer you a spot in all the fellowships you've applied for.",
+      "Yes! We encourage exploration, and have scheduled the fellowships accordingly for this reason. If you apply to multiple, we will still ask you to rank your preferences, in case we can't offer you a spot in all the fellowships you've applied for.",
   },
   {
     question: "How many applicants do you plan to accept?",
     answer:
-      "We keep our fellowships small (around 8 to 10 people in each of the 4 fellowships). However, we'll make our final decisions based on applicant quality, and do our best to accommodate all applicants we're excited about.",
+      "We keep our fellowships small (around 8 to 10 people in each of the 4 fellowships). However, we'll make our final decisions based on applicant quality, and do our best to accommodate all applicants we'd like to have in our fellowships.",
   },
   {
     question:
@@ -61,11 +61,11 @@ export default function FellowshipsPage() {
         <Link href="#" className="fellowshipLink">
           open through September 18th
         </Link>
-        ! If you have a strong background in AI safety, please consider{" "}
-        <Link href="#" className="fellowshipLink">
-          applying for direct membership
-        </Link>
-        .
+        ! If you have a strong background in AI safety, please speak to one of our{" "}
+        <Link href="/people#executive-board" className="fellowshipLink">
+          executive board members
+        </Link>{" "}
+        before applying for direct membership.
       </Text>
 
       <div className="fellowshipCardRow">
@@ -112,7 +112,7 @@ export default function FellowshipsPage() {
 
       <FellowshipAccordion
         fellowships={fellowships}
-        defaultValue={fellowships[0]?.value}
+        defaultValue={fellowships.slice(0, 1).map((f) => f.value)}
         className="mt-[var(--mantine-spacing-xl)]"
       />
 
