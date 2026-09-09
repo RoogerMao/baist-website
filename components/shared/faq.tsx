@@ -4,6 +4,8 @@ import { useId, useState } from "react"
 import { Box, Text, Title, UnstyledButton } from "@mantine/core"
 import { AnimatePresence, motion } from "motion/react"
 
+import classes from "./faq.module.css"
+
 export interface FaqItem {
   question: string
   /** Answer body — a string, or any node for richer formatting. */
@@ -13,10 +15,10 @@ export interface FaqItem {
 /** Plus sign whose vertical bar collapses into the horizontal one when open. */
 function PlusMinusIcon({ open }: { open: boolean }) {
   return (
-    <span className="faqIcon" aria-hidden>
-      <span className="faqIconBar" />
+    <span className={classes.faqIcon} aria-hidden>
+      <span className={classes.faqIconBar} />
       <motion.span
-        className="faqIconBar faqIconBarVertical"
+        className={`${classes.faqIconBar} ${classes.faqIconBarVertical}`}
         animate={{ rotate: open ? 0 : 90, opacity: open ? 0 : 1 }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
       />
@@ -49,7 +51,7 @@ function FaqRow({ item, defaultOpen }: { item: FaqItem; defaultOpen: boolean }) 
     // interactive content (links), so this is a div with button semantics.
     <Box
       id={controlId}
-      className="faqRow"
+      className={classes.faqRow}
       role="button"
       tabIndex={0}
       aria-expanded={open}
@@ -60,7 +62,7 @@ function FaqRow({ item, defaultOpen }: { item: FaqItem; defaultOpen: boolean }) 
       <UnstyledButton
         component="div"
         tabIndex={-1}
-        className="faqControl"
+        className={classes.faqControl}
       >
         <Title order={3} fz="md" fw={600} lh={1.4}>
           {item.question}
@@ -81,7 +83,7 @@ function FaqRow({ item, defaultOpen }: { item: FaqItem; defaultOpen: boolean }) 
             transition={{ duration: 0.25, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
           >
-            <Text size="sm" c="dimmed" component="div" className="faqAnswer">
+            <Text size="sm" c="dimmed" component="div" className={classes.faqAnswer}>
               {item.answer}
             </Text>
           </motion.div>
@@ -94,7 +96,7 @@ function FaqRow({ item, defaultOpen }: { item: FaqItem; defaultOpen: boolean }) 
 /**
  * Accordion-style FAQ list with a plus/minus toggle per question, modelled on
  * examples.motion.dev/ui/sections/faq-plus-minus. Items open independently.
- * Styling uses Mantine tokens (see `.faq*` rules in globals.css).
+ * Styling uses Mantine tokens (see faq.module.css).
  */
 export function Faq({
   items,
@@ -107,7 +109,7 @@ export function Faq({
   className?: string
 }) {
   return (
-    <div className={className ? `faq ${className}` : "faq"}>
+    <div className={className ? `${classes.faq} ${className}` : classes.faq}>
       {items.map((item, index) => (
         <FaqRow
           key={item.question}

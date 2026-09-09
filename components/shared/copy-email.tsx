@@ -3,6 +3,8 @@
 import { useCallback, useRef, useState } from "react"
 import { Tooltip, UnstyledButton } from "@mantine/core"
 
+import classes from "./copy-email.module.css"
+
 /** Copy `text` to the clipboard, falling back to a hidden textarea + execCommand. */
 async function copyText(text: string) {
   try {
@@ -69,7 +71,9 @@ export function CopyEmail({
             handleCopy()
           }
         }}
-        className={className ? `copyEmail ${className}` : "copyEmail"}
+        className={
+          className ? `${classes.copyEmail} ${className}` : classes.copyEmail
+        }
       >
         {address}
       </UnstyledButton>

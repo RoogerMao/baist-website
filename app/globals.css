@@ -282,12 +282,6 @@ a.menuItemAccent:hover {
   border-radius: 0;
 }
 
-/* Keep the FAQ block at a readable measure even when the page is wide. */
-.faqSection {
-  max-width: 52rem;
-  margin-inline: auto;
-}
-
 /* --- AnimationManager: two pinned layers, scroll cross-fades between them --- */
 .home {
   width: 100%;
@@ -1582,124 +1576,6 @@ ul.fellowshipList {
   }
 }
 
-
-/* FAQ list — plus/minus accordion (components/shared/faq.tsx) */
-.faq {
-  display: flex;
-  flex-direction: column;
-}
-
-.faqRow {
-  border-bottom: 1px solid var(--mantine-color-default-border);
-  /* The whole row (question + expanded answer) toggles on click now, not
-     just the question, so it should read as clickable everywhere. */
-  cursor: pointer;
-}
-
-.faqRow:first-of-type {
-  border-top: 1px solid var(--mantine-color-default-border);
-}
-
-.faqControl {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--mantine-spacing-md);
-  width: 100%;
-  padding: var(--mantine-spacing-md) 0;
-  color: var(--mantine-color-text);
-}
-
-.faqControl:hover .faqIconBar {
-  background-color: var(--mantine-primary-color-filled);
-}
-
-.faqControl:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 2px;
-  border-radius: var(--mantine-radius-sm);
-}
-
-.faqIcon {
-  position: relative;
-  flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
-}
-
-.faqIconBar {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 1rem;
-  height: 2px;
-  margin: -1px 0 0 -0.5rem;
-  border-radius: 999px;
-  background-color: var(--mantine-color-dimmed);
-  transition: background-color 120ms ease;
-}
-
-.faqIconBarVertical {
-  transform-origin: center;
-}
-
-.faqAnswer {
-  padding-bottom: var(--mantine-spacing-md);
-  max-width: 46rem;
-}
-
-.faqAnswer p {
-  margin: 0;
-}
-
-.faqAnswer p + ol,
-.faqAnswer p + ul {
-  margin-top: var(--mantine-spacing-xs);
-}
-
-.faqAnswer ol,
-.faqAnswer ul {
-  margin: 0;
-  padding-left: 1.25rem;
-}
-
-.faqAnswer ol {
-  list-style: decimal;
-}
-
-.faqAnswer ul {
-  list-style: disc;
-}
-
-.faqLink {
-  color: var(--accent-hover);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.faqLink:hover {
-  text-decoration: underline;
-}
-
-.faqAnswer li + li {
-  margin-top: var(--mantine-spacing-xs);
-}
-
-.copyEmail {
-  color: var(--accent-hover);
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.copyEmail:hover {
-  text-decoration: underline;
-}
-
-.copyEmail:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 2px;
-  border-radius: var(--mantine-radius-sm);
-}
 
 /* ── Calendar ─────────────────────────────────────────────────────────── */
 

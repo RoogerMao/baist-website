@@ -8,6 +8,8 @@ import {
 } from "@/components/start/fellowships"
 import { CopyEmail, Faq, type FaqItem } from "@/components/shared"
 
+import faq from "@/components/shared/faq.module.css"
+
 const fellowshipFaq: FaqItem[] = [
   {
     question: "Can I apply to multiple fellowships?",
@@ -31,7 +33,7 @@ const fellowshipFaq: FaqItem[] = [
         looking through online courses, similar to those by{" "}
         <Link
           href="https://bluedot.org/"
-          className="faqLink"
+          className={faq.faqLink}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -116,7 +118,9 @@ export default function FellowshipsPage() {
         className="mt-[var(--mantine-spacing-xl)]"
       />
 
-      <section className="faqSection mt-[calc(var(--mantine-spacing-xl)*2)]">
+      <section
+        className={`${faq.faqSection} mt-[calc(var(--mantine-spacing-xl)*2)]`}
+      >
         <Title order={1} ta="center" mb={4}>
           FAQ
         </Title>

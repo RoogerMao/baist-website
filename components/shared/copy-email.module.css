@@ -1,0 +1,16 @@
+/* Inline, click-to-copy email address (components/shared/copy-email.tsx) */
+.copyEmail {
+  color: var(--accent-hover);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.copyEmail:hover {
+  text-decoration: underline;
+}
+
+.copyEmail:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-sm);
+}
