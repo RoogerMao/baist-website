@@ -49,7 +49,7 @@ export function PersonCard({
       className={`${classes.personCard} scroll-mt-28`}
     >
       <Stack gap={4} align="center">
-        {photo && <Avatar src={photo} alt={name} size={44} radius="xl" />}
+        {photo && <Avatar src={photo} alt={name} size={88} radius="50%" />}
 
         {/* name + socials share one row and wrap together when tight, so the
             icons always sit just after the name — photo or no photo */}
