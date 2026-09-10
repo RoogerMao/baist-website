@@ -34,6 +34,7 @@ export const leadershipTeam: Person[] = [
 export const executiveBoard: Person[] = [
   {
     name: "Garrett Xu",
+    photo: "/people/garrett-xu.webp",
     role: "Director of AI Safety Fundamentals Fellowship",
     email: "garret_xu@brown.edu",
     linkedin: "https://www.linkedin.com/in/garrett-xu-575420228/",
@@ -41,6 +42,7 @@ export const executiveBoard: Person[] = [
   },
   {
     name: "Raen Kao",
+    photo: "/people/raen-kao.webp",
     role: "Director of Technical Governance Fellowship",
     email: "raen_kao@brown.edu",
     linkedin: "https://www.linkedin.com/in/raenkao/",
@@ -48,6 +50,7 @@ export const executiveBoard: Person[] = [
   },
   {
     name: "Roger Mao",
+    photo: "/people/roger-mao.webp",
     role: "Director of Technical Research Fellowship and Programming",
     email: "roger_mao@brown.edu",
     linkedin: "https://www.linkedin.com/in/roger-y-mao/",
