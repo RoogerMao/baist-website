@@ -30,7 +30,9 @@ export function Landing() {
     <div className="landingPage homeSection">
       <div className="homeContent">
         <motion.h1 className="hero" style={{ opacity: heroOpacity }}>
-          <Typewriter text="Explore AI Safety." />
+          <span className="heroUnderline">
+            <Typewriter text="Explore AI Safety." />
+          </span>
         </motion.h1>
         <motion.p className="subheading" style={{ opacity: subheadingOpacity }}>
           We're a community of ambitious builders and thinkers set on tackling

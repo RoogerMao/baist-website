@@ -208,7 +208,11 @@ body {
 /* Desktop navbar sits on the brown bar — light text, warm hover wash. The
    mobile Drawer reuses `.link` but is portaled outside `.header`, so it keeps
    the default theme colors. */
-.header {
+/* Mantine sets --burger-color on the Burger root itself, so inheriting it
+   from .header never reaches the icon — it has to be set on that root. The bar
+   is brown in both colour schemes, so the icon is always the nav foreground;
+   left to the theme it goes brown-on-brown and vanishes in light mode. */
+.header .mantine-Burger-root {
   --burger-color: var(--nav-fg);
 }
 
@@ -232,6 +236,13 @@ body {
   font-weight: 700;
   background-color: var(--nav-highlight);
   border-radius: var(--mantine-radius-md);
+
+  /* In the drawer every entry is a full-width band; .link already squares off
+     here, and this has to follow or "Get Started" keeps a pill the others
+     lost. */
+  @media (max-width: $mantine-breakpoint-sm) {
+    border-radius: 0;
+  }
 }
 
 .link.linkAccent:hover {
@@ -438,25 +449,17 @@ a.menuItemAccent:hover {
 /* Landing hero: a yellow underline sweeps in on hover (same technique as the
    alumni hero — a background gradient so it tracks the wrapped block as one
    stroke), text colour unchanged. */
+/* The stroke lives on an inline span inside the heading (.heroUnderline, the
+   same element the alumni hero uses) rather than on the h1 itself. On the
+   block, `width: fit-content` collapses to the full column as soon as the
+   text wraps, so on narrow screens the line overran the last line's text by
+   the width of the ragged edge. An inline box hugs each line's own text. */
 .landingPage .hero {
-  /* hug the text so the underline doesn't overrun into empty space */
-  width: fit-content;
   max-width: 100%;
-  background-image: linear-gradient(#ffc72c, #ffc72c);
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 0% 0.06em;
-  transition: background-size 450ms ease;
 }
 
-.landingPage .hero:hover {
+.landingPage .hero:hover .heroUnderline {
   background-size: 100% 0.06em;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .landingPage .hero {
-    transition: none;
-  }
 }
 
 /* Alumni heading is a full sentence — three-quarters the landing hero size. */
@@ -563,6 +566,12 @@ a.menuItemAccent:hover {
    alumni.tsx). A background gradient rather than a pseudo-element so it tracks
    every wrapped line as one stroke. */
 .heroUnderline {
+  /* clone, not the default slice: with slice the gradient is sized against the
+     inline box's full union width, so every line short of the widest one gets
+     a stroke that overruns its text. clone gives each wrapped line its own
+     box, so the stroke ends where that line's text ends. */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
   background-image: linear-gradient(#ffc72c, #ffc72c);
   background-repeat: no-repeat;
   background-position: 0 100%;
