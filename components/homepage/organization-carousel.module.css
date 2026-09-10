@@ -1,0 +1,184 @@
+/* Alumni: infinitely looping, drag-scrubbable profile carousel
+   (components/homepage/organization-carousel.tsx) */
+.alumniCarousel {
+  position: relative;
+  width: 100%;
+}
+
+.alumniCarouselViewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 4rem,
+    #000 calc(100% - 4rem),
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 4rem,
+    #000 calc(100% - 4rem),
+    transparent
+  );
+}
+
+.alumniCarouselArrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--mantine-primary-color-filled);
+  border-radius: 999px;
+  background-color: var(--mantine-primary-color-filled);
+  color: light-dark(var(--mantine-color-white), var(--mantine-color-black));
+  cursor: pointer;
+}
+
+.alumniCarouselArrow:hover {
+  background-color: var(--mantine-primary-color-filled-hover);
+  border-color: var(--mantine-primary-color-filled-hover);
+}
+
+.alumniCarouselArrow:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.alumniCarouselArrow svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.alumniCarouselArrow--prev {
+  left: 0;
+}
+
+.alumniCarouselArrow--next {
+  right: 0;
+}
+
+.alumniDots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--mantine-spacing-md);
+}
+
+.alumniDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--mantine-color-default-border);
+  cursor: pointer;
+  transition: width 200ms ease, background-color 200ms ease;
+}
+
+.alumniDot:hover {
+  background-color: var(--mantine-color-dimmed);
+}
+
+.alumniDot[data-active] {
+  width: 1.4rem;
+  background-color: var(--mantine-primary-color-filled);
+}
+
+.alumniDot:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.alumniTrack {
+  display: flex;
+  width: max-content;
+  align-items: stretch;
+  gap: var(--mantine-spacing-md);
+  padding: 0.5rem 0;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.alumniTrack:active {
+  cursor: grabbing;
+}
+
+/* Organization card: two columns — logo on the left, title and focus label
+   stacked to its right. The track stretches every card to the tallest in the
+   row. */
+.orgCard {
+  flex: 0 0 auto;
+  width: clamp(18rem, 26vw, 22rem);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mantine-spacing-sm);
+}
+
+/* The right-hand column: title stacked above the focus label, never beside
+   it. Takes every pixel the logo leaves; `min-width: 0` lets long names wrap
+   inside it instead of forcing the card wider. */
+.orgCardText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.orgCardLogo {
+  /* Wordmarks are wider than they are tall — fit them into the square rather
+     than cropping to fill it, and pad the leftover with white so every logo
+     reads as the same square tile whatever its aspect ratio. */
+  background-color: #fff;
+  flex: 0 0 auto;
+}
+
+/* The logo is the only link; hovering the card tints the title so the target
+   is discoverable from anywhere on it. */
+.orgCardTitle {
+  transition: color 150ms ease;
+}
+
+.orgCard[data-linked]:hover .orgCardTitle,
+.orgCard:has(.orgCardLogo:focus-visible) .orgCardTitle {
+  /* brown -> red on the light theme, cream -> yellow on the dark one; the
+     primary colour is near-white here and would barely read as a change. */
+  color: light-dark(#c00404, #ffc72c);
+}
+
+a.orgCardLogo {
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+a.orgCardLogo:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+/* Stacked under the title by .orgCardText's column gap. */
+.orgCardFocus {
+  margin: 0;
+}
+
+/* `contain` letterboxes the image inside the square, so the Avatar's own
+   clip doesn't touch its edges — round the image itself. The img is rendered
+   by Mantine's Avatar, so this reaches it by tag rather than by class. */
+.orgCardLogo img {
+  object-fit: contain;
+  border-radius: var(--mantine-radius-md);
+}
+
+/* Marks that carry their own background crop to fill the tile instead. */
+.orgCardLogo[data-fill] img {
+  object-fit: cover;
+}

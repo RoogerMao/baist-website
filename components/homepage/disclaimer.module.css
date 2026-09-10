@@ -1,0 +1,18 @@
+/* The italic footnote under the alumni carousel and under the organization
+   carousel. Both live here rather than with either component: the modifier
+   below overrides the base at equal specificity, so the two rules must stay in
+   one stylesheet where source order is guaranteed.
+   Used by homepage/alumni.tsx and homepage/organization-carousel.tsx. */
+.alumniDisclaimer {
+  margin: var(--mantine-spacing-xl) auto 0;
+  max-width: 60rem;
+  font-size: var(--mantine-font-size-xs);
+  font-style: italic;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--mantine-color-dimmed);
+}
+
+.alumniDisclaimer--logos {
+  margin-top: calc(var(--mantine-spacing-md) - 0.5rem);
+}
