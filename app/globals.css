@@ -611,28 +611,55 @@ a.menuItemAccent:hover {
 }
 
 /* Solid fill so it stays legible when tall content scrolls behind it. */
-.homeCue .cueButton {
+.homeCue .cueButton,
+.homeCueInline .cueButton {
   background-color: var(--mantine-color-body);
 }
 
 /* Same reasoning as the top cue: transparent (same as the page body) with a
    white outline, rather than a filled pill. :not(:hover) so this doesn't
    outrank .homeCue .cueButton:hover's red fill below. */
-:root[data-mantine-color-scheme="dark"] .homeCue .cueButton:not(:hover):not(:focus-visible) {
+:root[data-mantine-color-scheme="dark"] .homeCue .cueButton:not(:hover):not(:focus-visible),
+:root[data-mantine-color-scheme="dark"] .homeCueInline .cueButton:not(:hover):not(:focus-visible) {
   background-color: transparent;
   border-color: var(--mantine-color-white);
   color: var(--mantine-color-white);
 }
 
 .homeCue .cueButton:hover,
-.homeCue .cueButton:focus-visible {
+.homeCue .cueButton:focus-visible,
+.homeCueInline .cueButton:hover,
+.homeCueInline .cueButton:focus-visible {
   color: light-dark(#4e3629, #ffffff);
   background-color: light-dark(#ffc72c, #c00404);
+}
+
+/* Wide screens use the cue pinned to the bottom of the stage; the in-flow twin
+   rendered by landing.tsx stays out of the way. */
+.homeCueInline {
+  display: none;
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
   .homeContent {
     gap: var(--mantine-spacing-md);
+  }
+
+  /* The landing content is taller than a phone viewport, so it scrolls under
+     anything pinned to the bottom. Swap the pinned cue for the in-flow one,
+     which sits after the links instead of over them, and drop the bottom
+     padding that was only reserving space for the pinned version. */
+  .homeCue {
+    display: none;
+  }
+
+  .homeCueInline {
+    display: flex;
+    justify-content: center;
+  }
+
+  .landingPage .homeContent {
+    padding-bottom: 0;
   }
 }
 

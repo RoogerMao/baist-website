@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useTransform } from "motion/react"
 import { LandingLink } from "./landing_link"
+import { ScrollCue } from "./scroll-cue"
 import { Typewriter } from "./typewriter"
 import { useHome } from "./animation-manager"
 
@@ -62,6 +63,20 @@ export function Landing() {
             highlight
           />
         </motion.div>
+
+        {/* Narrow-screen twin of the pinned cue in animation-manager.tsx. The
+            landing content is taller than a phone viewport, so a cue pinned to
+            the bottom sits on top of the links; this one flows after them and
+            scrolls with the content. Exactly one of the two is displayed —
+            see .homeCue / .homeCueInline. */}
+        <div className="homeCueInline">
+          <ScrollCue
+            direction="down"
+            label="See where you could go"
+            opacity={linksOpacity}
+            onActivate={() => home?.scrollToAlumni()}
+          />
+        </div>
       </div>
     </div>
   )
