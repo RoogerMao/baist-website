@@ -5,6 +5,8 @@ import Link from "next/link"
 import { AnimatePresence, motion } from "motion/react"
 import { Stack, Text, Title } from "@mantine/core"
 
+import classes from "./landing_link.module.css"
+
 export interface LandingLinkProps {
   /** Destination route. */
   href: string
@@ -16,8 +18,8 @@ export interface LandingLinkProps {
   description?: string
   /**
    * Optional trailing clause of the description, picked out bold in the
-   * highlight colour (see `.landingLinkEmphasis`). Used for the fellowship
-   * application deadline.
+   * highlight colour (see `.landingLinkEmphasis` in landing_link.module.css).
+   * Used for the fellowship application deadline.
    */
   emphasis?: string
   /** When true, fill the button with the accent color. */
@@ -59,13 +61,13 @@ export function LandingLink({
   return (
     <Link
       href={href}
-      className="landingLink"
+      className={classes.landingLink}
       data-highlight={highlight || undefined}
       onPointerDown={spawnRipple}
     >
       <span
         aria-hidden
-        className="landingLinkIcon"
+        className={classes.landingLinkIcon}
         style={{ maskImage: `url(${iconSrc})`, WebkitMaskImage: `url(${iconSrc})` }}
       />
       <Stack gap={4} style={{ minWidth: 0 }}>
@@ -77,18 +79,18 @@ export function LandingLink({
             {description}
             {description && emphasis ? " " : null}
             {emphasis ? (
-              <strong className="landingLinkEmphasis">{emphasis}</strong>
+              <strong className={classes.landingLinkEmphasis}>{emphasis}</strong>
             ) : null}
           </Text>
         ) : null}
       </Stack>
 
-      <span className="landingLinkRipples" aria-hidden>
+      <span className={classes.landingLinkRipples} aria-hidden>
         <AnimatePresence>
           {ripples.map((ripple) => (
             <motion.span
               key={ripple.id}
-              className="landingLinkRipple"
+              className={classes.landingLinkRipple}
               style={{
                 left: ripple.x,
                 top: ripple.y,

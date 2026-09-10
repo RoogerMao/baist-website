@@ -1,0 +1,15 @@
+/* Author names — italic, accent on hover
+   (components/start/fellowships/author-link.tsx) */
+.authorName {
+  font-style: italic;
+}
+
+.authorLink {
+  color: var(--accent-hover);
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.authorLink:hover {
+  text-decoration: underline;
+}

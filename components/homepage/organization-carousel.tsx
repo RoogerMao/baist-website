@@ -18,6 +18,9 @@ import {
   wrap,
 } from "motion/react"
 
+import classes from "./organization-carousel.module.css"
+import disclaimer from "./disclaimer.module.css"
+
 export interface Organization {
   /** Organization name — the card's title. */
   name: string
@@ -58,7 +61,7 @@ function OrganizationCard({
       withBorder
       radius="md"
       p="lg"
-      className="orgCard"
+      className={classes.orgCard}
       data-linked={url ? true : undefined}
     >
       <Avatar
@@ -67,7 +70,7 @@ function OrganizationCard({
         color="initials"
         radius="md"
         size={64}
-        className="orgCardLogo"
+        className={classes.orgCardLogo}
         data-fill={logoFill || undefined}
         {...(url
           ? {
@@ -79,12 +82,12 @@ function OrganizationCard({
             }
           : {})}
       />
-      <div className="orgCardText">
-        <Title order={3} fz="h4" lh={1.2} m={0} className="orgCardTitle">
+      <div className={classes.orgCardText}>
+        <Title order={3} fz="h4" lh={1.2} m={0} className={classes.orgCardTitle}>
           {name}
         </Title>
         {focus ? (
-          <Text size="sm" c="dimmed" lh={1.35} className="orgCardFocus">
+          <Text size="sm" c="dimmed" lh={1.35} className={classes.orgCardFocus}>
             {focus}
           </Text>
         ) : null}
@@ -214,10 +217,10 @@ export function OrganizationCarousel({
   const loop = [...organizations, ...organizations, ...organizations]
 
   return (
-    <div className="alumniCarousel">
+    <div className={classes.alumniCarousel}>
       <motion.button
         type="button"
-        className="alumniCarouselArrow alumniCarouselArrow--prev"
+        className={`${classes.alumniCarouselArrow} ${classes["alumniCarouselArrow--prev"]}`}
         aria-label="Previous organization"
         onClick={() => scrollBy(-1)}
         style={{ y: "-50%" }}
@@ -227,10 +230,10 @@ export function OrganizationCarousel({
         <IconChevronLeft stroke={1.75} />
       </motion.button>
 
-      <div className="alumniCarouselViewport">
+      <div className={classes.alumniCarouselViewport}>
         <motion.div
           ref={trackRef}
-          className="alumniTrack"
+          className={classes.alumniTrack}
           style={{ x }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -246,7 +249,7 @@ export function OrganizationCarousel({
 
       <motion.button
         type="button"
-        className="alumniCarouselArrow alumniCarouselArrow--next"
+        className={`${classes.alumniCarouselArrow} ${classes["alumniCarouselArrow--next"]}`}
         aria-label="Next organization"
         onClick={() => scrollBy(1)}
         style={{ y: "-50%" }}
@@ -256,17 +259,17 @@ export function OrganizationCarousel({
         <IconChevronRight stroke={1.75} />
       </motion.button>
 
-      <p className="alumniDisclaimer alumniDisclaimer--logos">
+      <p className={`${disclaimer.alumniDisclaimer} ${disclaimer["alumniDisclaimer--logos"]}`}>
         Use of organizational logos does not imply affiliation with or
         endorsement by these organizations.
       </p>
 
-      <div className="alumniDots" role="tablist" aria-label="Organizations">
+      <div className={classes.alumniDots} role="tablist" aria-label="Organizations">
         {organizations.map((_, index) => (
           <button
             key={index}
             type="button"
-            className="alumniDot"
+            className={classes.alumniDot}
             data-active={index === activeIndex || undefined}
             aria-label={`Go to organization ${index + 1}`}
             aria-selected={index === activeIndex}

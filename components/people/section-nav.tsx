@@ -3,6 +3,11 @@
 import { Drawer } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 
+import classes from "./section-nav.module.css"
+// The flashed element is people-section.tsx's heading, so the animation
+// lives with that component; this file only needs the class name.
+import sectionStyles from "./people-section.module.css"
+
 export interface SectionLink {
   /** id of the target <section> on the page */
   id: string
@@ -44,10 +49,10 @@ export function SectionNav({ sections }: { sections: SectionLink[] }) {
     }
 
     // (re)start the highlight even if it's already running
-    title.classList.remove("sectionFlash")
+    title.classList.remove(sectionStyles.sectionFlash)
     void title.offsetWidth
-    title.classList.add("sectionFlash")
-    window.setTimeout(() => title.classList.remove("sectionFlash"), 1800)
+    title.classList.add(sectionStyles.sectionFlash)
+    window.setTimeout(() => title.classList.remove(sectionStyles.sectionFlash), 1800)
 
     close()
   }
@@ -56,7 +61,7 @@ export function SectionNav({ sections }: { sections: SectionLink[] }) {
     <>
       <button
         type="button"
-        className="sectionNavToggle"
+        className={classes.sectionNavToggle}
         aria-label="Open section navigation"
         onClick={open}
       >
@@ -85,12 +90,12 @@ export function SectionNav({ sections }: { sections: SectionLink[] }) {
         }}
       >
         <nav>
-          <ul className="sectionNavList">
+          <ul className={classes.sectionNavList}>
             {sections.map((section) => (
               <li key={section.id}>
                 <button
                   type="button"
-                  className="sectionNavLink"
+                  className={classes.sectionNavLink}
                   onClick={() => goToSection(section.id)}
                 >
                   {section.label}

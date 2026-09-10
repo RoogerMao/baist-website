@@ -1,0 +1,15 @@
+/* URL links in fellowship prose: highlighted with --accent-hover (red on the
+   light-mode page's brown text, yellow on the dark-mode page's white text) —
+   underlined only on hover, not at rest.
+
+   Its own module because both the fellowships page and the accordion's panel
+   body use it; neither owns the other. */
+.fellowshipLink {
+  color: var(--accent-hover);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.fellowshipLink:hover {
+  text-decoration: underline;
+}

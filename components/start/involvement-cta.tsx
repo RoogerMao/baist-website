@@ -4,6 +4,8 @@ import { useRef, useState, type PointerEvent } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "motion/react"
 
+import classes from "./involvement-cta.module.css"
+
 interface Ripple {
   id: number
   x: number
@@ -50,21 +52,23 @@ export function InvolvementCta({
     <Link
       href={href}
       className={
-        className ? `involvementCardCta ${className}` : "involvementCardCta"
+        className
+          ? `${classes.involvementCardCta} ${className}`
+          : classes.involvementCardCta
       }
       data-white={white || undefined}
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noopener noreferrer" : undefined}
       onPointerDown={spawnRipple}
     >
-      <span className="involvementCardCtaLabel">{label}</span>
+      <span className={classes.involvementCardCtaLabel}>{label}</span>
 
-      <span className="involvementCardCtaRipples" aria-hidden>
+      <span className={classes.involvementCardCtaRipples} aria-hidden>
         <AnimatePresence>
           {ripples.map((ripple) => (
             <motion.span
               key={ripple.id}
-              className="involvementCardCtaRipple"
+              className={classes.involvementCardCtaRipple}
               style={{
                 left: ripple.x,
                 top: ripple.y,

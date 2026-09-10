@@ -1,0 +1,13 @@
+/* People page: heading (app/people/page.tsx) */
+.peopleHeading {
+  font-size: clamp(2rem, 6vw, 2.75rem);
+}
+
+.peopleHeadingLink {
+  color: var(--accent-hover);
+  text-decoration: none;
+}
+
+.peopleHeadingLink:hover {
+  text-decoration: underline;
+}

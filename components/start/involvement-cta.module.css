@@ -1,0 +1,78 @@
+/* Get Started page: the CTA button inside an involvement card
+   (components/start/involvement-cta.tsx). Callers may append their own class
+   for spacing — see .fellowshipApplyCta. */
+
+/* CTA: a button that sits on a background distinct from its card, with a
+   Material-style press ripple (motion.dev/examples/react-material-design-ripple). */
+.involvementCardCta {
+  position: relative;
+  overflow: hidden;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  text-decoration: none;
+  /* site accent: brown/white fill that transitions to red/yellow on hover */
+  background-color: var(--accent);
+  color: var(--accent-fg);
+  transition: background-color 150ms ease;
+}
+
+.involvementCardCta:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Trailing arrow, nudged right on hover. */
+.involvementCardCta::after {
+  content: "\2192";
+  position: relative;
+  z-index: 1;
+  margin-left: 0.2em;
+  transition: transform 150ms ease;
+}
+
+.involvementCardCta:hover::after {
+  transform: translateX(2px);
+}
+
+/* The Fellow card itself is brown in light mode / white in dark mode (see
+   .involvementCard[data-highlight] in involvement-card.module.css), so this
+   CTA takes the opposite fill in each mode to actually stand out against its
+   own card, turning red on hover in both. */
+.involvementCardCta[data-white] {
+  background-color: light-dark(#ffffff, #4e3629);
+  color: light-dark(#4e3629, #ffffff);
+}
+
+.involvementCardCta[data-white]:hover {
+  background-color: #c00404;
+  color: #ffffff;
+}
+
+/* This CTA now resolves to the same colors as its own (also accent-filled)
+   card — a deliberate, requested trade-off: in light mode it's a brown pill
+   on a brown card, distinguished only by its border/ripple/arrow, not fill
+   contrast. No override needed; it already inherits .involvementCardCta's
+   --accent / --accent-hover above. */
+
+.involvementCardCtaLabel {
+  position: relative;
+  z-index: 1;
+}
+
+.involvementCardCtaRipples {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.involvementCardCtaRipple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentColor;
+}

@@ -2,9 +2,12 @@
 
 import { useEffect } from "react"
 
-const CARD_FLASH_CLASS = "personCardFlash"
+import card from "./person-card.module.css"
+import section from "./people-section.module.css"
+
+const CARD_FLASH_CLASS = card.personCardFlash
 const CARD_FLASH_MS = 2200
-const TITLE_FLASH_CLASS = "sectionFlash"
+const TITLE_FLASH_CLASS = section.sectionFlash
 const TITLE_FLASH_MS = 1800
 
 export function PeopleHighlight() {

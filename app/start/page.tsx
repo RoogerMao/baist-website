@@ -4,6 +4,8 @@ import { Text, Title } from "@mantine/core"
 import { InvolvementCard, type InvolvementLevel } from "@/components/start"
 import { CopyEmail, Faq, type FaqItem } from "@/components/shared"
 
+import faq from "@/components/shared/faq.module.css"
+
 const startFaq: FaqItem[] = [
   {
     question:
@@ -46,7 +48,7 @@ const startFaq: FaqItem[] = [
         looking through online courses, similar to those by{" "}
         <Link
           href="https://bluedot.org/"
-          className="faqLink"
+          className={faq.faqLink}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -129,7 +131,9 @@ export default function StartPage() {
         ))}
       </div>
 
-      <section className="faqSection mt-[calc(var(--mantine-spacing-xl)*2)]">
+      <section
+        className={`${faq.faqSection} mt-[calc(var(--mantine-spacing-xl)*2)]`}
+      >
         <Title order={1} ta="center" mb={4}>
           FAQ
         </Title>

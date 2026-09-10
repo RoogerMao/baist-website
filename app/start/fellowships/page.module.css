@@ -1,0 +1,48 @@
+/* Fellowships page prose and layout (app/start/fellowships/page.tsx) */
+.fellowshipCardRow {
+  display: grid;
+  gap: var(--mantine-spacing-md);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 48em) {
+  .fellowshipCardRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.fellowshipAccent {
+  color: var(--accent-hover);
+  font-style: italic;
+}
+
+.fellowshipList {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: var(--mantine-font-size-sm);
+  line-height: 1.55;
+}
+
+ol.fellowshipList {
+  list-style: decimal;
+}
+
+ul.fellowshipList {
+  list-style: disc;
+}
+
+.fellowshipList li {
+  padding-left: 0.25rem;
+}
+
+.fellowshipList li + li {
+  margin-top: var(--mantine-spacing-sm);
+}
+
+.fellowshipListNested {
+  margin-top: var(--mantine-spacing-sm);
+}
+
+.fellowshipListNested li + li {
+  margin-top: var(--mantine-spacing-xs);
+}

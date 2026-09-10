@@ -13,6 +13,8 @@ import { useClipboard } from "@mantine/hooks";
 import { MaskIcon } from "@/components/mask-icon";
 import { personCardId } from "./people-ids";
 
+import classes from "./person-card.module.css";
+
 export interface Person {
   name: string;
   role?: string;
@@ -44,7 +46,7 @@ export function PersonCard({
       radius="md"
       p="md"
       id={personCardId(name)}
-      className="personCard scroll-mt-28"
+      className={`${classes.personCard} scroll-mt-28`}
     >
       <Stack gap={4} align="center">
         {photo && <Avatar src={photo} alt={name} size={44} radius="xl" />}
@@ -52,7 +54,7 @@ export function PersonCard({
         {/* name + socials share one row and wrap together when tight, so the
             icons always sit just after the name — photo or no photo */}
         <Group gap={6} wrap="wrap" align="center" justify="center">
-          <Text fw={600} fz="h4" component="span" className="personCardName">
+          <Text fw={600} fz="h4" component="span" className={classes.personCardName}>
             {name}
           </Text>
 
@@ -67,7 +69,7 @@ export function PersonCard({
                   size="sm"
                   variant="subtle"
                   color="gray"
-                  className="personCardIcon"
+                  className={classes.personCardIcon}
                   data-copied={clipboard.copied || undefined}
                   aria-label={`Copy email address for ${name}`}
                   onClick={() => clipboard.copy(email)}
@@ -82,7 +84,7 @@ export function PersonCard({
                 size="sm"
                 variant="subtle"
                 color="gray"
-                className="personCardIcon"
+                className={classes.personCardIcon}
                 component="a"
                 href={linkedin}
                 target="_blank"
@@ -96,7 +98,7 @@ export function PersonCard({
         </Group>
 
         {role && (
-          <Text c="dimmed" fz={12} ta="center" className="personCardRole">
+          <Text c="dimmed" fz={12} ta="center">
             {role}
           </Text>
         )}
@@ -106,7 +108,7 @@ export function PersonCard({
             href={calendly}
             target="_blank"
             rel="noopener noreferrer"
-            className="personCardBooking"
+            className={classes.personCardBooking}
           >
             Book a time with {firstName}
           </a>
@@ -118,10 +120,10 @@ export function PersonCard({
                  covering the person it belongs to. */
               position="bottom"
               withArrow
-              classNames={{ tooltip: "personTooltip personBookingTooltip" }}
+              classNames={{ tooltip: `personTooltip ${classes.personBookingTooltip}` }}
             >
               {/* Not a link: focusable so the note is reachable by keyboard. */}
-              <span className="personCardBooking" data-inert tabIndex={0}>
+              <span className={classes.personCardBooking} data-inert tabIndex={0}>
                 Book a time with {firstName}
               </span>
             </Tooltip>

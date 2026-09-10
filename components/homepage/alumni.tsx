@@ -14,6 +14,8 @@ import { ORGANIZATIONS } from "./organizations-data"
 import { ScrollCue } from "./scroll-cue"
 import { useHome } from "./animation-manager"
 
+import disclaimer from "./disclaimer.module.css"
+
 const MotionLink = motion.create(Link)
 
 interface Ripple {
@@ -139,7 +141,7 @@ export function Alumni() {
         <motion.div style={{ opacity: carouselOpacity }}>
           <OrganizationCarousel organizations={ORGANIZATIONS} />
 
-          <p className="alumniDisclaimer">
+          <p className={disclaimer.alumniDisclaimer}>
             Disclaimer: &ldquo;The content of UCS/GSC recognized student
             organization websites is generated independently from Brown
             University. The statements, views, opinions, and information

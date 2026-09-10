@@ -1,0 +1,17 @@
+/* Calendar — full event card (components/start/calendar/event-card.tsx) */
+
+/* Brief highlight when a preview card scrolls you to the full event card. */
+.eventCardHighlight {
+  animation: eventCardPulse 2.2s ease-out;
+}
+
+@keyframes eventCardPulse {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px var(--mantine-primary-color-filled);
+    border-color: var(--mantine-primary-color-filled);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
