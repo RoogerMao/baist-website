@@ -1,0 +1,46 @@
+/* Landing links row: 3-up row -> 2 + full-width -> column
+   (the container lives in components/homepage/landing.tsx; each card is a
+   LandingLink, styled in landing_link.module.css). These reach the cards as
+   `> *` rather than by class, so the two modules stay independent. */
+.landingLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: stretch;
+  gap: var(--mantine-spacing-sm);
+  /* Inset + centered so the row doesn't hug the left edge under a full-width
+     hero on wide screens. */
+  width: 90%;
+  margin-inline: auto;
+}
+
+.landingLinks > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: $mantine-breakpoint-md) {
+  .landingLinks > * {
+    flex-basis: calc(50% - var(--mantine-spacing-sm) / 2);
+  }
+
+  /* fellowships (3rd) drops to its own full-width row */
+  .landingLinks > *:nth-child(3) {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .landingLinks {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: none;
+  }
+
+  /* stack at natural height rather than splitting the column equally */
+  .landingLinks > *,
+  .landingLinks > *:nth-child(3) {
+    flex: 0 0 auto;
+  }
+}

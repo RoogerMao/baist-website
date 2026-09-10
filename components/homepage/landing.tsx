@@ -5,6 +5,8 @@ import { LandingLink } from "./landing_link"
 import { Typewriter } from "./typewriter"
 import { useHome } from "./animation-manager"
 
+import classes from "./landing.module.css"
+
 /**
  * Fade-out order leaving the landing (scrolling down): hero, then subheading,
  * then the links — each range sits inside the manager's landing-exit window
@@ -35,7 +37,7 @@ export function Landing() {
           some of the most pressing problems in AI and society.
         </motion.p>
 
-        <motion.div className="landingLinks" style={{ opacity: linksOpacity }}>
+        <motion.div className={classes.landingLinks} style={{ opacity: linksOpacity }}>
           <LandingLink
             href="/people"
             iconSrc="/landing/mentoring.svg"
