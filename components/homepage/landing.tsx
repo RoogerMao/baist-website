@@ -38,16 +38,17 @@ export function Landing() {
           </span>
         </motion.h1>
         <motion.p className="subheading" style={{ opacity: subheadingOpacity }}>
-          We're a community of ambitious builders and thinkers set on tackling
-          some of the most pressing problems in AI and society.
+          We're a community of ambitious builders and thinkers set on
+          preventing catastrophic outcomes from transformative AI.
         </motion.p>
 
         <motion.div className={classes.landingLinks} style={{ opacity: linksOpacity }}>
           <LandingLink
-            href="/people"
-            iconSrc="/landing/mentoring.svg"
-            title="1:1 Mentorship"
-            description="Meet with any member of our executive board, whether you're an interested student, fellow, or club member."
+            href="/start/fellowships"
+            iconSrc="/landing/fellowships.svg"
+            title="Research and Governance Fellowships"
+            description="We will teach you real-world skills, the arguments for, and the arguments against AI safety."
+            emphasis="Applications due Friday, September 18th."
             highlight
           />
           <LandingLink
@@ -57,11 +58,10 @@ export function Landing() {
             description="Speakers, application workshops, club trips, and more."
           />
           <LandingLink
-            href="/start/fellowships"
-            iconSrc="/landing/fellowships.svg"
-            title="Research and Governance Fellowships"
-            description="We will teach you real-world skills, the arguments for, and the arguments against AI safety."
-            emphasis="Applications due Friday, September 18th."
+            href="/people"
+            iconSrc="/landing/mentoring.svg"
+            title="1:1 Mentorship"
+            description="Meet with any member of our executive board, whether you're an interested student, fellow, or club member."
             highlight
           />
         </motion.div>

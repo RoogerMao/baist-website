@@ -24,7 +24,8 @@
     flex-basis: calc(50% - var(--mantine-spacing-sm) / 2);
   }
 
-  /* fellowships (3rd) drops to its own full-width row */
+  /* three cards in a 2-up wrap leave the last one alone on its own row, so
+     it spans instead of sitting half-width beside empty space */
   .landingLinks > *:nth-child(3) {
     flex-basis: 100%;
   }

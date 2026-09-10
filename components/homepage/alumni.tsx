@@ -87,7 +87,7 @@ export function Alumni() {
       <div className="homeContent">
         <div className="alumniIntro">
           <motion.h1 className="hero" style={{ opacity: heroOpacity }}>
-            We build our careers{" "}
+            We advance our careers{" "}
             <span className="heroUnderline">
               while preparing the world for future, more advanced models
             </span>
