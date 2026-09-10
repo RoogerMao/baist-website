@@ -38,8 +38,8 @@ export function Landing() {
           </span>
         </motion.h1>
         <motion.p className="subheading" style={{ opacity: subheadingOpacity }}>
-          We're a community of ambitious builders and thinkers set on
-          preventing catastrophic outcomes from transformative AI.
+          We're a community of ambitious builders and thinkers working to
+          prevent catastrophic outcomes from transformative AI.
         </motion.p>
 
         <motion.div className={classes.landingLinks} style={{ opacity: linksOpacity }}>
