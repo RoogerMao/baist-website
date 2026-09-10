@@ -43,6 +43,12 @@ export interface HomeContextValue {
   /** Ease the window to the alumni layer / back to the top. */
   scrollToAlumni: () => void
   scrollToTop: () => void
+  /**
+   * True when the landing content is taller than the layer, so a cue pinned to
+   * the bottom of the stage would sit on top of it. The landing then renders
+   * the cue in its own flow instead — see landing.tsx.
+   */
+  cueInline: boolean
 }
 
 /**
@@ -158,9 +164,16 @@ export function AnimationManager({ top, bottom }: AnimationManagerProps) {
   const scrollToAlumni = useCallback(() => animateScrollTo(fadeEnd), [fadeEnd])
   const scrollToTop = useCallback(() => animateScrollTo(0), [])
 
+  /* Any landing taller than its layer scrolls under a bottom-pinned cue, so
+     the cue moves into the landing's own flow. Measured rather than keyed to a
+     breakpoint: a short desktop window overflows just as a phone does. Stable
+     against flapping — the inline cue only makes an already-overflowing layer
+     taller, and dropping it only shrinks one that already fits. */
+  const cueInline = landingOverflow > 0
+
   const context = useMemo<HomeContextValue>(
-    () => ({ screens, fadeProgress, scrollToAlumni, scrollToTop }),
-    [screens, fadeProgress, scrollToAlumni, scrollToTop],
+    () => ({ screens, fadeProgress, scrollToAlumni, scrollToTop, cueInline }),
+    [screens, fadeProgress, scrollToAlumni, scrollToTop, cueInline],
   )
 
   return (
@@ -204,18 +217,22 @@ export function AnimationManager({ top, bottom }: AnimationManagerProps) {
             </motion.div>
 
             {/* Pinned to the viewport (outside the translating wrapper) so it's
-                visible from first load, fading out with the landing layer. */}
-            <div
-              className="homeCue"
-              style={{ visibility: phase === "alumni" ? "hidden" : "visible" }}
-            >
-              <ScrollCue
-                direction="down"
-                label="See where you could go"
-                opacity={landingOpacity}
-                onActivate={scrollToAlumni}
-              />
-            </div>
+                visible from first load, fading out with the landing layer. Only
+                when the landing fits — otherwise it would sit on top of the
+                content and landing.tsx renders the cue in flow instead. */}
+            {!cueInline && (
+              <div
+                className="homeCue"
+                style={{ visibility: phase === "alumni" ? "hidden" : "visible" }}
+              >
+                <ScrollCue
+                  direction="down"
+                  label="See where you could go"
+                  opacity={landingOpacity}
+                  onActivate={scrollToAlumni}
+                />
+              </div>
+            )}
           </div>
         </div>
       </HomeContext.Provider>

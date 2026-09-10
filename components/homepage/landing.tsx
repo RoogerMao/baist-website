@@ -27,8 +27,10 @@ export function Landing() {
   const subheadingOpacity = useTransform(fadeProgress, SUBHEADING_RANGE, [1, 0])
   const linksOpacity = useTransform(fadeProgress, LINKS_RANGE, [1, 0])
 
+  const cueInline = home?.cueInline ?? false
+
   return (
-    <div className="landingPage homeSection">
+    <div className="landingPage homeSection" data-cue-inline={cueInline || undefined}>
       <div className="homeContent">
         <motion.h1 className="hero" style={{ opacity: heroOpacity }}>
           <span className="heroUnderline">
@@ -64,19 +66,20 @@ export function Landing() {
           />
         </motion.div>
 
-        {/* Narrow-screen twin of the pinned cue in animation-manager.tsx. The
-            landing content is taller than a phone viewport, so a cue pinned to
-            the bottom sits on top of the links; this one flows after them and
-            scrolls with the content. Exactly one of the two is displayed —
-            see .homeCue / .homeCueInline. */}
-        <div className="homeCueInline">
-          <ScrollCue
-            direction="down"
-            label="See where you could go"
-            opacity={linksOpacity}
-            onActivate={() => home?.scrollToAlumni()}
-          />
-        </div>
+        {/* Stand-in for the pinned cue in animation-manager.tsx, used whenever
+            this content is taller than the viewport: pinned to the bottom the
+            cue would cover the links, so it flows after them and scrolls with
+            them instead. The manager renders exactly one of the two. */}
+        {cueInline && (
+          <div className="homeCueInline">
+            <ScrollCue
+              direction="down"
+              label="See where you could go"
+              opacity={linksOpacity}
+              onActivate={() => home?.scrollToAlumni()}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

@@ -634,32 +634,22 @@ a.menuItemAccent:hover {
   background-color: light-dark(#ffc72c, #c00404);
 }
 
-/* Wide screens use the cue pinned to the bottom of the stage; the in-flow twin
-   rendered by landing.tsx stays out of the way. */
+/* Only rendered when the landing overflows its layer — see cueInline in
+   animation-manager.tsx, which also drops the pinned cue in that case. */
 .homeCueInline {
-  display: none;
+  display: flex;
+  justify-content: center;
+}
+
+/* With the cue in flow there is no pinned cue left to reserve room for, so the
+   padding below would just be dead space above it. */
+.landingPage[data-cue-inline] .homeContent {
+  padding-bottom: 0;
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
   .homeContent {
     gap: var(--mantine-spacing-md);
-  }
-
-  /* The landing content is taller than a phone viewport, so it scrolls under
-     anything pinned to the bottom. Swap the pinned cue for the in-flow one,
-     which sits after the links instead of over them, and drop the bottom
-     padding that was only reserving space for the pinned version. */
-  .homeCue {
-    display: none;
-  }
-
-  .homeCueInline {
-    display: flex;
-    justify-content: center;
-  }
-
-  .landingPage .homeContent {
-    padding-bottom: 0;
   }
 }
 
