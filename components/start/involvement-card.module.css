@@ -1,0 +1,69 @@
+/* Get Started page: involvement cards (components/start/involvement-card.tsx) */
+.involvementCard[data-highlight] {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.involvementCardHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.involvementCard[data-highlight] .involvementCardHeading {
+  color: var(--accent-fg);
+}
+
+.involvementCardAbilities {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  font-size: var(--mantine-font-size-sm);
+  flex: 1;
+}
+
+.involvementCardAbilities li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.involvementCardAbilities li::before {
+  content: "\2022";
+  position: absolute;
+  left: 0.15rem;
+  top: -0.05em;
+  opacity: 0.65;
+}
+
+.involvementCardAdmissionLink {
+  color: var(--accent-hover);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.involvementCardAdmissionLink:hover {
+  text-decoration: underline;
+}
+
+.involvementCard[data-highlight] .involvementCardAdmissionLink {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Aside above the ability list (e.g. how to apply for membership). Pulled
+   closer to the list than the Stack's own gap, so it reads as a lead-in to
+   the bullets rather than a separate block. */
+.involvementCardNote {
+  margin-bottom: calc(var(--mantine-spacing-md) * -1 + var(--mantine-spacing-xs));
+}
+
+.involvementCardCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-xs);
+}

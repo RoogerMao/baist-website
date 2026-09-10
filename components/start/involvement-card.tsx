@@ -1,6 +1,8 @@
 import { Paper, Stack, Text } from "@mantine/core"
 import { InvolvementCta } from "./involvement-cta"
 
+import classes from "./involvement-card.module.css"
+
 export interface InvolvementLevel {
   /** Name of this level of involvement — e.g. "Fellow". */
   title: string
@@ -42,11 +44,11 @@ export function InvolvementCard({
       withBorder
       radius="md"
       p="lg"
-      className="involvementCard h-full"
+      className={`${classes.involvementCard} h-full`}
       data-highlight={highlighted || undefined}
     >
       <Stack gap="md" className="h-full">
-        <div className="involvementCardHeading">
+        <div className={classes.involvementCardHeading}>
           <Text fw={700} fz="lg" lh={1.2}>
             {title}
           </Text>
@@ -54,19 +56,19 @@ export function InvolvementCard({
         </div>
 
         {note && (
-          <Text fz="sm" fs="italic" className="involvementCardNote">
+          <Text fz="sm" fs="italic" className={classes.involvementCardNote}>
             {note}
           </Text>
         )}
 
-        <ul className="involvementCardAbilities">
+        <ul className={classes.involvementCardAbilities}>
           {abilities.map((ability) => (
             <li key={ability}>{ability}</li>
           ))}
         </ul>
 
         {ctas && ctas.length > 0 && (
-          <div className="involvementCardCtas">
+          <div className={classes.involvementCardCtas}>
             {ctas.map((cta) => (
               <InvolvementCta
                 key={cta.label}
