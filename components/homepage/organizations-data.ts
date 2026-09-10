@@ -59,7 +59,6 @@ export const ORGANIZATIONS: Organization[] = [
   {
     name: "Anthropic Fellows",
     logo: "/landing/organizations/anthropic-fellows.png",
-    logoFill: true,
     focus: "AI Security, Interpretability, and Model Organisms Research Fellowship",
     url: "https://alignment.anthropic.com/2025/anthropic-fellows-program-2026/",
   },
