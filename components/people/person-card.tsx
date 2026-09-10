@@ -52,7 +52,7 @@ export function PersonCard({
         {/* name + socials share one row and wrap together when tight, so the
             icons always sit just after the name — photo or no photo */}
         <Group gap={6} wrap="wrap" align="center" justify="center">
-          <Text fw={600} fz="h4" component="span">
+          <Text fw={600} fz="h4" component="span" className="personCardName">
             {name}
           </Text>
 
@@ -114,8 +114,8 @@ export function PersonCard({
           bookingNote && (
             <Tooltip
               label={bookingNote}
-              /* Below the button, so the bubble clears the card: a hovered
-                 card is filled with the same accent colour as the tooltip. */
+              /* Below the button, so the bubble clears the card rather than
+                 covering the person it belongs to. */
               position="bottom"
               withArrow
               classNames={{ tooltip: "personTooltip personBookingTooltip" }}

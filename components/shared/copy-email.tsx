@@ -11,7 +11,6 @@ async function copyText(text: string) {
       return true
     }
   } catch {
-    // fall through to the legacy path
   }
 
   try {

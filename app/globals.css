@@ -1137,36 +1137,17 @@ a.orgCardLogo:focus-visible {
 
 /* --- People page: cards --- */
 
-/* Whole card fills the site accent on hover (brown in light mode, white in
-   dark), text + icons switch to --accent-fg. Only the hovered card reacts
-   (plain :hover, no sibling dimming). */
-.personCard {
-  transition: background-color 150ms ease, border-color 150ms ease,
-    color 150ms ease;
+/* Hovering a card highlights the person's name only — the card keeps its own
+   background, border, and text colours. --accent-hover is the highlight for
+   text: red against light mode's brown name, yellow against dark mode's white
+   one, so the cue always contrasts with the colour it replaces. */
+.personCardName {
+  transition: color 150ms ease;
 }
 
-.personCard:hover {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-fg);
-}
-
-.personCard:hover .mantine-Text-root,
-.personCard:hover .mantine-Title-root,
-.personCard:hover .mantine-Avatar-placeholder {
-  color: var(--accent-fg);
-  --text-color: var(--accent-fg);
-}
-
-/* Role/subtitle goes a muted version of the name's color on hover, tinted
-   toward the card fill so it stays legible against either accent color.
-   Mostly accent-fg (90%) so it stays readable — just enough card-color mixed
-   in to read as "subtitle" rather than the name's full-strength color.
-   !important: Mantine's c="dimmed" sets color via an inline style, which
-   beats any plain class selector regardless of specificity. */
-.personCard:hover .personCardRole {
-  color: color-mix(in srgb, var(--accent-fg) 90%, var(--accent)) !important;
-  --text-color: color-mix(in srgb, var(--accent-fg) 90%, var(--accent)) !important;
+.personCard:hover .personCardName {
+  color: var(--accent-hover);
+  --text-color: var(--accent-hover);
 }
 
 /* Card icons flush to the accent colour: LinkedIn on hover, email briefly after
@@ -1187,22 +1168,9 @@ a.orgCardLogo:focus-visible {
   background-color: transparent;
 }
 
-/* On the hovered (accent-filled) card the glyphs sit at --accent-fg; a direct
-   icon hover still pops — yellow on the light-mode card's brown fill, red on
-   the dark-mode card's white fill (the reverse of --accent-hover). */
-.personCard:hover .personCardIcon {
-  color: color-mix(in srgb, var(--accent-fg) 80%, transparent);
-}
-
-.personCard:hover .personCardIcon:hover,
-.personCard:hover .personCardIcon[data-copied] {
-  color: light-dark(#ffc72c, #c00404);
-}
-
 /* "Book a time" button at the foot of a person card. Spans the card, and is
-   outlined rather than filled: the card itself flips to the accent fill on
-   hover, so a pill that borrows the current text colour reads correctly in
-   both states without a colour change of its own. */
+   outlined rather than filled — it borrows the card's own text colour and
+   fills only on its own hover. */
 .personCardBooking {
   align-self: stretch;
   margin-top: var(--mantine-spacing-xs);
@@ -1231,11 +1199,13 @@ a.orgCardLogo:focus-visible {
 }
 
 /* Link variant fills on its own hover; the tooltip-only variant keeps a flat
-   look and a default cursor, since there is nowhere to click through. */
+   look and a default cursor, since there is nowhere to click through. The fill
+   is the surface highlight (yellow in light mode, red against the dark mode
+   card's brown) — the mirror of --accent-hover, which highlights text. */
 .personCardBooking:not([data-inert]):hover {
-  background-color: var(--accent-hover);
-  border-color: var(--accent-hover);
-  color: #ffffff;
+  background-color: light-dark(#ffc72c, #c00404);
+  border-color: light-dark(#ffc72c, #c00404);
+  color: light-dark(#4e3629, #ffffff);
 }
 
 .personCardBooking:not([data-inert]):hover::after {
@@ -1244,12 +1214,11 @@ a.orgCardLogo:focus-visible {
 
 .personCardBooking[data-inert] {
   cursor: default;
-  opacity: 0.75;
 }
 
-/* The booking note's bubble can overlap the card it belongs to, and a hovered
-   card carries the same accent fill as the tooltip. A border in the tooltip's
-   own text colour keeps its edge visible against card and page alike. */
+/* The booking note's bubble can overlap the card it belongs to. A border in
+   the tooltip's own text colour keeps its edge visible against card and page
+   alike. */
 .personBookingTooltip {
   border: 1px solid var(--accent-fg);
 }
