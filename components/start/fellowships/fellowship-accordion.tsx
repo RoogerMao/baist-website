@@ -6,6 +6,9 @@ import { MaskIcon } from "@/components/mask-icon"
 import { InvolvementCta } from "../involvement-cta"
 import { AuthorList } from "./author-link"
 
+import classes from "./fellowship-accordion.module.css"
+import link from "./fellowship-link.module.css"
+
 export interface Fellowship {
   /** Stable key / accordion item value. */
   value: string
@@ -44,7 +47,7 @@ function DescriptionText({ description }: { description: string }) {
       <Link
         key={href}
         href={href}
-        className="fellowshipLink"
+        className={link.fellowshipLink}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -75,12 +78,12 @@ function FellowshipPanel({
         <DescriptionText description={description} />
       </Text>
 
-      <div className="fellowshipChips">
-        <Title order={3} fz="sm" fw={600} className="fellowshipChipsLabel">
+      <div className={classes.fellowshipChips}>
+        <Title order={3} fz="sm" fw={600} className={classes.fellowshipChipsLabel}>
           Topics Covered:
         </Title>
         {topics.map((topic) => (
-          <span key={topic} className="fellowshipChip">
+          <span key={topic} className={classes.fellowshipChip}>
             {topic}
           </span>
         ))}
@@ -93,7 +96,7 @@ function FellowshipPanel({
             <span key={item.href}>
               <Link
                 href={item.href}
-                className="fellowshipLink"
+                className={link.fellowshipLink}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -110,7 +113,7 @@ function FellowshipPanel({
           label="Apply Here"
           href={applyHref}
           newTab
-          className="fellowshipApplyCta"
+          className={classes.fellowshipApplyCta}
         />
       )}
     </Stack>
@@ -140,7 +143,9 @@ export function FellowshipAccordion({
       radius="md"
       defaultValue={defaultValue}
       className={
-        className ? `fellowshipAccordion ${className}` : "fellowshipAccordion"
+        className
+          ? `${classes.fellowshipAccordion} ${className}`
+          : classes.fellowshipAccordion
       }
     >
       {fellowships.map((fellowship) => (
@@ -152,12 +157,12 @@ export function FellowshipAccordion({
           <Accordion.Control
             icon={<MaskIcon src={fellowship.icon} size="1.5rem" />}
           >
-            <span className="fellowshipControlLabel">
+            <span className={classes.fellowshipControlLabel}>
               <Title order={2} fz="xl" fw={700} lh={1.2}>
                 {fellowship.title}
               </Title>
               {fellowship.schedule && (
-                <span className="fellowshipSchedule">{fellowship.schedule}</span>
+                <span className={classes.fellowshipSchedule}>{fellowship.schedule}</span>
               )}
             </span>
           </Accordion.Control>

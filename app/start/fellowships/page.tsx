@@ -9,6 +9,8 @@ import {
 import { CopyEmail, Faq, type FaqItem } from "@/components/shared"
 
 import faq from "@/components/shared/faq.module.css"
+import link from "@/components/start/fellowships/fellowship-link.module.css"
+import classes from "./page.module.css"
 
 const fellowshipFaq: FaqItem[] = [
   {
@@ -60,30 +62,30 @@ export default function FellowshipsPage() {
         Fall cohorts will run for 2 hours per week for 10 weeks, from September
         28th to December 4th. All fellowships will conclude with a 2-to-4-hour
         capstone project / presentation. Fellowship applications are{" "}
-        <Link href="#" className="fellowshipLink">
+        <Link href="#" className={link.fellowshipLink}>
           open through September 18th
         </Link>
         ! If you have a strong background in AI safety, please speak to one of our{" "}
-        <Link href="/people#executive-board" className="fellowshipLink">
+        <Link href="/people#executive-board" className={link.fellowshipLink}>
           executive board members
         </Link>{" "}
         before applying for direct membership.
       </Text>
 
-      <div className="fellowshipCardRow">
+      <div className={classes.fellowshipCardRow}>
         <FellowshipCard title="Application Structure">
-          <ol className="fellowshipList">
+          <ol className={classes.fellowshipList}>
             <li>
               20-minute{" "}
-              <Link href="#" className="fellowshipLink">
+              <Link href="#" className={link.fellowshipLink}>
                 written application form due September 18th
               </Link>
               .
-              <ul className="fellowshipList fellowshipListNested">
+              <ul className={`${classes.fellowshipList} ${classes.fellowshipListNested}`}>
                 <li>
                   Fellowship facilitators will host office hours to answer
                   questions from Sunday, September 13th to Thursday, September
-                  17th. <em className="fellowshipAccent">Hours coming soon.</em>
+                  17th. <em className={classes.fellowshipAccent}>Hours coming soon.</em>
                 </li>
               </ul>
             </li>
@@ -97,7 +99,7 @@ export default function FellowshipsPage() {
         </FellowshipCard>
 
         <FellowshipCard title="Application Advice">
-          <ul className="fellowshipList">
+          <ul className={classes.fellowshipList}>
             <li>
               We aren&rsquo;t trying to trick you! We respect and are thankful for
               your time&mdash;we&rsquo;ve designed the applications so that you

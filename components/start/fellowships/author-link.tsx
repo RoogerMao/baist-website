@@ -2,6 +2,8 @@ import Link from "next/link"
 import { findPerson } from "@/components/people/people-data"
 import { personCardId } from "@/components/people/people-ids"
 
+import classes from "./author-link.module.css"
+
 /**
  * A fellowship author's name. When the person has a card on the People page the
  * name links there and their card flashes on arrival; otherwise it renders as
@@ -11,11 +13,11 @@ export function AuthorLink({ name }: { name: string }) {
   const person = findPerson(name)
 
   if (!person) {
-    return <span className="authorName">{name}</span>
+    return <span className={classes.authorName}>{name}</span>
   }
 
   return (
-    <Link href={`/people#${personCardId(name)}`} className="authorName authorLink">
+    <Link href={`/people#${personCardId(name)}`} className={`${classes.authorName} ${classes.authorLink}`}>
       {name}
     </Link>
   )

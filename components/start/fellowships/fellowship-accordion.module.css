@@ -1,0 +1,121 @@
+/* Fellowships page: the fellowship accordion
+   (components/start/fellowships/fellowship-accordion.tsx)
+
+   Every .mantine-Accordion-* below is wrapped in :global(): CSS Modules scopes
+   bare class selectors, and a hashed .mantine-Accordion-control would never
+   match the element Mantine actually renders. Only .fellowshipAccordion and
+   .fellowshipSchedule are this module's own, and stay scoped. */
+
+/* Accordion: elevated card. Collapsed = fully accented; expanded keeps the
+   accent only behind the icon + title, with the panel on the page background. */
+.fellowshipAccordion :global(.mantine-Accordion-item) {
+  border: none;
+  overflow: hidden;
+  background-color: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+/* Title bars hold one flat colour — solid brown with light text in light mode.
+   Mantine's own control:hover wash is pinned back to the rest fill rather than
+   simply dropped, since its stylesheet can load after this file and win on
+   equal specificity; the bars stay a constant colour so only the chevron
+   signals interactivity. */
+.fellowshipAccordion :global(.mantine-Accordion-control),
+.fellowshipAccordion :global(.mantine-Accordion-control:hover) {
+  background-color: #4e3629;
+  color: #fff;
+}
+
+.fellowshipAccordion :global(.mantine-Accordion-icon),
+.fellowshipAccordion :global(.mantine-Accordion-chevron) {
+  color: #fff;
+}
+
+.fellowshipAccordion .fellowshipSchedule {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Dark mode: solid white header with brown text instead — the light-mode
+   brown header would otherwise blend into the (also brown) dark-mode page. */
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion :global(.mantine-Accordion-control),
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion :global(.mantine-Accordion-control:hover) {
+  background-color: var(--mantine-color-white);
+  color: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion :global(.mantine-Accordion-icon),
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion :global(.mantine-Accordion-chevron) {
+  color: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .fellowshipAccordion .fellowshipSchedule {
+  color: #5b5044;
+}
+
+.fellowshipControlLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.6rem;
+  row-gap: 0.15rem;
+}
+
+.fellowshipSchedule {
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-1));
+}
+
+.fellowshipAccordion :global(.mantine-Accordion-panel) {
+  background-color: var(--mantine-color-body);
+}
+
+/* Apply button at the foot of a fellowship panel. Inherits the /start CTA
+   styling wholesale (brown/white pill, red/yellow on hover); only needs a
+   little extra air separating it from the curriculum line above. */
+.fellowshipApplyCta {
+  margin-top: var(--mantine-spacing-xs);
+}
+
+/* Tentative-topic chips */
+.fellowshipChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fellowshipChipsLabel {
+  margin: 0 0.35rem 0 0;
+}
+
+.fellowshipChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: var(--mantine-font-size-xs);
+  line-height: 1.4;
+  background-color: #4e3629;
+  color: #fff;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.fellowshipChip:hover {
+  background-color: #c00404;
+  color: #fff;
+}
+
+/* Dark mode: white chips (matching the now-white fellowship headers
+   above), turning yellow on hover — brown/red would blend into the (also
+   brown) dark-mode page. */
+:root[data-mantine-color-scheme="dark"] .fellowshipChip {
+  background-color: var(--mantine-color-white);
+  color: #4e3629;
+}
+
+:root[data-mantine-color-scheme="dark"] .fellowshipChip:hover {
+  background-color: #ffc72c;
+  color: #4e3629;
+}
