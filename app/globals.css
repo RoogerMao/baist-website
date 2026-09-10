@@ -593,7 +593,13 @@ a.menuItemAccent:hover {
    6-line, half-the-viewport block; floor keeps it >= ~half a landing link. */
 .homeSection .subheading {
   margin: 0;
-  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+  /* On the brown page dark-1 is a tan that sits heavier than it needs to.
+     Lifted most of the way to the body colour: the hero carries the hierarchy
+     by scale, so the subhero can be light without competing with it. */
+  color: light-dark(
+    var(--mantine-color-gray-7),
+    color-mix(in srgb, var(--mantine-color-dark-0) 70%, var(--mantine-color-dark-1))
+  );
   font-size: clamp(2rem, 4vw + 1rem, 3.8rem);
   line-height: 1.3;
 }
