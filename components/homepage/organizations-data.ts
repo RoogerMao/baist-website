@@ -3,6 +3,12 @@ import type { Organization } from "./organization-carousel"
 // Logos live in /public/landing/organizations.
 export const ORGANIZATIONS: Organization[] = [
   {
+    name: "Anthropic Fellows",
+    logo: "/landing/organizations/anthropic-fellows.png",
+    focus: "AI Security, Interpretability, and Model Organisms Research Fellowship",
+    url: "https://alignment.anthropic.com/2025/anthropic-fellows-program-2026/",
+  },
+  {
     name: "Cambridge AI Safety Hub",
     logo: "/landing/organizations/cambridge-ai-safety-hub.jpeg",
     focus: "AI Safety Hub",
@@ -55,12 +61,6 @@ export const ORGANIZATIONS: Organization[] = [
     logo: "/landing/organizations/spar.png",
     focus: "Part-Time Remote Research",
     url: "https://sparai.org/",
-  },
-  {
-    name: "Anthropic Fellows",
-    logo: "/landing/organizations/anthropic-fellows.png",
-    focus: "AI Security, Interpretability, and Model Organisms Research Fellowship",
-    url: "https://alignment.anthropic.com/2025/anthropic-fellows-program-2026/",
   },
   {
     name: "Institute for AI Policy and Strategy",
