@@ -25,8 +25,8 @@ export const TOPIC_COLORS: Record<EventTopic, string> = {
 export interface CalendarEvent {
   /** Event name. */
   title: string
-  /** Longer prose blurb — rendered as Markdown. */
-  description: string
+  /** Optional longer prose blurb — rendered as Markdown. */
+  description?: string
   /** Human-readable date, e.g. "September 10th, 2026". */
   date: string
   /** Who may attend. */
