@@ -18,8 +18,14 @@ export const leadershipTeam: Person[] = [
     email: "isaac_bitran@brown.edu",
   },
   {
+    name: "Jay Maroney",
+    role: "Leadership Team",
+    email: "jay_maroney@brown.edu",
+    linkedin: "https://www.linkedin.com/in/james-maroney-797b30304/",
+  },
+  {
     name: "Solly Goluboff-Schragger",
-    role: "AI and Society Workshops Project Lead",
+    role: "Leadership Team",
     email: "soloman_goluboff-schragger@brown.edu",
     linkedin: "https://www.linkedin.com/in/solomongs/",
   },
