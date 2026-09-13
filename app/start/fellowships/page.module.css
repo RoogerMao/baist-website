@@ -11,9 +11,10 @@
   }
 }
 
-.fellowshipAccent {
+/* Same colour emphasis as .fellowshipLink, without the link hover behaviour */
+.fellowshipEmphasis {
   color: var(--accent-hover);
-  font-style: italic;
+  font-weight: 500;
 }
 
 .fellowshipList {

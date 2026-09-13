@@ -1,0 +1,68 @@
+/* Fellowships page: open hours table
+   (components/start/fellowships/open-hours.tsx)
+
+   One header row of weekdays over one row whose cells each stack a column of
+   session cards. Scrolls horizontally inside the card on narrow screens. */
+.openHoursScroll {
+  overflow-x: auto;
+}
+
+.openHoursTable {
+  min-width: 40rem;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: var(--mantine-spacing-sm) 0;
+  margin: 0 calc(var(--mantine-spacing-sm) * -1);
+  width: calc(100% + var(--mantine-spacing-sm) * 2);
+}
+
+.openHoursDay {
+  padding: 0 0 var(--mantine-spacing-xs);
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 600;
+  text-align: center;
+}
+
+.openHoursCell {
+  vertical-align: top;
+  padding: 0;
+}
+
+.openHoursSession {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  font-size: var(--mantine-font-size-xs);
+  line-height: 1.45;
+  text-align: center;
+}
+
+.openHoursSession + .openHoursSession {
+  margin-top: var(--mantine-spacing-xs);
+}
+
+.openHoursSession p {
+  margin: 0;
+}
+
+.openHoursWindow {
+  font-weight: 600;
+}
+
+/* Facilitator names link to their People card (which flashes on arrival);
+   accent-coloured (red on light, yellow on dark), underlined on hover. */
+.openHoursFacilitator {
+  color: var(--accent-hover);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.openHoursFacilitator:hover {
+  text-decoration: underline;
+}
+
+.openHoursLocation {
+  font-style: italic;
+  opacity: 0.8;
+}

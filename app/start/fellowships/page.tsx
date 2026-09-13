@@ -5,6 +5,8 @@ import {
   FellowshipAccordion,
   FellowshipCard,
   fellowships,
+  OpenHours,
+  openHours,
 } from "@/components/start/fellowships"
 import { CopyEmail, Faq, type FaqItem } from "@/components/shared"
 
@@ -77,15 +79,15 @@ export default function FellowshipsPage() {
           <ol className={classes.fellowshipList}>
             <li>
               20-minute{" "}
-              <Link href="#" className={link.fellowshipLink}>
+              <span className={classes.fellowshipEmphasis}>
                 written application form due September 18th
-              </Link>
+              </span>
               .
               <ul className={`${classes.fellowshipList} ${classes.fellowshipListNested}`}>
                 <li>
-                  Fellowship facilitators will host office hours to answer
-                  questions from Sunday, September 13th to Thursday, September
-                  17th. <em className={classes.fellowshipAccent}>Hours coming soon.</em>
+                  Fellowship facilitators will host open hours to answer
+                  questions from Monday, September 14th to Friday, September
+                  18th.
                 </li>
               </ul>
             </li>
@@ -114,6 +116,10 @@ export default function FellowshipsPage() {
         </FellowshipCard>
       </div>
 
+      <div className="mt-[var(--mantine-spacing-md)]">
+        <OpenHours days={openHours} />
+      </div>
+
       <FellowshipAccordion
         fellowships={fellowships}
         defaultValue={fellowships.slice(0, 1).map((f) => f.value)}
@@ -128,7 +134,7 @@ export default function FellowshipsPage() {
         </Title>
 
         <Text c="dimmed" ta="center" mb="xl" maw="46rem" mx="auto">
-          If you have unanswered questions, please stop by our office hours, or
+          If you have unanswered questions, please stop by our open hours, or
           email us at <CopyEmail address="baist@brown.edu" />.
         </Text>
 

@@ -139,7 +139,7 @@ export default function StartPage() {
         </Title>
 
         <Text c="dimmed" ta="center" mb="xl" maw="46rem" mx="auto">
-          If you have unanswered questions, please stop by our office hours, or
+          If you have unanswered questions, please stop by our open hours, or
           email us at <CopyEmail address="baist@brown.edu" />.
         </Text>
 
