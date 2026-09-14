@@ -35,12 +35,12 @@ export const openHours: OpenHoursDay[] = [
       {
         window: "1:00 to 2:00 PM",
         facilitators: [{ label: "Cam", name: "Camden Wright" }],
-        location: "Rockefeller Study Room TBD",
+        location: "Rockefeller Room 131",
       },
       {
         window: "4:30 to 5:30 PM",
         facilitators: [{ label: "Roger", name: "Roger Mao" }],
-        location: "Rockefeller Study Room TBD",
+        location: "Rockefeller Room 131",
       },
     ],
   },
