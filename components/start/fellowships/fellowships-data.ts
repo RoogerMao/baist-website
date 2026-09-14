@@ -4,8 +4,8 @@ export const fellowships: Fellowship[] = [
   {
     value: "technical-ai-safety-research",
     icon: "/fellowships/technical.svg",
-    title: "Technical AI Safety Research Fellowship",
-    schedule: "Tuesdays and Thursdays from 5:30 to 7:30 PM",
+    title: "Technical AI Safety Research Fellowship (2)",
+    schedule: "Mondays Time TBD or Thursdays from 5:30 to 7:30 PM",
     authors: ["Camden Wright", "Roger Mao", "Tyrone Serapio"],
     description:
       "In addition to the arguments for and against AI safety, this fellowship covers the architecture and training of LLMs, before discussing how we can influence model behavior: clarifying model reasoning (interpretability), evaluations, and external safeguards.",
