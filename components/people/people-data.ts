@@ -42,7 +42,7 @@ export const executiveBoard: Person[] = [
     name: "Garrett Xu",
     photo: "/people/garrett-xu.webp",
     role: "Director of AI Safety Fundamentals Fellowship",
-    email: "garret_xu@brown.edu",
+    email: "garrett_xu@brown.edu",
     linkedin: "https://www.linkedin.com/in/garrett-xu-575420228/",
     calendly: "https://calendly.com/garrett-xu",
   },
