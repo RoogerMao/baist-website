@@ -63,9 +63,11 @@ function EmptyPreview() {
 
 export function PinnedSection({
   events,
+  now,
   onSelect,
 }: {
   events: CalendarEvent[]
+  now: number
   onSelect: (id: string) => void
 }) {
   return (
@@ -74,7 +76,7 @@ export function PinnedSection({
         <Paper radius={32} p="xl" className={classes.pinnedCard}>
           <div className={classes.pinnedGrid}>
             {SECTIONS.map((section) => {
-              const picks = pinnedEventsFor(events, section.audience)
+              const picks = pinnedEventsFor(events, section.audience, new Date(now))
               return (
                 <div key={section.audience} className={classes.pinnedCol}>
                   <Title order={2} ta="center" mb="sm" className={classes.pinnedColTitle}>

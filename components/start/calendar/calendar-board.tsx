@@ -7,8 +7,18 @@ import { splitEvents } from "./calendar-utils"
 import { EventGrid } from "./event-grid"
 import { PinnedSection } from "./pinned-section"
 
-export function CalendarBoard({ events }: { events: CalendarEvent[] }) {
-  const { upcoming, past } = useMemo(() => splitEvents(events), [events])
+export function CalendarBoard({
+  events,
+  now,
+}: {
+  events: CalendarEvent[]
+  /** Render time from the server, so hydration sees the same split. */
+  now: number
+}) {
+  const { upcoming, past } = useMemo(
+    () => splitEvents(events, new Date(now)),
+    [events, now]
+  )
   const [highlightedId, setHighlightedId] = useState<string | null>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
@@ -25,7 +35,7 @@ export function CalendarBoard({ events }: { events: CalendarEvent[] }) {
 
   return (
     <>
-      <PinnedSection events={events} onSelect={handleSelect} />
+      <PinnedSection events={events} now={now} onSelect={handleSelect} />
 
       <section className="mb-12">
         <Title order={2} ta="center" mb="md">
