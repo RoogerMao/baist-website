@@ -25,6 +25,31 @@
   }
 }
 
+/* Masonry variant (Leadership): cards flow down balanced columns at their own
+   natural heights, so a taller card (one with a photo) never leaves a gap
+   under its shorter neighbours. Same 1/2/3 column breakpoints as the grid. */
+.peopleMasonry {
+  column-count: 1;
+  column-gap: var(--mantine-spacing-md);
+}
+
+.peopleMasonryItem {
+  break-inside: avoid;
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+@media (min-width: 40em) {
+  .peopleMasonry {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 64em) {
+  .peopleMasonry {
+    column-count: 3;
+  }
+}
+
 /* Section-heading flash — used both by the section-nav drawer and by arriving
    at /people#<section-id> (e.g. the "executive board members" link on the
    fellowships page). Colour only: the heading text alone changes, never a

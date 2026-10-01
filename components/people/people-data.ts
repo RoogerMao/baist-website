@@ -9,8 +9,18 @@ export const leadershipTeam: Person[] = [
   },
   {
     name: "Camden Wright",
-    role: "Technical Fellowship Lead",
+    photo: "/people/camden-wright.jpg",
+    role: "Technical Research Fellowship Facilitator",
     email: "camden_wright@brown.edu",
+    linkedin: "https://www.linkedin.com/in/camden-wright-877b80344/",
+  },
+  {
+    name: "Evan Lee",
+    photo: "/people/evan-lee.jpg",
+    role: "AI Safety Fundamentals Fellowship Facilitator",
+    email: "evan_lee@brown.edu",
+    linkedin: "https://www.linkedin.com/in/evanyclee/",
+    bookingNote: "Link coming soon!",
   },
   {
     name: "Isaac Bitran",
@@ -31,7 +41,8 @@ export const leadershipTeam: Person[] = [
   },
   {
     name: "Tyrone Serapio",
-    role: "Technical Fellowship Lead",
+    photo: "/people/tyrone-serapio.jpg",
+    role: "Technical Research Fellowship Facilitator",
     email: "tyrone_kirk_serapio@brown.edu",
     linkedin: "https://www.linkedin.com/in/tyroneserapio/",
   },
@@ -40,7 +51,7 @@ export const leadershipTeam: Person[] = [
 export const executiveBoard: Person[] = [
   {
     name: "Garrett Xu",
-    photo: "/people/garrett-xu.webp",
+    photo: "/people/garrett-xu.jpg",
     role: "Director of AI Safety Fundamentals Fellowship",
     email: "garrett_xu@brown.edu",
     linkedin: "https://www.linkedin.com/in/garrett-xu-575420228/",
@@ -49,7 +60,7 @@ export const executiveBoard: Person[] = [
   {
     name: "Raen Kao",
     photo: "/people/raen-kao.webp",
-    role: "Director of Technical Governance Fellowship",
+    role: "Director of Technical Governance Fellowship and Public Events",
     email: "raen_kao@brown.edu",
     linkedin: "https://www.linkedin.com/in/raenkao/",
     bookingNote: "To speak with Raen, please send an email!",
@@ -57,7 +68,7 @@ export const executiveBoard: Person[] = [
   {
     name: "Roger Mao",
     photo: "/people/roger-mao.webp",
-    role: "Director of Technical Research Fellowship and Programming",
+    role: "Director of Technical Research Fellowship and Member Events",
     email: "roger_mao@brown.edu",
     linkedin: "https://www.linkedin.com/in/roger-y-mao/",
     calendly: "https://calendly.com/rogermao2019/30min",

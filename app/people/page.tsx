@@ -40,6 +40,7 @@ export default function PeoplePage() {
         id="leadership-team"
         title="Leadership Team"
         people={leadershipTeam}
+        masonry
       />
       <PeopleSection
         id="executive-board"
