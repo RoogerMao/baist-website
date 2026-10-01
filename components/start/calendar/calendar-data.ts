@@ -33,5 +33,23 @@ export const events: CalendarEvent[] = [
     audience: "General Body",
     topics: ["Club Information", "Fellowship Applications"],
   },
+  {
+    title: "AI Safety News Flash",
+    date: "September 29th, 2026",
+    time: "6 to 7 PM",
+    location: "The Underground",
+    audience: "General Body",
+    topics: [],
+  },
+  {
+    title: "Fellowship Kick-Off",
+    description:
+      "Garrett will give a short presentation about HuggingFace, we'll provide food, and there will be time for you to meet the fellows in all of our cohorts this semester!",
+    date: "October 1st, 2026",
+    time: "6:30 to 8:30 PM",
+    location: "The Underground",
+    audience: "Fellows",
+    topics: [],
+  },
   ...openHoursEvents,
 ]

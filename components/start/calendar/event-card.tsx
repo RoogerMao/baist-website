@@ -21,11 +21,10 @@ export function EventCard({
 }) {
   const { title, description, date, audience, topics, time, location } = event
 
-  // Time and location are only surfaced for General Body events.
-  const timeLocation =
-    audience === "General Body"
-      ? [time, location].filter(Boolean).join(" · ")
-      : ""
+  // Time is shown for every event; location only for General Body events.
+  const timeLocation = [time, audience === "General Body" ? location : ""]
+    .filter(Boolean)
+    .join(" · ")
 
   return (
     <Paper

@@ -33,7 +33,7 @@ export interface CalendarEvent {
   audience: EventAudience
   /** Zero or more topic tags. */
   topics: EventTopic[]
-  /** Human-readable time, e.g. "5 to 8:30 PM". Only shown for General Body events. */
+  /** Human-readable time, e.g. "5 to 8:30 PM". */
   time?: string
   /** Where the event is held. Only shown for General Body events. */
   location?: string
