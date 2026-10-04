@@ -35,8 +35,8 @@ export const fellowships: Fellowship[] = [
   {
     value: "ai-safety-fundamentals",
     icon: "/fellowships/fundamentals.svg",
-    title: "AI Safety Fundamentals Fellowship (2 cohorts)",
-    schedule: "Mondays from 5 to 7 PM",
+    title: "Safety Fundamentals Fellowship (2 cohorts)",
+    schedule: "Mondays from 6 to 8 PM, Wednesdays from 6 to 8 PM",
     authors: ["Garrett Xu"],
     description:
       "This fellowship will help participants build mental models in understanding catastrophic AI risks on a [gears-level](https://www.lesswrong.com/w/gears-level) — that we should expect AI to be transformative and dangerously high risk, by default. As capabilities are compounding and as AI is increasingly used to speed up AI R&D, we may not be well-equipped to fully monitor, understand, and control AIs with misaligned goals in the near future. By the end of the fellowship, we hope to fast-track you into the field of AI safety and inspire you to contribute meaningfully on the most important problem of our time.",

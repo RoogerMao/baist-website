@@ -13,11 +13,12 @@ interface MeetingSeries {
   time: string
 }
 
-// AI Safety Fundamentals cohorts are intentionally omitted for now.
 const SERIES: MeetingSeries[] = [
-  { title: "Technical Safety #1", weekday: 1, time: "5 to 7 PM" },
+  { title: "Technical Safety (Mon)", weekday: 1, time: "5 to 7 PM" },
+  { title: "AISF (Mon)", weekday: 1, time: "6 to 8 PM" },
   { title: "Governance", weekday: 3, time: "5 to 7 PM" },
-  { title: "Technical Safety #2", weekday: 4, time: "5:30 to 7:30 PM" },
+  { title: "AISF (Wed)", weekday: 3, time: "6 to 8 PM" },
+  { title: "Technical Safety (Thu)", weekday: 4, time: "5:30 to 7:30 PM" },
 ]
 
 const MONTHS = [

@@ -3,6 +3,7 @@ import type { Person } from "./person-card"
 export const leadershipTeam: Person[] = [
   {
     name: "Aalyaan Ali",
+    photo: "/people/aalyaan-ali.webp",
     role: "Communications and Programming Lead",
     email: "aalyaan_ali@brown.edu",
     linkedin: "https://www.linkedin.com/in/aalyaan/",
@@ -17,7 +18,7 @@ export const leadershipTeam: Person[] = [
   {
     name: "Evan Lee",
     photo: "/people/evan-lee.jpg",
-    role: "AI Safety Fundamentals Fellowship Facilitator",
+    role: "Safety Fundamentals Fellowship Facilitator",
     email: "evan_lee@brown.edu",
     linkedin: "https://www.linkedin.com/in/evanyclee/",
     calendly:
@@ -53,7 +54,7 @@ export const executiveBoard: Person[] = [
   {
     name: "Garrett Xu",
     photo: "/people/garrett-xu.jpg",
-    role: "Director of AI Safety Fundamentals Fellowship",
+    role: "Director of Safety Fundamentals Fellowship",
     email: "garrett_xu@brown.edu",
     linkedin: "https://www.linkedin.com/in/garrett-xu-575420228/",
     calendly: "https://calendly.com/garrett-xu",

@@ -86,6 +86,8 @@
 
 .pinnedPreviewTitle {
   color: var(--pin-fg) !important;
+  /* !important: Mantine's Title sets font-size via --title-fz. */
+  font-size: 0.95rem !important;
 }
 
 .pinnedPreviewDate {

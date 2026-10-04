@@ -11,7 +11,7 @@ export type EventTopic =
   | "Fellowship Applications"
   | "Technical Safety Research Fellowship"
   | "Governance Fellowship"
-  | "AI Safety Fundamentals Fellowship"
+  | "Safety Fundamentals Fellowship"
 
 /** Mantine colour used to render each topic's chip. */
 export const TOPIC_COLORS: Record<EventTopic, string> = {
@@ -19,7 +19,7 @@ export const TOPIC_COLORS: Record<EventTopic, string> = {
   "Fellowship Applications": "red",
   "Technical Safety Research Fellowship": "brown",
   "Governance Fellowship": "brown",
-  "AI Safety Fundamentals Fellowship": "brown",
+  "Safety Fundamentals Fellowship": "brown",
 }
 
 export interface CalendarEvent {

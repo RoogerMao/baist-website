@@ -42,7 +42,7 @@ function PreviewCard({
         ))}
       </Group>
       <Text size="xs" c="dimmed" mt="sm" ta="center" className={classes.pinnedPreviewDate}>
-        {event.date}
+        {event.date}{event.time ? ` · ${event.time}` : ""}
       </Text>
     </UnstyledButton>
   )
