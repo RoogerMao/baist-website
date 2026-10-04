@@ -71,13 +71,6 @@
   background-color: var(--mantine-color-body);
 }
 
-/* Apply button at the foot of a fellowship panel. Inherits the /start CTA
-   styling wholesale (brown/white pill, red/yellow on hover); only needs a
-   little extra air separating it from the curriculum line above. */
-.fellowshipApplyCta {
-  margin-top: var(--mantine-spacing-xs);
-}
-
 /* Tentative-topic chips */
 .fellowshipChips {
   display: flex;

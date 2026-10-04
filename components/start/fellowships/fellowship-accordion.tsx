@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { Accordion, Stack, Text, Title } from "@mantine/core"
 import { MaskIcon } from "@/components/mask-icon"
-import { InvolvementCta } from "../involvement-cta"
 import { AuthorList } from "./author-link"
 
 import classes from "./fellowship-accordion.module.css"
@@ -66,8 +65,7 @@ function FellowshipPanel({
   description,
   topics,
   pastCurriculums,
-  applyHref,
-}: Omit<Fellowship, "value" | "icon" | "title">) {
+}: Omit<Fellowship, "value" | "icon" | "title" | "applyHref">) {
   return (
     <Stack gap="md" pt="xs">
       <Text size="sm" c="dimmed">
@@ -106,15 +104,6 @@ function FellowshipPanel({
             </span>
           ))}
         </Text>
-      )}
-
-      {applyHref && (
-        <InvolvementCta
-          label="Apply Here"
-          href={applyHref}
-          newTab
-          className={classes.fellowshipApplyCta}
-        />
       )}
     </Stack>
   )
@@ -172,7 +161,6 @@ export function FellowshipAccordion({
               description={fellowship.description}
               topics={fellowship.topics}
               pastCurriculums={fellowship.pastCurriculums}
-              applyHref={fellowship.applyHref}
             />
           </Accordion.Panel>
         </Accordion.Item>

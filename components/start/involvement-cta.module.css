@@ -1,6 +1,6 @@
 /* Get Started page: the CTA button inside an involvement card
    (components/start/involvement-cta.tsx). Callers may append their own class
-   for spacing — see .fellowshipApplyCta. */
+   for spacing. */
 
 /* CTA: a button that sits on a background distinct from its card, with a
    Material-style press ripple (motion.dev/examples/react-material-design-ripple). */

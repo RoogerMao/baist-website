@@ -39,11 +39,3 @@ ul.fellowshipList {
 .fellowshipList li + li {
   margin-top: var(--mantine-spacing-sm);
 }
-
-.fellowshipListNested {
-  margin-top: var(--mantine-spacing-sm);
-}
-
-.fellowshipListNested li + li {
-  margin-top: var(--mantine-spacing-xs);
-}

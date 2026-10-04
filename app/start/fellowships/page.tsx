@@ -5,10 +5,9 @@ import {
   FellowshipAccordion,
   FellowshipCard,
   fellowships,
-  OpenHours,
-  openHours,
 } from "@/components/start/fellowships"
 import { CopyEmail, Faq, type FaqItem } from "@/components/shared"
+import { InvolvementCta } from "@/components/start/involvement-cta"
 
 import faq from "@/components/shared/faq.module.css"
 import link from "@/components/start/fellowships/fellowship-link.module.css"
@@ -60,19 +59,19 @@ export default function FellowshipsPage() {
         Fellowships
       </Title>
 
-      <Text c="dimmed" ta="center" mb="xl" maw="46rem" mx="auto">
+      <Text c="dimmed" ta="center" mb="sm" maw="46rem" mx="auto">
         Fall cohorts will run for 2 hours per week for 10 weeks, from September
         28th to December 4th. All fellowships will conclude with a 2-to-4-hour
-        capstone project / presentation. Fellowship applications are{" "}
-        <Link href="#" className={link.fellowshipLink}>
-          open through September 18th
-        </Link>
-        ! If you have a strong background in AI safety, please speak to one of our{" "}
-        <Link href="/people#executive-board" className={link.fellowshipLink}>
-          executive board members
-        </Link>{" "}
-        before applying for direct membership.
+        capstone project / presentation. Fall 2026 applications are now closed.
       </Text>
+
+      <div className="mb-[var(--mantine-spacing-xl)] flex justify-center">
+        <InvolvementCta
+          label="Express Interest for Future Cohorts"
+          href="https://airtable.com/appzrK1CeY3gVhlS6/pag7Xrvd9qKBIiWim/form"
+          newTab
+        />
+      </div>
 
       <div className={classes.fellowshipCardRow}>
         <FellowshipCard title="Application Structure">
@@ -83,13 +82,6 @@ export default function FellowshipsPage() {
                 written application form due September 18th
               </span>
               .
-              <ul className={`${classes.fellowshipList} ${classes.fellowshipListNested}`}>
-                <li>
-                  Fellowship facilitators will host open hours to answer
-                  questions from Monday, September 14th to Friday, September
-                  18th.
-                </li>
-              </ul>
             </li>
             <li>
               We will ask selected applicants to complete a 45-minute task and
@@ -116,10 +108,6 @@ export default function FellowshipsPage() {
         </FellowshipCard>
       </div>
 
-      <div className="mt-[var(--mantine-spacing-md)]">
-        <OpenHours days={openHours} />
-      </div>
-
       <FellowshipAccordion
         fellowships={fellowships}
         defaultValue={fellowships.slice(0, 1).map((f) => f.value)}
@@ -134,8 +122,7 @@ export default function FellowshipsPage() {
         </Title>
 
         <Text c="dimmed" ta="center" mb="xl" maw="46rem" mx="auto">
-          If you have unanswered questions, please stop by our open hours, or
-          email us at <CopyEmail address="baist@brown.edu" />.
+          If you have unanswered questions, please email us at <CopyEmail address="baist@brown.edu" />.
         </Text>
 
         <Faq items={fellowshipFaq} defaultOpenIndex={0} />
