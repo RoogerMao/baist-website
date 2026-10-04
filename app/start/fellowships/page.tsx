@@ -79,7 +79,7 @@ export default function FellowshipsPage() {
             <li>
               20-minute{" "}
               <span className={classes.fellowshipEmphasis}>
-                written application form due September 18th
+                written application form
               </span>
               .
             </li>

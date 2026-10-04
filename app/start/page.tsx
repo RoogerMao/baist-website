@@ -118,12 +118,9 @@ const levels: InvolvementLevel[] = [
 export default function StartPage() {
   return (
     <main className="mx-auto w-full max-w-[85rem] px-[var(--page-padding-inline)] pb-16 pt-[calc(var(--header-height)+2rem)]">
-      <Title order={1} mb={4} ta="center">
+      <Title order={1} mb="xl" ta="center">
         Our Structure
       </Title>
-      <Text fs="italic" c="dimmed" ta="center" mb="xl">
-        All Fall 2026 fellowship applications are due by 11:59 PM EDT on Friday, September 18th
-      </Text>
 
       <div className="flex flex-col gap-4">
         {levels.map((level) => (
