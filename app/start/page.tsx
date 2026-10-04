@@ -90,7 +90,12 @@ const levels: InvolvementLevel[] = [
       "Schedule 1:1's with their fellowship facilitator and any executive board member",
     ],
     ctas: [
-      { label: "Apply Here", href: "/start/fellowships", white: true },
+      {
+        label: "Express Interest",
+        href: "https://airtable.com/appzrK1CeY3gVhlS6/pag7Xrvd9qKBIiWim/form",
+        newTab: true,
+        white: true,
+      },
     ],
   },
   {
