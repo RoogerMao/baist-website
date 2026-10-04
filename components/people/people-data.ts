@@ -20,7 +20,8 @@ export const leadershipTeam: Person[] = [
     role: "AI Safety Fundamentals Fellowship Facilitator",
     email: "evan_lee@brown.edu",
     linkedin: "https://www.linkedin.com/in/evanyclee/",
-    bookingNote: "Link coming soon!",
+    calendly:
+      "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ01WkVpE2zY3zLtZoo-T-QxR366mlxDqf5GdzkG-ttIm1DaKDuBfCXDD_YVJZ7g88IjfvghSlBS",
   },
   {
     name: "Isaac Bitran",
