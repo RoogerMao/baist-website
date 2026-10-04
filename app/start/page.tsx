@@ -84,7 +84,6 @@ const levels: InvolvementLevel[] = [
   {
     title: "Fellow",
     admissionProcess: "Applications every semester",
-    highlighted: true,
     abilities: [
       "Attend cohort and select member events",
       "Schedule 1:1's with their fellowship facilitator and any executive board member",
@@ -94,7 +93,6 @@ const levels: InvolvementLevel[] = [
         label: "Express Interest",
         href: "https://airtable.com/appzrK1CeY3gVhlS6/pag7Xrvd9qKBIiWim/form",
         newTab: true,
-        white: true,
       },
     ],
   },
