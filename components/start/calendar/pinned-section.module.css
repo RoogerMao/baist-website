@@ -7,8 +7,18 @@
    the darker brown of dark mode. Preview cards then sit one step *lighter*
    again (see .pinnedPreview below) so they still lift off the panel. */
 .pinnedCard {
-  background-color: light-dark(var(--mantine-color-gray-1), #4e3629);
-  border: 1px solid light-dark(var(--mantine-color-gray-3), #5c4735);
+  /* Contrasts with the page: brown panel on the white page, white panel on
+     the brown dark-mode page. Everything below reads these tokens. */
+  --pin-bg: light-dark(#4e3629, white);
+  --pin-fg: light-dark(white, #4e3629);
+  --pin-card-bg: light-dark(#5c4735, #f4f1ed);
+  --pin-card-border: light-dark(#6d4a35, #ddd3ca);
+  --pin-rule: light-dark(
+    color-mix(in srgb, white 22%, transparent),
+    color-mix(in srgb, #4e3629 18%, transparent)
+  );
+  background-color: var(--pin-bg);
+  border: 1px solid var(--pin-card-border);
 }
 
 /* Section titles ("General Body" / "Fellows" / "Members") — the page's own
@@ -16,7 +26,7 @@
    !important: Mantine's Title styles can load after this file and win on
    equal specificity otherwise. */
 .pinnedColTitle {
-  color: light-dark(#4e3629, var(--mantine-color-white)) !important;
+  color: var(--pin-fg) !important;
 }
 
 /* Three equal columns with inset vertical rules between them. */
@@ -37,11 +47,7 @@
 }
 
 .pinnedCol + .pinnedCol {
-  border-left: 1px solid
-    light-dark(
-      color-mix(in srgb, #4e3629 18%, transparent),
-      color-mix(in srgb, white 22%, transparent)
-    );
+  border-left: 1px solid var(--pin-rule);
 }
 
 @media (max-width: 48em) {
@@ -56,11 +62,7 @@
 
   .pinnedCol + .pinnedCol {
     border-left: none;
-    border-top: 1px solid
-      light-dark(
-        color-mix(in srgb, #4e3629 18%, transparent),
-        color-mix(in srgb, white 22%, transparent)
-      );
+    border-top: 1px solid var(--pin-rule);
     padding-top: var(--mantine-spacing-md);
   }
 }
@@ -77,32 +79,27 @@
   text-align: left;
   padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-md);
-  background-color: white;
-  border: 1px solid var(--mantine-color-default-border);
+  background-color: var(--pin-card-bg);
+  border: 1px solid var(--pin-card-border);
   transition: border-color 120ms ease, transform 120ms ease;
 }
 
-:root[data-mantine-color-scheme="dark"] .pinnedPreview {
-  background-color: #5c4735;
-  border-color: #6d4a35;
+.pinnedPreviewTitle {
+  color: var(--pin-fg) !important;
 }
 
-:root[data-mantine-color-scheme="dark"] .pinnedPreviewTitle {
-  color: var(--mantine-color-white) !important;
-}
-
-:root[data-mantine-color-scheme="dark"] .pinnedPreviewDate {
+.pinnedPreviewDate {
   /* !important: Mantine's c="dimmed" sets color via an inline style. */
-  color: color-mix(in srgb, white 65%, transparent) !important;
+  color: color-mix(in srgb, var(--pin-fg) 70%, transparent) !important;
 }
 
 button.pinnedPreview:hover {
-  border-color: light-dark(var(--mantine-color-brown-7), var(--mantine-color-white));
+  border-color: var(--pin-fg);
   transform: translateY(-1px);
 }
 
 button.pinnedPreview:focus-visible {
-  outline: 2px solid light-dark(#4e3629, white);
+  outline: 2px solid var(--pin-fg);
   outline-offset: 2px;
 }
 
@@ -112,16 +109,12 @@ button.pinnedPreview:focus-visible {
   border-style: dashed;
 }
 
-/* Stay transparent even though .pinnedPreview above sets a solid fill for
-   real (non-empty) preview cards in dark mode — this element carries both
-   classes. */
-:root[data-mantine-color-scheme="dark"] .pinnedPreviewEmpty {
-  background-color: transparent;
-  border-color: color-mix(in srgb, white 35%, transparent);
+.pinnedPreviewEmpty {
+  border-color: color-mix(in srgb, var(--pin-fg) 35%, transparent);
 }
 
 /* "Hang tight!" — body text colour in each mode, matching .pinnedColTitle.
    !important: same Mantine Title override-order issue as that rule. */
 .pinnedPreviewEmptyTitle {
-  color: light-dark(#4e3629, var(--mantine-color-white)) !important;
+  color: var(--pin-fg) !important;
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Title } from "@mantine/core"
-import { CalendarBoard, events } from "@/components/start/calendar"
+import { CalendarBoard, events, fellowshipMeetings } from "@/components/start/calendar"
 
 export const metadata: Metadata = {
   title: "Calendar — Brown AI Safety Team",
@@ -12,6 +12,7 @@ export const revalidate = 300
 
 export default function CalendarPage() {
   const now = Date.now()
+  const allEvents = [...events, ...fellowshipMeetings(new Date(now))]
 
   return (
     <main className="w-full px-[var(--page-padding-inline)] pb-16 pt-[calc(var(--header-height)+2rem)]">
@@ -19,7 +20,7 @@ export default function CalendarPage() {
         Featured Events
       </Title>
 
-      <CalendarBoard events={events} now={now} />
+      <CalendarBoard events={allEvents} now={now} />
     </main>
   )
 }

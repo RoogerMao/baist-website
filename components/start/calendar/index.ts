@@ -11,6 +11,7 @@ export { PinnedSection } from "./pinned-section"
 export { Pill } from "./pill"
 export { Markdown } from "./markdown"
 export { events } from "./calendar-data"
+export { fellowshipMeetings } from "./fellowship-meetings"
 export {
   eventId,
   isPastEvent,

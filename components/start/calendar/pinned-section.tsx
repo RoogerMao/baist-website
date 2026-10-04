@@ -54,7 +54,7 @@ function EmptyPreview() {
       <Title order={4} lh={1.3} ta="center" className={classes.pinnedPreviewEmptyTitle}>
         Hang tight!
       </Title>
-      <Text fz={11} c="dimmed" mt={6} ta="center">
+      <Text fz={11} c="dimmed" mt={6} ta="center" className={classes.pinnedPreviewDate}>
         Nothing scheduled yet — check back soon.
       </Text>
     </div>

@@ -35,6 +35,8 @@ export const events: CalendarEvent[] = [
   },
   {
     title: "AI Safety News Flash",
+    description:
+      "What's the case for AI Safety? Garrett will share his perspective on recent events like the HuggingFace x OpenAI hack, DseWiki, and the OpenAI's hack of Australia.",
     date: "September 29th, 2026",
     time: "6 to 7 PM",
     location: "The Underground",
